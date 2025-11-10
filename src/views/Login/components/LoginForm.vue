@@ -275,6 +275,7 @@ const getRole = async () => {
   const params = {
     roleName: formData.username
   }
+
   const res =
     appStore.getDynamicRouter && appStore.getServerDynamicRouter
       ? await getAdminRoleApi(params)
@@ -290,8 +291,8 @@ const getRole = async () => {
       addRoute(route as RouteRecordRaw) // 动态添加可访问路由表
     })
     permissionStore.setIsAddRouters(true)
-    push({ path: redirect.value || permissionStore.addRouters[0].path })
   }
+  push({ path: redirect.value || permissionStore.addRouters[0].path })
 }
 
 // 去注册页面
