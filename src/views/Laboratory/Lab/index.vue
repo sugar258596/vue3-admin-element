@@ -1,12 +1,11 @@
 <script setup lang="jsx">
 import { reactive, ref, unref } from 'vue'
-
-import { getUserList, deleteUser } from '@/api'
+import { getLabsList, deleteLabs } from '@/api'
 
 import { useTable } from '@/hooks/web/useTable'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Table, } from '@/components/Table'
-import { ElTag, ElMessageBox, ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox, ElTag } from 'element-plus'
 import { Search } from '@/components/Search'
 import { ContentWrap } from '@/components/ContentWrap'
 import Write from './components/Write.vue'
@@ -16,9 +15,13 @@ import { BaseButton } from '@/components/Button'
 
 const { t } = useI18n()
 
+const searchParams = ref({
+
+})
+
 const { tableRegister, tableState, tableMethods } = useTable({
   fetchDataApi: async () => {
-    const { list, total } = await getUserList()
+    const { list, total } = await getLabsList(searchParams.value)
     return {
       list: list || [],
       total: total
@@ -36,8 +39,24 @@ const tableColumns = reactive([
     type: 'index'
   },
   {
-    field: 'username',
-    label: t('role.roleName')
+    field: 'name',
+    label: '实验室名称'
+  },
+  {
+    field: 'department',
+    label: '所属院系'
+  },
+  {
+    field: 'description',
+    label: '实验室描述'
+  },
+  {
+    field: 'location',
+    label: '实验室地址'
+  },
+  {
+    field: 'rating',
+    label: '评分'
   },
   {
     field: 'status',
@@ -57,10 +76,6 @@ const tableColumns = reactive([
   {
     field: 'createdAt',
     label: t('tableDemo.displayTime')
-  },
-  {
-    field: 'role',
-    label: '角色'
   },
   {
     field: 'action',
@@ -90,13 +105,13 @@ const tableColumns = reactive([
 
 const searchSchema = reactive([
   {
-    field: 'roleName',
-    label: t('role.roleName'),
+    field: 'keyword',
+    label: "关键字",
     component: 'Input'
   }
 ])
 
-const searchParams = ref({})
+
 const setSearchParams = (data) => {
   searchParams.value = data
   getList()
@@ -119,6 +134,12 @@ const action = (row, type) => {
   dialogVisible.value = true
 }
 
+const AddAction = () => {
+  dialogTitle.value = t('exampleDemo.add')
+  currentRow.value = undefined
+  dialogVisible.value = true
+  actionType.value = ''
+}
 
 const save = async () => {
   const write = unref(writeRef)
@@ -136,7 +157,7 @@ const save = async () => {
 const delData = async (row) => {
   try {
     await ElMessageBox.confirm(
-      `确定要删除用户 "${row.username}" 吗？此操作不可恢复。`,
+      `确定要 "${row.name}" 吗？此操作不可恢复。`,
       '删除确认',
       {
         confirmButtonText: '确定',
@@ -145,7 +166,7 @@ const delData = async (row) => {
       }
     )
 
-    await deleteUser(row.id)
+    await deleteLabs(row.id)
     ElMessage.success('删除成功')
     getList()
   } catch (error) {
@@ -155,14 +176,14 @@ const delData = async (row) => {
     }
   }
 }
-
-
-
 </script>
 
 <template>
   <ContentWrap>
     <Search :schema="searchSchema" @reset="setSearchParams" @search="setSearchParams" />
+    <div class="mb-10px">
+      <BaseButton type="primary" @click="AddAction">{{ t('exampleDemo.add') }}</BaseButton>
+    </div>
     <Table :columns="tableColumns" default-expand-all node-key="id" :data="dataList" :loading="loading" :pagination="{
       total
     }" @register="tableRegister" />

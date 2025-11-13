@@ -38,6 +38,7 @@ export enum ComponentNameEnum {
   CHECKBOX_GROUP = 'CheckboxGroup',
   CHECKBOX_BUTTON = 'CheckboxButton',
   INPUT = 'Input',
+  INPUT_TAG = 'InputTag',
   AUTOCOMPLETE = 'Autocomplete',
   INPUT_NUMBER = 'InputNumber',
   SELECT = 'Select',

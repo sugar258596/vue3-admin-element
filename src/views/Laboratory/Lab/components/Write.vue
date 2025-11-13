@@ -5,7 +5,7 @@ import { reactive, watch, ref, } from 'vue'
 import { useValidator } from '@/hooks/web/useValidator'
 import { useI18n } from '@/hooks/web/useI18n'
 import { ElIcon, ElMessage, ElAvatar } from 'element-plus'
-import { editUser } from '@/api'
+import { addLabs, editLabs } from '@/api'
 
 const { t } = useI18n()
 
@@ -19,18 +19,83 @@ const props = defineProps({
 })
 
 
-const imageUrl = ref(props.currentRow?.avatar)
-
-
 const formSchema = ref([
   {
-    field: 'username',
-    label: t('role.roleName'),
+    field: 'name',
+    label: '实验室名称',
     component: 'Input',
+  },
+  {
+    field: 'capacity',
+    label: '实验室容量 (人数)',
+    component: 'InputNumber',
+  },
+  {
+    field: 'department',
+    label: '所属院系',
+    component: 'Input',
+  },
+  {
+    field: 'description',
+    label: '实验室描述',
+    component: 'Input',
+    colProps: {
+      span: 24
+    },
     componentProps: {
-      disabled: true
+      type: 'textarea'
     }
   },
+  {
+    field: 'location',
+    label: '实验室地址',
+    component: 'Input',
+    colProps: {
+      span: 24
+    },
+    componentProps: {
+      type: 'textarea'
+    }
+  },
+
+  {
+    field: 'images',
+    component: 'Upload',
+    label: "实验室图片",
+    colProps: {
+      span: 24
+    },
+    componentProps: {
+      autoUpload: false,
+      action: "#",
+      listType: "picture-card",
+      limit: 10,
+      multiple: true,
+      onChange: (uploadFile) => {
+        imageUrl.value = uploadFile.url
+      },
+      beforeUpload: (rawFile) => {
+        if (rawFile.size / 1024 / 1024 > 2) {
+          ElMessage.error('Avatar picture size can not exceed 2MB!')
+          return false
+        }
+        return true
+      },
+      beforeRemove: () => {
+        imageUrl.value = ''
+      },
+      slots: {
+        default: () => (
+          <>
+            <ElIcon class="avatar-uploader-icon" size="large">
+              add
+            </ElIcon>
+          </>
+        )
+      }
+    }
+  },
+
   {
     field: 'status',
     label: t('menu.status'),
@@ -50,94 +115,36 @@ const formSchema = ref([
     }
   },
   {
-    field: 'Upload',
-    component: 'Upload',
-    label: `${t('formDemo.userAvatar')}`,
-    colProps: {
-      span: 24
-    },
-    componentProps: {
-      autoUpload: false,
-      action: "#",
-      listType: "picture-card",
-      limit: 1,
-      onChange: (uploadFile) => {
-        imageUrl.value = uploadFile.url
-      },
-      beforeUpload: (rawFile) => {
-        if (rawFile.size / 1024 / 1024 > 2) {
-          ElMessage.error('Avatar picture size can not exceed 2MB!')
-          return false
-        }
-        return true
-      },
-      beforeRemove: () => {
-        imageUrl.value = ''
-      },
-      slots: {
-        default: () => (
-          <>
-            {imageUrl.value ? <ElAvatar src={imageUrl.value} /> : null}
-            {!imageUrl.value ? (
-              <ElIcon class="avatar-uploader-icon" size="large">
-                add
-              </ElIcon>
-            ) : null}
-          </>
-        )
-      }
-    }
+    field: 'tags',
+    label: '实验室标签',
+    component: 'InputTag'
   },
   {
-    field: 'role',
-    label: '用户角色',
+    field: 'equipmentList',
+    label: '实验室设备',
     component: 'Select',
     componentProps: {
+      multiple: true,
+      filterable: true,
+      allowCreate: true,
       options: [
         {
-          value: 'super_admin',
-          label: "超级管理员"
+          value: 2,
+          label: 'HTML',
         },
         {
-          value: 'admin',
-          label: "管理员"
+          value: 1,
+          label: 'CSS',
         },
         {
-          value: 'teacher',
-          label: "教师"
-        },
-
-        {
-          value: 'student',
-          label: "学生"
+          value: 3,
+          label: 'JavaScript',
         },
       ]
+    },
+    colProps: {
+      span: 24
     }
-  },
-  {
-    field: 'nickname',
-    label: '用户昵称',
-    component: 'Input'
-  },
-  {
-    field: 'phone',
-    label: '手机号',
-    component: 'Input'
-  },
-  {
-    field: 'email',
-    label: '用户邮箱',
-    component: 'Input'
-  },
-  {
-    field: 'department',
-    label: '所属院系/部门',
-    component: 'Input'
-  },
-  {
-    field: 'teachingTags',
-    label: '教学标签数组',
-    component: 'InputTag'
   },
 ])
 
@@ -157,13 +164,24 @@ const submit = async () => {
   })
   if (valid) {
     const formData = await getFormData()
-    const { Upload, id, ...newData } = formData
+    const { id, images, ...newData } = formData
 
-    if (Upload && Upload.length > 0 && Upload[0].raw) {
-      newData.avatar = Upload[0].raw
+
+    const image = images?.map(item => {
+      // 判断是否为文件
+      if (item.raw) {
+        return item.raw
+      }
+      return item?.url
+    })
+    newData.images = image
+
+    if (id) {
+      await editLabs(id, newData)
+    } else {
+      addLabs(newData)
     }
 
-    await editUser(id, newData)
     return formData
   }
 }
@@ -172,7 +190,16 @@ watch(
   () => props.currentRow,
   (currentRow) => {
     if (!currentRow) return
-    setValues(currentRow)
+    const { images, ...newData } = currentRow
+    newData.images = images.map(item => {
+      return {
+        url: item,
+      }
+    })
+    newData.equipmentList = currentRow.equipmentList.map(item => item.id)
+    console.log(newData.equipmentList);
+
+    setValues(newData)
   },
   {
     deep: true,

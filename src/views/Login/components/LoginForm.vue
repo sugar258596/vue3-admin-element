@@ -1,14 +1,13 @@
-<script setup lang="tsx">
+<script setup lang="jsx">
 import { reactive, ref, watch, onMounted, unref } from 'vue'
 import { Form, FormSchema } from '@/components/Form'
 import { useI18n } from '@/hooks/web/useI18n'
 import { ElCheckbox, ElLink } from 'element-plus'
 import { useForm } from '@/hooks/web/useForm'
-import { loginApi, getTestRoleApi, getAdminRoleApi } from '@/api/login'
+import { loginApi, getUserInfoApi } from '@/api'
 import { useAppStore } from '@/store/modules/app'
 import { usePermissionStore } from '@/store/modules/permission'
 import { useRouter } from 'vue-router'
-import type { RouteLocationNormalizedLoaded, RouteRecordRaw } from 'vue-router'
 import { UserType } from '@/api/login/types'
 import { useValidator } from '@/hooks/web/useValidator'
 import { Icon } from '@/components/Icon'
@@ -34,7 +33,7 @@ const rules = {
   password: [required()]
 }
 
-const schema = reactive<FormSchema[]>([
+const schema = reactive([
   {
     field: 'title',
     colProps: {
@@ -74,7 +73,7 @@ const schema = reactive<FormSchema[]>([
       },
       placeholder: 'admin or test',
       // 按下enter键触发登录
-      onKeydown: (_e: any) => {
+      onKeydown: (_e) => {
         if (_e.key === 'Enter') {
           _e.stopPropagation() // 阻止事件冒泡
           signIn()
@@ -215,12 +214,12 @@ const iconColor = '#999'
 
 const hoverColor = 'var(--el-color-primary)'
 
-const redirect = ref<string>('')
+const redirect = ref < string > ('')
 
 watch(
   () => currentRoute.value,
-  (route: RouteLocationNormalizedLoaded) => {
-    redirect.value = route?.query?.redirect as string
+  (route) => {
+    redirect.value = route?.query?.redirect
   },
   {
     immediate: true
@@ -233,12 +232,14 @@ const signIn = async () => {
   await formRef?.validate(async (isValid) => {
     if (isValid) {
       loading.value = true
-      const formData = await getFormData<UserType>()
+      const formData = await getFormData()
 
       try {
-        const res = await loginApi(formData)
+        const { token } = await loginApi(formData)
 
-        if (res) {
+        userStore.setToken(token)
+
+        if (token) {
           // 是否记住我
           if (unref(remember)) {
             userStore.setLoginInfo({
@@ -249,14 +250,16 @@ const signIn = async () => {
             userStore.setLoginInfo(undefined)
           }
           userStore.setRememberMe(unref(remember))
-          userStore.setUserInfo(res.data)
+          const userInfo = await getUserInfoApi()
+
+          userStore.setUserInfo(userInfo)
           // 是否使用动态路由
           if (appStore.getDynamicRouter) {
             getRole()
           } else {
-            await permissionStore.generateRoutes('static').catch(() => {})
+            await permissionStore.generateRoutes('static').catch(() => { })
             permissionStore.getAddRouters.forEach((route) => {
-              addRoute(route as RouteRecordRaw) // 动态添加可访问路由表
+              addRoute(route) // 动态添加可访问路由表
             })
             permissionStore.setIsAddRouters(true)
             push({ path: redirect.value || permissionStore.addRouters[0].path })
@@ -271,27 +274,8 @@ const signIn = async () => {
 
 // 获取角色信息
 const getRole = async () => {
-  const formData = await getFormData<UserType>()
-  const params = {
-    roleName: formData.username
-  }
+  const formData = await getFormData()
 
-  const res =
-    appStore.getDynamicRouter && appStore.getServerDynamicRouter
-      ? await getAdminRoleApi(params)
-      : await getTestRoleApi(params)
-  if (res) {
-    const routers = res.data || []
-    userStore.setRoleRouters(routers)
-    appStore.getDynamicRouter && appStore.getServerDynamicRouter
-      ? await permissionStore.generateRoutes('server', routers).catch(() => {})
-      : await permissionStore.generateRoutes('frontEnd', routers).catch(() => {})
-
-    permissionStore.getAddRouters.forEach((route) => {
-      addRoute(route as RouteRecordRaw) // 动态添加可访问路由表
-    })
-    permissionStore.setIsAddRouters(true)
-  }
   push({ path: redirect.value || permissionStore.addRouters[0].path })
 }
 
@@ -302,13 +286,6 @@ const toRegister = () => {
 </script>
 
 <template>
-  <Form
-    :schema="schema"
-    :rules="rules"
-    label-position="top"
-    hide-required-asterisk
-    size="large"
-    class="dark:(border-1 border-[var(--el-border-color)] border-solid)"
-    @register="formRegister"
-  />
+  <Form :schema="schema" :rules="rules" label-position="top" hide-required-asterisk size="large"
+    class="dark:(border-1 border-[var(--el-border-color)] border-solid)" @register="formRegister" />
 </template>

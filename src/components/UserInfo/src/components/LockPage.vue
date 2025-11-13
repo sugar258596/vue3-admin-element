@@ -9,7 +9,7 @@ import { useI18n } from '@/hooks/web/useI18n'
 import { useNow } from '@/hooks/web/useNow'
 import { useDesign } from '@/hooks/web/useDesign'
 import { Icon } from '@/components/Icon'
-import { loginOutApi } from '@/api/login'
+import { loginOutApi } from '@/api'
 import { useTagsViewStore } from '@/store/modules/tagsView'
 
 const tagsViewStore = useTagsViewStore()
@@ -49,7 +49,7 @@ async function unLock() {
 
 // 返回登录
 async function goLogin() {
-  const res = await loginOutApi().catch(() => {})
+  const res = await loginOutApi().catch(() => { })
   if (res) {
     clear()
     tagsViewStore.delAllViews()
@@ -72,16 +72,10 @@ function handleShowForm(show = false) {
 </script>
 
 <template>
-  <div
-    :class="prefixCls"
-    class="fixed inset-0 flex h-screen w-screen bg-black items-center justify-center"
-  >
-    <div
-      :class="`${prefixCls}__unlock`"
+  <div :class="prefixCls" class="fixed inset-0 flex h-screen w-screen bg-black items-center justify-center">
+    <div :class="`${prefixCls}__unlock`"
       class="absolute top-0 left-1/2 flex pt-5 h-16 items-center justify-center sm:text-md xl:text-xl text-white flex-col cursor-pointer transform translate-x-1/2"
-      @click="handleShowForm(false)"
-      v-show="showDate"
-    >
+      @click="handleShowForm(false)" v-show="showDate">
       <Icon icon="vi-ep:lock" />
       <span>{{ t('lock.unlock') }}</span>
     </div>
@@ -104,46 +98,20 @@ function handleShowForm(show = false) {
             <img src="@/assets/imgs/avatar.jpg" alt="" class="w-70px h-70px rounded-[50%]" />
             <span class="text-14px my-10px text-[var(--logo-title-text-color)]">Archer</span>
           </div>
-          <ElInput
-            type="password"
-            :placeholder="t('lock.placeholder')"
-            class="enter-x"
-            v-model="password"
-            @keydown.enter="unLock"
-            ref="passwordInputRef"
-          />
+          <ElInput type="password" :placeholder="t('lock.placeholder')" class="enter-x" v-model="password"
+            @keydown.enter="unLock" ref="passwordInputRef" />
           <span :class="`text-14px ${prefixCls}-entry__err-msg enter-x`" v-if="errMsg">
             {{ t('lock.message') }}
           </span>
           <div :class="`${prefixCls}-entry__footer enter-x`">
-            <BaseButton
-              type="primary"
-              size="small"
-              class="mt-2 mr-2 enter-x"
-              link
-              :disabled="loading"
-              @click="handleShowForm(true)"
-            >
+            <BaseButton type="primary" size="small" class="mt-2 mr-2 enter-x" link :disabled="loading"
+              @click="handleShowForm(true)">
               {{ t('common.back') }}
             </BaseButton>
-            <BaseButton
-              type="primary"
-              size="small"
-              class="mt-2 mr-2 enter-x"
-              link
-              :disabled="loading"
-              @click="goLogin"
-            >
+            <BaseButton type="primary" size="small" class="mt-2 mr-2 enter-x" link :disabled="loading" @click="goLogin">
               {{ t('lock.backToLogin') }}
             </BaseButton>
-            <BaseButton
-              type="primary"
-              class="mt-2"
-              size="small"
-              link
-              @click="unLock()"
-              :disabled="loading"
-            >
+            <BaseButton type="primary" class="mt-2" size="small" link @click="unLock()" :disabled="loading">
               {{ t('lock.entrySystem') }}
             </BaseButton>
           </div>

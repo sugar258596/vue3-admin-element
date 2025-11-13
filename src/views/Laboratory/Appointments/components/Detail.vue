@@ -65,7 +65,7 @@ const detailSchema = ref([
     span: 24
   },
   {
-    field: 'teachingTags',
+    field: 'text',
     label: '教学标签数组',
     span: 24
   },

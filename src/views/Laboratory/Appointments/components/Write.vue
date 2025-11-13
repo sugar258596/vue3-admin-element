@@ -18,7 +18,6 @@ const props = defineProps({
   }
 })
 
-
 const imageUrl = ref(props.currentRow?.avatar)
 
 
@@ -53,9 +52,6 @@ const formSchema = ref([
     field: 'Upload',
     component: 'Upload',
     label: `${t('formDemo.userAvatar')}`,
-    colProps: {
-      span: 24
-    },
     componentProps: {
       autoUpload: false,
       action: "#",

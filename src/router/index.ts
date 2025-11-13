@@ -376,71 +376,39 @@ export const asyncRouterMap: AppRouteRecordRaw[] = [
       }
     ]
   },
-
   {
-    path: '/example',
+    path: '/laboratory',
     component: Layout,
-    redirect: '/example/example-dialog',
-    name: 'Example',
+    redirect: '/authorization/user',
+    name: 'Laboratory',
     meta: {
-      title: t('router.example'),
-      icon: 'vi-ep:management',
+      title: '实验室管理',
+      icon: 'medical-icon:laboratory',
       alwaysShow: true
     },
     children: [
       {
-        path: 'example-dialog',
-        component: () => import('@/views/Example/Dialog/ExampleDialog.vue'),
-        name: 'ExampleDialog',
+        path: 'lab',
+        component: () => import('@/views/Laboratory/Lab/index.vue'),
+        name: 'Lab',
         meta: {
-          title: t('router.exampleDialog')
+          title: '实验室'
         }
       },
       {
-        path: 'example-page',
-        component: () => import('@/views/Example/Page/ExamplePage.vue'),
-        name: 'ExamplePage',
+        path: 'appointments',
+        component: () => import('@/views/Laboratory/Appointments/index.vue'),
+        name: 'Appointments',
         meta: {
-          title: t('router.examplePage')
+          title: '实验室预约'
         }
       },
       {
-        path: 'example-add',
-        component: () => import('@/views/Example/Page/ExampleAdd.vue'),
-        name: 'ExampleAdd',
+        path: 'instruments',
+        component: () => import('@/views/Laboratory/Instruments/index.vue'),
+        name: 'Instruments',
         meta: {
-          title: t('router.exampleAdd'),
-          noTagsView: true,
-          noCache: true,
-          hidden: true,
-          canTo: true,
-          activeMenu: '/example/example-page'
-        }
-      },
-      {
-        path: 'example-edit',
-        component: () => import('@/views/Example/Page/ExampleEdit.vue'),
-        name: 'ExampleEdit',
-        meta: {
-          title: t('router.exampleEdit'),
-          noTagsView: true,
-          noCache: true,
-          hidden: true,
-          canTo: true,
-          activeMenu: '/example/example-page'
-        }
-      },
-      {
-        path: 'example-detail',
-        component: () => import('@/views/Example/Page/ExampleDetail.vue'),
-        name: 'ExampleDetail',
-        meta: {
-          title: t('router.exampleDetail'),
-          noTagsView: true,
-          noCache: true,
-          hidden: true,
-          canTo: true,
-          activeMenu: '/example/example-page'
+          title: '仪器'
         }
       }
     ]
@@ -464,22 +432,7 @@ export const asyncRouterMap: AppRouteRecordRaw[] = [
           title: t('router.department')
         }
       },
-      {
-        path: 'user',
-        component: () => import('@/views/Authorization/User/User.vue'),
-        name: 'User',
-        meta: {
-          title: t('router.user')
-        }
-      },
-      {
-        path: 'menu',
-        component: () => import('@/views/Authorization/Menu/Menu.vue'),
-        name: 'Menu',
-        meta: {
-          title: t('router.menuManagement')
-        }
-      },
+
       {
         path: 'role',
         component: () => import('@/views/Authorization/Role/Role.vue'),

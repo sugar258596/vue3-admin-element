@@ -1,12 +1,11 @@
 <script setup lang="jsx">
 import { reactive, ref, unref } from 'vue'
-
-import { getUserList, deleteUser } from '@/api'
+import { getUserList } from '@/api'
 
 import { useTable } from '@/hooks/web/useTable'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Table, } from '@/components/Table'
-import { ElTag, ElMessageBox, ElMessage } from 'element-plus'
+import { ElTag } from 'element-plus'
 import { Search } from '@/components/Search'
 import { ContentWrap } from '@/components/ContentWrap'
 import Write from './components/Write.vue'
@@ -79,8 +78,7 @@ const tableColumns = reactive([
             }>
               {t('exampleDemo.detail')}
             </BaseButton>
-            < BaseButton type="danger" onClick={() => delData(row)}
-            >{t('exampleDemo.del')} </BaseButton >
+            < BaseButton type="danger" > {t('exampleDemo.del')} </BaseButton>
           </>
         )
       }
@@ -119,6 +117,12 @@ const action = (row, type) => {
   dialogVisible.value = true
 }
 
+const AddAction = () => {
+  dialogTitle.value = t('exampleDemo.add')
+  currentRow.value = undefined
+  dialogVisible.value = true
+  actionType.value = ''
+}
 
 const save = async () => {
   const write = unref(writeRef)
@@ -128,41 +132,17 @@ const save = async () => {
     setTimeout(() => {
       saveLoading.value = false
       dialogVisible.value = false
-      getList()
     }, 1000)
   }
 }
-
-const delData = async (row) => {
-  try {
-    await ElMessageBox.confirm(
-      `确定要删除用户 "${row.username}" 吗？此操作不可恢复。`,
-      '删除确认',
-      {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }
-    )
-
-    await deleteUser(row.id)
-    ElMessage.success('删除成功')
-    getList()
-  } catch (error) {
-    if (error !== 'cancel') {
-      ElMessage.error('删除失败')
-      console.error(error)
-    }
-  }
-}
-
-
-
 </script>
 
 <template>
   <ContentWrap>
     <Search :schema="searchSchema" @reset="setSearchParams" @search="setSearchParams" />
+    <div class="mb-10px">
+      <BaseButton type="primary" @click="AddAction">{{ t('exampleDemo.add') }}</BaseButton>
+    </div>
     <Table :columns="tableColumns" default-expand-all node-key="id" :data="dataList" :loading="loading" :pagination="{
       total
     }" @register="tableRegister" />

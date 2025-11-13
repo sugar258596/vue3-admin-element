@@ -39,8 +39,8 @@ const defaultResponseInterceptors = (response: AxiosResponse) => {
   if (response?.config?.responseType === 'blob') {
     // 如果是文件流，直接过
     return response
-  } else if (response.data.code === SUCCESS_CODE) {
-    return response.data
+  } else if (response.data.code === SUCCESS_CODE || response.data.code === 200) {
+    return response.data.data
   } else {
     ElMessage.error(response?.data?.message)
     if (response?.data?.code === 401) {

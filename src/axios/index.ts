@@ -14,7 +14,7 @@ const request = (option: AxiosConfig) => {
     responseType: responseType,
     headers: {
       'Content-Type': CONTENT_TYPE,
-      [userStore.getTokenKey ?? 'Authorization']: userStore.getToken ?? '',
+      [userStore.getTokenKey ?? 'Authorization']: `Bearer ${userStore.getToken}`,
       ...headers
     }
   })
@@ -32,6 +32,9 @@ export default {
   },
   put: <T = any>(option: AxiosConfig) => {
     return request({ method: 'put', ...option }) as Promise<IResponse<T>>
+  },
+  patch: <T = any>(option: AxiosConfig) => {
+    return request({ method: 'patch', ...option }) as Promise<IResponse<T>>
   },
   cancelRequest: (url: string | string[]) => {
     return service.cancelRequest(url)

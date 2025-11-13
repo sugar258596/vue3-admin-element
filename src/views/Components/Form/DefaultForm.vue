@@ -1700,8 +1700,7 @@ const schema = reactive<FormSchema[]>([
       },
       onExceed: (files, uploadFiles) => {
         ElMessage.warning(
-          `The limit is 3, you selected ${files.length} files this time, add up to ${
-            files.length + uploadFiles.length
+          `The limit is 3, you selected ${files.length} files this time, add up to ${files.length + uploadFiles.length
           } totally`
         )
       },

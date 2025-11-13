@@ -129,8 +129,21 @@ export function firstUpperCase(str: string) {
  */
 export function objToFormData(obj: Recordable) {
   const formData = new FormData()
-  Object.keys(obj).forEach((key) => {
-    formData.append(key, obj[key])
+  Object.entries(obj).forEach(([key, value]) => {
+    if (Array.isArray(value)) {
+      value.forEach((item) => {
+        if (item) {
+          formData.append(key, item)
+        }
+      })
+    } else {
+      if (value) {
+        {
+          formData.append(key, value)
+        }
+      }
+    }
   })
+
   return formData
 }

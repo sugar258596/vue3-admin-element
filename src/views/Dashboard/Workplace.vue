@@ -9,15 +9,8 @@ import { Echart } from '@/components/Echart'
 import { EChartsOption } from 'echarts'
 import { radarOption } from './echarts-data'
 import { Highlight } from '@/components/Highlight'
-import {
-  getCountApi,
-  getProjectApi,
-  getDynamicApi,
-  getTeamApi,
-  getRadarApi
-} from '@/api/dashboard/workplace'
+
 import type { WorkplaceTotal, Project, Dynamic, Team } from '@/api/dashboard/workplace/types'
-import { set } from 'lodash-es'
 
 const loading = ref(true)
 
@@ -29,75 +22,35 @@ let totalSate = reactive<WorkplaceTotal>({
 })
 
 const getCount = async () => {
-  const res = await getCountApi().catch(() => {})
-  if (res) {
-    totalSate = Object.assign(totalSate, res.data)
-  }
+
 }
 
 let projects = reactive<Project[]>([])
 
 // 获取项目数
 const getProject = async () => {
-  const res = await getProjectApi().catch(() => {})
-  if (res) {
-    projects = Object.assign(projects, res.data)
-  }
+
 }
 
 // 获取动态
 let dynamics = reactive<Dynamic[]>([])
 
 const getDynamic = async () => {
-  const res = await getDynamicApi().catch(() => {})
-  if (res) {
-    dynamics = Object.assign(dynamics, res.data)
-  }
+
 }
 
 // 获取团队
 let team = reactive<Team[]>([])
 
 const getTeam = async () => {
-  const res = await getTeamApi().catch(() => {})
-  if (res) {
-    team = Object.assign(team, res.data)
-  }
+
 }
 
 // 获取指数
 const radarOptionData = reactive<EChartsOption>(radarOption) as EChartsOption
 
 const getRadar = async () => {
-  const res = await getRadarApi().catch(() => {})
-  if (res) {
-    set(
-      radarOptionData,
-      'radar.indicator',
-      res.data.map((v) => {
-        return {
-          name: t(v.name),
-          max: v.max
-        }
-      })
-    )
-    set(radarOptionData, 'series', [
-      {
-        name: `xxx${t('workplace.index')}`,
-        type: 'radar',
-        data: [
-          {
-            value: res.data.map((v) => v.personal),
-            name: t('workplace.personal')
-          },
-          {
-            value: res.data.map((v) => v.team),
-            name: t('workplace.team')
-          }
-        ]
-      }
-    ])
-  }
+
 }
 
 const getAllApi = async () => {
@@ -117,11 +70,7 @@ const { t } = useI18n()
         <ElRow :gutter="20" justify="space-between">
           <ElCol :xl="12" :lg="12" :md="12" :sm="24" :xs="24">
             <div class="flex items-center">
-              <img
-                src="@/assets/imgs/avatar.jpg"
-                alt=""
-                class="w-70px h-70px rounded-[50%] mr-20px"
-              />
+              <img src="@/assets/imgs/avatar.jpg" alt="" class="w-70px h-70px rounded-[50%] mr-20px" />
               <div>
                 <div class="text-20px">
                   {{ t('workplace.goodMorning') }}，Archer，{{ t('workplace.happyDay') }}
@@ -136,32 +85,17 @@ const { t } = useI18n()
             <div class="flex h-70px items-center justify-end lt-sm:mt-20px">
               <div class="px-8px text-right">
                 <div class="text-14px text-gray-400 mb-20px">{{ t('workplace.project') }}</div>
-                <CountTo
-                  class="text-20px"
-                  :start-val="0"
-                  :end-val="totalSate.project"
-                  :duration="2600"
-                />
+                <CountTo class="text-20px" :start-val="0" :end-val="totalSate.project" :duration="2600" />
               </div>
               <ElDivider direction="vertical" />
               <div class="px-8px text-right">
                 <div class="text-14px text-gray-400 mb-20px">{{ t('workplace.toDo') }}</div>
-                <CountTo
-                  class="text-20px"
-                  :start-val="0"
-                  :end-val="totalSate.todo"
-                  :duration="2600"
-                />
+                <CountTo class="text-20px" :start-val="0" :end-val="totalSate.todo" :duration="2600" />
               </div>
               <ElDivider direction="vertical" border-style="dashed" />
               <div class="px-8px text-right">
                 <div class="text-14px text-gray-400 mb-20px">{{ t('workplace.access') }}</div>
-                <CountTo
-                  class="text-20px"
-                  :start-val="0"
-                  :end-val="totalSate.access"
-                  :duration="2600"
-                />
+                <CountTo class="text-20px" :start-val="0" :end-val="totalSate.access" :duration="2600" />
               </div>
             </div>
           </ElCol>
@@ -181,15 +115,7 @@ const { t } = useI18n()
         </template>
         <ElSkeleton :loading="loading" animated>
           <ElRow>
-            <ElCol
-              v-for="(item, index) in projects"
-              :key="`card-${index}`"
-              :xl="8"
-              :lg="8"
-              :md="12"
-              :sm="24"
-              :xs="24"
-            >
+            <ElCol v-for="(item, index) in projects" :key="`card-${index}`" :xl="8" :lg="8" :md="12" :sm="24" :xs="24">
               <ElCard shadow="hover">
                 <div class="flex items-center">
                   <Icon :icon="item.icon" :size="25" class="mr-10px" />
@@ -216,11 +142,7 @@ const { t } = useI18n()
         <ElSkeleton :loading="loading" animated>
           <div v-for="(item, index) in dynamics" :key="`dynamics-${index}`">
             <div class="flex items-center">
-              <img
-                src="@/assets/imgs/avatar.jpg"
-                alt=""
-                class="w-35px h-35px rounded-[50%] mr-20px"
-              />
+              <img src="@/assets/imgs/avatar.jpg" alt="" class="w-35px h-35px rounded-[50%] mr-20px" />
               <div>
                 <div class="text-14px">
                   <Highlight :keys="item.keys.map((v) => t(v))">
@@ -244,16 +166,7 @@ const { t } = useI18n()
         </template>
         <ElSkeleton :loading="loading" animated>
           <ElRow>
-            <ElCol
-              v-for="item in 9"
-              :key="`card-${item}`"
-              :xl="12"
-              :lg="12"
-              :md="12"
-              :sm="24"
-              :xs="24"
-              class="mb-10px"
-            >
+            <ElCol v-for="item in 9" :key="`card-${item}`" :xl="12" :lg="12" :md="12" :sm="24" :xs="24" class="mb-10px">
               <ElLink type="default" :underline="false">
                 {{ t('workplace.operation') }}{{ item }}
               </ElLink>
