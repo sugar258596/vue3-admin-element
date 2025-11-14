@@ -11,16 +11,56 @@ defineProps({
 })
 
 const renderTag = (enable) => {
-  return <ElTag type={enable === 1 ? 'danger' : 'success'}>{enable === 1 ? '启用' : '禁用'}</ElTag>
+  switch (enable) {
+    case 0:
+      return <ElTag type='success'>正常</ElTag>
+    case 1:
+      return <ElTag type='danger'>停用</ElTag>
+    case 2:
+      return <ElTag type='warning'>维护中</ElTag>
+    case 3:
+      return <ElTag type='danger'>故障</ElTag>
+    case 4:
+      return <ElTag type='info'>借出</ElTag>
+    default:
+      return <ElTag type='danger'>停用</ElTag>
+  }
 }
 
 
-
-
 const detailSchema = ref([
+
   {
-    field: 'username',
-    label: '用户名'
+    field: 'model',
+    label: '设备型号',
+    span: 24,
+  },
+  {
+    field: 'serialNumber',
+    label: '设备序列号',
+    span: 24,
+  },
+  {
+    field: 'description',
+    label: '设备描述',
+    span: 24,
+  },
+  {
+    field: 'specifications',
+    label: '设备技术规格',
+    span: 24,
+  },
+  {
+    field: 'labName',
+    label: '所属实验室',
+    span: 24,
+    slots: {
+      default: (data) => {
+        return (
+          <div> {data.lab?.name} </div>
+        )
+      }
+    }
   },
   {
     field: 'status',
@@ -32,44 +72,26 @@ const detailSchema = ref([
     }
   },
   {
-    field: 'avatar',
-    label: '头像',
+    field: 'images',
+    label: '展示图片',
     span: 24,
     slots: {
       default: (data) => {
-        return <ElAvatar src={data.avatar} />
+        return (
+          <div class={'flex flex-wrap gap-2'}>
+            {data.images?.map((item, index) => (
+              <div class={'w-20 h-20'}>
+                <img class={'w-full h-full object-cover'} key={index} src={item} />
+              </div>
+            ))}
+          </div>
+        )
       }
     }
   },
-  {
-    field: 'role',
-    label: '用户角色',
-  },
-  {
-    field: 'nickname',
-    label: '用户昵称',
-  },
-  {
-    field: 'phone',
-    label: '手机号',
-    span: 24
-  },
-  {
-    field: 'email',
-    label: '用户邮箱',
-    span: 24
-  },
-  {
-    field: 'department',
-    label: '所属院系/部门',
-    span: 24
-  },
-  {
-    field: 'text',
-    label: '教学标签数组',
-    span: 24
-  },
 ])
+
+
 </script>
 
 <template>

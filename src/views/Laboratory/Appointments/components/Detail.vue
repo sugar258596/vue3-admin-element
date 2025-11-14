@@ -1,7 +1,7 @@
 <script setup lang="jsx">
 import { ref } from 'vue'
 import { Descriptions } from '@/components/Descriptions'
-import { ElTag, ElAvatar } from 'element-plus'
+import { ElTag } from 'element-plus'
 
 defineProps({
   currentRow: {
@@ -10,17 +10,72 @@ defineProps({
   }
 })
 
-const renderTag = (enable) => {
-  return <ElTag type={enable === 1 ? 'danger' : 'success'}>{enable === 1 ? '启用' : '禁用'}</ElTag>
+
+const timeSlot = {
+  0: '上午',
+  1: '下午',
+  2: '晚上'
 }
 
 
+const renderTag = (enable) => {
+  switch (enable) {
+    case 1:
+      return <ElTag type='success'>已预约</ElTag>
+    case 2:
+      return <ElTag type='danger'>已拒绝</ElTag>
+    case 3:
+      return <ElTag type='warning'>已取消</ElTag>
+    case 4:
+      return <ElTag type='success'>已完成</ElTag>
+    default:
+      return <ElTag type='info'>待审核</ElTag>
+  }
+}
 
 
 const detailSchema = ref([
   {
-    field: 'username',
-    label: '用户名'
+    field: 'name',
+    label: '实验室名称',
+    slots: {
+      default: (data) => {
+        return (
+          <>
+            <div>{data.name}</div>
+          </>
+        )
+      }
+    }
+  },
+  {
+    field: 'user',
+    label: '预约用户',
+    slots: {
+      default: (data) => {
+        return (
+          <>
+            <div>{data.user.name}</div>
+          </>
+        )
+      }
+    }
+  },
+  {
+    field: 'purpose',
+    label: '预约目的'
+  },
+  {
+    field: 'description',
+    label: '预约详细描述'
+  },
+  {
+    field: 'participantCount',
+    label: '参与人数'
+  },
+  {
+    field: 'appointmentDate',
+    label: '预约日期',
   },
   {
     field: 'status',
@@ -32,42 +87,21 @@ const detailSchema = ref([
     }
   },
   {
-    field: 'avatar',
-    label: '头像',
-    span: 24,
+    field: 'timeSlot',
+    label: '时间段',
     slots: {
       default: (data) => {
-        return <ElAvatar src={data.avatar} />
+        return (
+          <>
+            <div>{timeSlot[data.timeSlot]}</div>
+          </>
+        )
       }
     }
   },
   {
-    field: 'role',
-    label: '用户角色',
-  },
-  {
-    field: 'nickname',
-    label: '用户昵称',
-  },
-  {
-    field: 'phone',
-    label: '手机号',
-    span: 24
-  },
-  {
-    field: 'email',
-    label: '用户邮箱',
-    span: 24
-  },
-  {
-    field: 'department',
-    label: '所属院系/部门',
-    span: 24
-  },
-  {
-    field: 'text',
-    label: '教学标签数组',
-    span: 24
+    field: 'rejectionReason',
+    label: '拒绝原因',
   },
 ])
 </script>

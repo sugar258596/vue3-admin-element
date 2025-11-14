@@ -23,17 +23,40 @@ const imageUrl = ref(props.currentRow?.avatar)
 
 const formSchema = ref([
   {
-    field: 'username',
-    label: t('role.roleName'),
+    field: "name",
+    label: "仪器名称",
     component: 'Input',
-    componentProps: {
-      disabled: true
-    }
+  },
+  {
+    field: "model",
+    label: "仪器型号",
+    component: 'Input',
+  },
+  {
+    field: "serialNumber",
+    label: "仪器序列号",
+    component: 'Input',
+  },
+  {
+    field: "description",
+    label: "仪器描述",
+    component: 'Input',
+  },
+  {
+    field: "specifications",
+    label: "仪器规格参数",
+    component: 'Input',
+  },
+  {
+    field: "qrCode",
+    label: "仪器二维码",
+    component: 'Input',
   },
   {
     field: 'status',
     label: t('menu.status'),
     component: 'Select',
+    value: 0,
     componentProps: {
       options: [
         {
@@ -49,9 +72,12 @@ const formSchema = ref([
     }
   },
   {
-    field: 'Upload',
+    field: 'images',
     component: 'Upload',
-    label: `${t('formDemo.userAvatar')}`,
+    label: `仪器图片`,
+    colProps: {
+      span: 24
+    },
     componentProps: {
       autoUpload: false,
       action: "#",
@@ -84,57 +110,6 @@ const formSchema = ref([
       }
     }
   },
-  {
-    field: 'role',
-    label: '用户角色',
-    component: 'Select',
-    componentProps: {
-      options: [
-        {
-          value: 'super_admin',
-          label: "超级管理员"
-        },
-        {
-          value: 'admin',
-          label: "管理员"
-        },
-        {
-          value: 'teacher',
-          label: "教师"
-        },
-
-        {
-          value: 'student',
-          label: "学生"
-        },
-      ]
-    }
-  },
-  {
-    field: 'nickname',
-    label: '用户昵称',
-    component: 'Input'
-  },
-  {
-    field: 'phone',
-    label: '手机号',
-    component: 'Input'
-  },
-  {
-    field: 'email',
-    label: '用户邮箱',
-    component: 'Input'
-  },
-  {
-    field: 'department',
-    label: '所属院系/部门',
-    component: 'Input'
-  },
-  {
-    field: 'teachingTags',
-    label: '教学标签数组',
-    component: 'InputTag'
-  },
 ])
 
 const rules = reactive({
@@ -153,13 +128,23 @@ const submit = async () => {
   })
   if (valid) {
     const formData = await getFormData()
-    const { Upload, id, ...newData } = formData
+    const { id, images, ...newData } = formData
 
-    if (Upload && Upload.length > 0 && Upload[0].raw) {
-      newData.avatar = Upload[0].raw
+
+    const image = images?.map(item => {
+      // 判断是否为文件
+      if (item.raw) {
+        return item.raw
+      }
+      return item?.url
+    })
+    newData.images = image
+
+    if (id) {
+      // await editLabs(id, newData)
+    } else {
+      // addLabs(newData)
     }
-
-    await editUser(id, newData)
     return formData
   }
 }
@@ -168,6 +153,16 @@ watch(
   () => props.currentRow,
   (currentRow) => {
     if (!currentRow) return
+    const { images, ...newData } = currentRow
+    newData.images = images?.map(item => {
+      return {
+        url: item,
+      }
+    }) ?? []
+    newData.equipmentList = currentRow.equipmentList.map(item => item.id)
+    console.log(newData.equipmentList);
+
+    setValues(newData)
     setValues(currentRow)
   },
   {

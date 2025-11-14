@@ -1,6 +1,6 @@
 <script setup lang="jsx">
 import { reactive, ref, unref } from 'vue'
-import { getLabsList, deleteLabs } from '@/api'
+import { getInstrumentsList, deleteLabs } from '@/api'
 
 import { useTable } from '@/hooks/web/useTable'
 import { useI18n } from '@/hooks/web/useI18n'
@@ -15,19 +15,35 @@ import { BaseButton } from '@/components/Button'
 
 const { t } = useI18n()
 
-const searchParams = ref({
-
-})
+const searchParams = ref({})
 
 const { tableRegister, tableState, tableMethods } = useTable({
   fetchDataApi: async () => {
-    const { list, total } = await getLabsList(searchParams.value)
+    const { list, total } = await getInstrumentsList(searchParams.value)
     return {
       list: list || [],
       total: total
     }
   }
 })
+
+
+const renderTag = (enable) => {
+  switch (enable) {
+    case 0:
+      return <ElTag type='success'>正常</ElTag>
+    case 1:
+      return <ElTag type='danger'>停用</ElTag>
+    case 2:
+      return <ElTag type='warning'>维护中</ElTag>
+    case 3:
+      return <ElTag type='danger'>故障</ElTag>
+    case 4:
+      return <ElTag type='info'>借出</ElTag>
+    default:
+      return <ElTag type='danger'>停用</ElTag>
+  }
+}
 
 const { dataList, loading, total } = tableState
 const { getList } = tableMethods
@@ -39,43 +55,29 @@ const tableColumns = reactive([
     type: 'index'
   },
   {
-    field: 'name',
-    label: '实验室名称'
+    field: 'model',
+    label: '设备型号'
   },
   {
-    field: 'department',
-    label: '所属院系'
+    field: 'serialNumber',
+    label: '设备序列号'
   },
   {
     field: 'description',
-    label: '实验室描述'
+    label: '设备描述'
   },
   {
-    field: 'location',
-    label: '实验室地址'
-  },
-  {
-    field: 'rating',
-    label: '评分'
+    field: 'specifications',
+    label: '设备技术规格'
   },
   {
     field: 'status',
     label: t('menu.status'),
     slots: {
       default: (data) => {
-        return (
-          <>
-            <ElTag type={data.row.status === 1 ? 'danger' : 'success'} >
-              {data.row.status === 0 ? t('userDemo.enable') : t('userDemo.disable')}
-            </ElTag>
-          </>
-        )
+        return renderTag(data.row.status)
       }
     }
-  },
-  {
-    field: 'createdAt',
-    label: t('tableDemo.displayTime')
   },
   {
     field: 'action',

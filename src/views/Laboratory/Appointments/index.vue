@@ -1,11 +1,10 @@
 <script setup lang="jsx">
 import { reactive, ref, unref } from 'vue'
-import { getUserList } from '@/api'
+import { getAppointmentsList } from '@/api'
 
 import { useTable } from '@/hooks/web/useTable'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Table, } from '@/components/Table'
-import { ElTag } from 'element-plus'
 import { Search } from '@/components/Search'
 import { ContentWrap } from '@/components/ContentWrap'
 import Write from './components/Write.vue'
@@ -15,9 +14,19 @@ import { BaseButton } from '@/components/Button'
 
 const { t } = useI18n()
 
+const searchParams = ref({
+
+})
+
+const timeSlot = {
+  0: '上午',
+  1: '下午',
+  2: '晚上'
+}
+
 const { tableRegister, tableState, tableMethods } = useTable({
   fetchDataApi: async () => {
-    const { list, total } = await getUserList()
+    const { list, total } = await getAppointmentsList(searchParams.value)
     return {
       list: list || [],
       total: total
@@ -35,31 +44,55 @@ const tableColumns = reactive([
     type: 'index'
   },
   {
-    field: 'username',
-    label: t('role.roleName')
-  },
-  {
-    field: 'status',
-    label: t('menu.status'),
+    field: 'name',
+    label: '实验室名称',
     slots: {
       default: (data) => {
         return (
           <>
-            <ElTag type={data.row.status === 1 ? 'danger' : 'success'} >
-              {data.row.status === 0 ? t('userDemo.enable') : t('userDemo.disable')}
-            </ElTag>
+            <div>{data.row.lab.name}</div>
           </>
         )
       }
     }
   },
   {
-    field: 'createdAt',
-    label: t('tableDemo.displayTime')
+    field: 'user',
+    label: '预约用户',
+    slots: {
+      default: (data) => {
+        return (
+          <>
+            <div>{data.row.user.name}</div>
+          </>
+        )
+      }
+    }
   },
   {
-    field: 'role',
-    label: '角色'
+    field: 'purpose',
+    label: '预约目的'
+  },
+  {
+    field: 'description',
+    label: '预约详细描述'
+  },
+  {
+    field: 'appointmentDate',
+    label: '预约日期',
+  },
+  {
+    field: 'timeSlot',
+    label: '时间段',
+    slots: {
+      default: (data) => {
+        return (
+          <>
+            <div>{timeSlot[data.row.timeSlot]}</div>
+          </>
+        )
+      }
+    }
   },
   {
     field: 'action',
@@ -72,13 +105,13 @@ const tableColumns = reactive([
           <>
             <BaseButton type="primary" onClick={() => action(row, 'edit')
             }>
-              {t('exampleDemo.edit')}
+              审核
             </BaseButton>
             < BaseButton type="success" onClick={() => action(row, 'detail')
             }>
               {t('exampleDemo.detail')}
             </BaseButton>
-            < BaseButton type="danger" > {t('exampleDemo.del')} </BaseButton>
+
           </>
         )
       }
@@ -88,13 +121,13 @@ const tableColumns = reactive([
 
 const searchSchema = reactive([
   {
-    field: 'roleName',
-    label: t('role.roleName'),
+    field: 'keyword',
+    label: "关键字",
     component: 'Input'
   }
 ])
 
-const searchParams = ref({})
+
 const setSearchParams = (data) => {
   searchParams.value = data
   getList()
@@ -111,18 +144,12 @@ const writeRef = ref()
 const saveLoading = ref(false)
 
 const action = (row, type) => {
-  dialogTitle.value = t(type === 'edit' ? 'exampleDemo.edit' : 'exampleDemo.detail')
+  dialogTitle.value = t(type === 'edit' ? "审核" : 'exampleDemo.detail')
   actionType.value = type
   currentRow.value = row
   dialogVisible.value = true
 }
 
-const AddAction = () => {
-  dialogTitle.value = t('exampleDemo.add')
-  currentRow.value = undefined
-  dialogVisible.value = true
-  actionType.value = ''
-}
 
 const save = async () => {
   const write = unref(writeRef)
@@ -132,17 +159,16 @@ const save = async () => {
     setTimeout(() => {
       saveLoading.value = false
       dialogVisible.value = false
+      getList()
     }, 1000)
   }
 }
+
 </script>
 
 <template>
   <ContentWrap>
     <Search :schema="searchSchema" @reset="setSearchParams" @search="setSearchParams" />
-    <div class="mb-10px">
-      <BaseButton type="primary" @click="AddAction">{{ t('exampleDemo.add') }}</BaseButton>
-    </div>
     <Table :columns="tableColumns" default-expand-all node-key="id" :data="dataList" :loading="loading" :pagination="{
       total
     }" @register="tableRegister" />

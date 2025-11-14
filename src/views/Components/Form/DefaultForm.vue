@@ -17,7 +17,7 @@ import {
   ElMessageBox,
   ElIcon
 } from 'element-plus'
-import { getDictOneApi } from '@/api/common'
+
 import { Icon } from '@/components/Icon'
 import { BaseButton } from '@/components/Button'
 
@@ -1478,8 +1478,8 @@ const schema = reactive<FormSchema[]>([
     },
     // 远程加载option
     optionApi: async () => {
-      const res = await getDictOneApi()
-      return res.data
+      // const res = await getDictOneApi()
+      // return res.data
     }
   },
   {
@@ -1491,8 +1491,8 @@ const schema = reactive<FormSchema[]>([
     },
     // 远程加载option
     optionApi: async () => {
-      const res = await getDictOneApi()
-      return res.data
+      // const res = await getDictOneApi()
+      // return res.data
     }
   },
   {
@@ -1504,8 +1504,8 @@ const schema = reactive<FormSchema[]>([
     },
     // 远程加载option
     optionApi: async () => {
-      const res = await getDictOneApi()
-      return res.data
+      // const res = await getDictOneApi()
+      // return res.data
     }
   },
   {
@@ -1517,8 +1517,8 @@ const schema = reactive<FormSchema[]>([
     },
     // 远程加载option
     optionApi: async () => {
-      const res = await getDictOneApi()
-      return res.data
+      // const res = await getDictOneApi()
+      // return res.data
     }
   },
   {
