@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ContentWrap } from '@/components/ContentWrap'
 import { createImageViewer } from '@/components/ImageViewer'
 import { useI18n } from '@/hooks/web/useI18n'
@@ -20,10 +20,7 @@ const open = () => {
 </script>
 
 <template>
-  <ContentWrap
-    :title="t('imageViewerDemo.imageViewer')"
-    :message="t('imageViewerDemo.imageViewerDes')"
-  >
+  <ContentWrap :title="t('imageViewerDemo.imageViewer')" :message="t('imageViewerDemo.imageViewerDes')">
     <BaseButton type="primary" @click="open">{{ t('imageViewerDemo.open') }}</BaseButton>
   </ContentWrap>
 </template>

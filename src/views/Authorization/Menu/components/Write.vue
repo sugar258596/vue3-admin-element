@@ -1,7 +1,7 @@
-<script setup lang="tsx">
-import { Form, FormSchema } from '@/components/Form'
+<script setup lang="jsx">
+import { Form, } from '@/components/Form'
 import { useForm } from '@/hooks/web/useForm'
-import { PropType, reactive, watch, ref, unref } from 'vue'
+import { reactive, watch, ref, unref } from 'vue'
 import { useValidator } from '@/hooks/web/useValidator'
 import { useI18n } from '@/hooks/web/useI18n'
 import { getMenuListApi } from '@/api/menu'
@@ -16,20 +16,20 @@ const { required } = useValidator()
 
 const props = defineProps({
   currentRow: {
-    type: Object as PropType<any>,
+    type: Object,
     default: () => null
   }
 })
 
-const handleClose = async (tag: any) => {
+const handleClose = async (tag) => {
   const formData = await getFormData()
   // 删除对应的权限
   setValues({
-    permissionList: formData?.permissionList?.filter((v: any) => v.value !== tag.value)
+    permissionList: formData?.permissionList?.filter((v) => v.value !== tag.value)
   })
 }
 
-const handleEdit = async (row: any) => {
+const handleEdit = async (row) => {
   // 深拷贝当前行数据到编辑行
   permissionEditingRow.value = { ...row }
 }
@@ -45,9 +45,9 @@ const handleSave = async () => {
 
 const showDrawer = ref(false)
 // 存储正在编辑的行的数据
-const permissionEditingRow = ref<any>(null)
+const permissionEditingRow = ref < any > (null)
 
-const formSchema = reactive<FormSchema[]>([
+const formSchema = reactive([
   {
     field: 'type',
     label: '菜单类型',
@@ -68,7 +68,7 @@ const formSchema = reactive<FormSchema[]>([
         }
       ],
       on: {
-        change: async (val: number) => {
+        change: async (val) => {
           const formData = await getFormData()
           if (val === 1) {
             setSchema([
@@ -121,7 +121,7 @@ const formSchema = reactive<FormSchema[]>([
       checkOnClickNode: true,
       clearable: true,
       on: {
-        change: async (val: number) => {
+        change: async (val) => {
           const formData = await getFormData()
           if (val && formData.type === 0) {
             setValues({
@@ -158,7 +158,7 @@ const formSchema = reactive<FormSchema[]>([
       disabled: true,
       placeholder: '#为顶级目录，##为子目录',
       on: {
-        change: (val: string) => {
+        change: (val) => {
           cacheComponent.value = val
         }
       }
@@ -210,7 +210,7 @@ const formSchema = reactive<FormSchema[]>([
     },
     formItemProps: {
       slots: {
-        default: (data: any) => (
+        default: (data) => (
           <>
             <BaseButton
               class="m-t-5px"
@@ -226,7 +226,7 @@ const formSchema = reactive<FormSchema[]>([
                 prop="value"
                 label="Value"
                 v-slots={{
-                  default: ({ row }: any) =>
+                  default: ({ row }) =>
                     permissionEditingRow.value && permissionEditingRow.value.id === row.id ? (
                       <ElInput v-model={permissionEditingRow.value.value} size="small" />
                     ) : (
@@ -238,7 +238,7 @@ const formSchema = reactive<FormSchema[]>([
                 prop="label"
                 label="Label"
                 v-slots={{
-                  default: ({ row }: any) =>
+                  default: ({ row }) =>
                     permissionEditingRow.value && permissionEditingRow.value.id === row.id ? (
                       <ElInput v-model={permissionEditingRow.value.label} size="small" />
                     ) : (
@@ -252,7 +252,7 @@ const formSchema = reactive<FormSchema[]>([
                 label="Operations"
                 width="180"
                 v-slots={{
-                  default: ({ row }: any) =>
+                  default: ({ row }) =>
                     permissionEditingRow.value && permissionEditingRow.value.id === row.id ? (
                       <ElButton size="small" type="primary" onClick={handleSave}>
                         确定
@@ -395,7 +395,7 @@ defineExpose({
   submit
 })
 
-const confirm = async (data: any) => {
+const confirm = async (data) => {
   const formData = await getFormData()
   setValues({
     permissionList: [...(formData?.permissionList || []), data]

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { Waterfall } from '@/components/Waterfall'
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
@@ -6,10 +6,10 @@ import Mock from 'mockjs'
 import { ref, unref } from 'vue'
 import { toAnyString } from '@/utils'
 
-const data = ref<any>([])
+const data = ref([])
 
 const getList = () => {
-  const list: any = []
+  const list = []
   for (let i = 0; i < 20; i++) {
     // 随机 100, 500 之间的整数
     const height = Mock.Random.integer(100, 500)
@@ -48,15 +48,9 @@ const loadMore = () => {
 
 <template>
   <ContentWrap :title="t('router.waterfall')">
-    <Waterfall
-      :data="data"
-      :loading="loading"
-      :end="end"
-      :props="{
-        src: 'image_uri',
-        height: 'height'
-      }"
-      @load-more="loadMore"
-    />
+    <Waterfall :data="data" :loading="loading" :end="end" :props="{
+      src: 'image_uri',
+      height: 'height'
+    }" @load-more="loadMore" />
   </ContentWrap>
 </template>

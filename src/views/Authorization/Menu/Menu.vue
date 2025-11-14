@@ -1,4 +1,4 @@
-<script setup lang="tsx">
+<script setup lang="jsx">
 import { reactive, ref, unref } from 'vue'
 import { getMenuListApi } from '@/api/menu'
 import { useTable } from '@/hooks/web/useTable'
@@ -7,7 +7,7 @@ import { Table, TableColumn } from '@/components/Table'
 import { ElTag } from 'element-plus'
 import { Icon } from '@/components/Icon'
 import { Search } from '@/components/Search'
-import { FormSchema } from '@/components/Form'
+import { } from '@/components/Form'
 import { ContentWrap } from '@/components/ContentWrap'
 import Write from './components/Write.vue'
 import Detail from './components/Detail.vue'
@@ -28,7 +28,7 @@ const { tableRegister, tableState, tableMethods } = useTable({
 const { dataList, loading } = tableState
 const { getList } = tableMethods
 
-const tableColumns = reactive<TableColumn[]>([
+const tableColumns = reactive([
   {
     field: 'index',
     label: t('userDemo.index'),
@@ -38,7 +38,7 @@ const tableColumns = reactive<TableColumn[]>([
     field: 'meta.title',
     label: t('menu.menuName'),
     slots: {
-      default: (data: any) => {
+      default: (data) => {
         const title = data.row.meta.title
         return <>{title}</>
       }
@@ -48,7 +48,7 @@ const tableColumns = reactive<TableColumn[]>([
     field: 'meta.icon',
     label: t('menu.icon'),
     slots: {
-      default: (data: any) => {
+      default: (data) => {
         const icon = data.row.meta.icon
         if (icon) {
           return (
@@ -66,7 +66,7 @@ const tableColumns = reactive<TableColumn[]>([
   //   field: 'meta.permission',
   //   label: t('menu.permission'),
   //   slots: {
-  //     default: (data: any) => {
+  //     default: (data) => {
   //       const permission = data.row.meta.permission
   //       return permission ? <>{permission.join(', ')}</> : null
   //     }
@@ -76,7 +76,7 @@ const tableColumns = reactive<TableColumn[]>([
     field: 'component',
     label: t('menu.component'),
     slots: {
-      default: (data: any) => {
+      default: (data) => {
         const component = data.row.component
         return <>{component === '#' ? '顶级目录' : component === '##' ? '子目录' : component}</>
       }
@@ -90,7 +90,7 @@ const tableColumns = reactive<TableColumn[]>([
     field: 'status',
     label: t('menu.status'),
     slots: {
-      default: (data: any) => {
+      default: (data) => {
         return (
           <>
             <ElTag type={data.row.status === 0 ? 'danger' : 'success'}>
@@ -106,7 +106,7 @@ const tableColumns = reactive<TableColumn[]>([
     label: t('userDemo.action'),
     width: 240,
     slots: {
-      default: (data: any) => {
+      default: (data) => {
         const row = data.row
         return (
           <>
@@ -124,7 +124,7 @@ const tableColumns = reactive<TableColumn[]>([
   }
 ])
 
-const searchSchema = reactive<FormSchema[]>([
+const searchSchema = reactive([
   {
     field: 'meta.title',
     label: t('menu.menuName'),
@@ -133,7 +133,7 @@ const searchSchema = reactive<FormSchema[]>([
 ])
 
 const searchParams = ref({})
-const setSearchParams = (data: any) => {
+const setSearchParams = (data) => {
   searchParams.value = data
   getList()
 }
@@ -144,11 +144,11 @@ const dialogTitle = ref('')
 const currentRow = ref()
 const actionType = ref('')
 
-const writeRef = ref<ComponentRef<typeof Write>>()
+const writeRef = ref()
 
 const saveLoading = ref(false)
 
-const action = (row: any, type: string) => {
+const action = (row, type) => {
   dialogTitle.value = t(type === 'edit' ? 'exampleDemo.edit' : 'exampleDemo.detail')
   actionType.value = type
   currentRow.value = row
@@ -182,14 +182,8 @@ const save = async () => {
     <div class="mb-10px">
       <BaseButton type="primary" @click="AddAction">{{ t('exampleDemo.add') }}</BaseButton>
     </div>
-    <Table
-      :columns="tableColumns"
-      default-expand-all
-      node-key="id"
-      :data="dataList"
-      :loading="loading"
-      @register="tableRegister"
-    />
+    <Table :columns="tableColumns" default-expand-all node-key="id" :data="dataList" :loading="loading"
+      @register="tableRegister" />
   </ContentWrap>
 
   <Dialog v-model="dialogVisible" :title="dialogTitle">
@@ -198,12 +192,7 @@ const save = async () => {
     <Detail v-if="actionType === 'detail'" :current-row="currentRow" />
 
     <template #footer>
-      <BaseButton
-        v-if="actionType !== 'detail'"
-        type="primary"
-        :loading="saveLoading"
-        @click="save"
-      >
+      <BaseButton v-if="actionType !== 'detail'" type="primary" :loading="saveLoading" @click="save">
         {{ t('exampleDemo.save') }}
       </BaseButton>
       <BaseButton @click="dialogVisible = false">{{ t('dialogDemo.close') }}</BaseButton>

@@ -1,17 +1,16 @@
-<script setup lang="ts">
+<script setup>
 import { ContentWrap } from '@/components/ContentWrap'
 import { Editor, EditorExpose } from '@/components/Editor'
 import { useI18n } from '@/hooks/web/useI18n'
-import { IDomEditor } from '@wangeditor/editor'
 import { ref, onMounted, unref } from 'vue'
 
 const { t } = useI18n()
 
-const change = (editor: IDomEditor) => {
+const change = (editor) => {
   console.log(editor.getHtml())
 }
 
-const editorRef = ref<typeof Editor & EditorExpose>()
+const editorRef = ref()
 
 const defaultHtml = ref('')
 

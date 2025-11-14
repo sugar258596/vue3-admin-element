@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { computed } from 'vue'
 import { useAppStore } from '@/store/modules/app'
 import { ElSwitch } from 'element-plus'
@@ -23,7 +23,7 @@ const isDark = computed({
   get() {
     return appStore.getIsDark
   },
-  set(val: boolean) {
+  set(val) {
     appStore.setIsDark(val)
     const color = getCssVar('--el-bg-color')
     appStore.setMenuTheme(color)

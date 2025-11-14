@@ -1,5 +1,5 @@
-<script setup lang="tsx">
-import { Form, FormSchema } from '@/components/Form'
+<script setup lang="jsx">
+import { Form, } from '@/components/Form'
 import { reactive, ref, unref } from 'vue'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useForm } from '@/hooks/web/useForm'
@@ -31,7 +31,7 @@ const getCode = () => {
   }, 1000)
 }
 
-const schema = reactive<FormSchema[]>([
+const schema = reactive([
   {
     field: 'title',
     colProps: {
@@ -124,7 +124,7 @@ const schema = reactive<FormSchema[]>([
     },
     formItemProps: {
       slots: {
-        default: (formData: any) => {
+        default: (formData) => {
           return (
             <>
               <IAgree
@@ -176,7 +176,7 @@ const schema = reactive<FormSchema[]>([
   }
 ])
 
-const rules: FormRules = {
+const rules = {
   username: [required()],
   password: [required()],
   check_password: [required()],
@@ -206,13 +206,6 @@ const loginRegister = async () => {
 </script>
 
 <template>
-  <Form
-    :schema="schema"
-    :rules="rules"
-    label-position="top"
-    hide-required-asterisk
-    size="large"
-    class="dark:(border-1 border-[var(--el-border-color)] border-solid)"
-    @register="formRegister"
-  />
+  <Form :schema="schema" :rules="rules" label-position="top" hide-required-asterisk size="large"
+    class="dark:(border-1 border-[var(--el-border-color)] border-solid)" @register="formRegister" />
 </template>

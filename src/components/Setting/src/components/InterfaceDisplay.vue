@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ElSwitch, ElMessage } from 'element-plus'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useAppStore } from '@/store/modules/app'
@@ -17,49 +17,49 @@ const { t } = useI18n()
 // 面包屑
 const breadcrumb = ref(appStore.getBreadcrumb)
 
-const breadcrumbChange = (show: boolean) => {
+const breadcrumbChange = (show) => {
   appStore.setBreadcrumb(show)
 }
 
 // 面包屑图标
 const breadcrumbIcon = ref(appStore.getBreadcrumbIcon)
 
-const breadcrumbIconChange = (show: boolean) => {
+const breadcrumbIconChange = (show) => {
   appStore.setBreadcrumbIcon(show)
 }
 
 // 折叠图标
 const hamburger = ref(appStore.getHamburger)
 
-const hamburgerChange = (show: boolean) => {
+const hamburgerChange = (show) => {
   appStore.setHamburger(show)
 }
 
 // 全屏图标
 const screenfull = ref(appStore.getScreenfull)
 
-const screenfullChange = (show: boolean) => {
+const screenfullChange = (show) => {
   appStore.setScreenfull(show)
 }
 
 // 尺寸图标
 const size = ref(appStore.getSize)
 
-const sizeChange = (show: boolean) => {
+const sizeChange = (show) => {
   appStore.setSize(show)
 }
 
 // 多语言图标
 const locale = ref(appStore.getLocale)
 
-const localeChange = (show: boolean) => {
+const localeChange = (show) => {
   appStore.setLocale(show)
 }
 
 // 标签页
 const tagsView = ref(appStore.getTagsView)
 
-const tagsViewChange = (show: boolean) => {
+const tagsViewChange = (show) => {
   // 切换标签栏显示时，同步切换标签栏的高度
   setCssVar('--tags-view-height', show ? '35px' : '0px')
   appStore.setTagsView(show)
@@ -68,49 +68,49 @@ const tagsViewChange = (show: boolean) => {
 // 标签页图标
 const tagsViewIcon = ref(appStore.getTagsViewIcon)
 
-const tagsViewIconChange = (show: boolean) => {
+const tagsViewIconChange = (show) => {
   appStore.setTagsViewIcon(show)
 }
 
 // logo
 const logo = ref(appStore.getLogo)
 
-const logoChange = (show: boolean) => {
+const logoChange = (show) => {
   appStore.setLogo(show)
 }
 
 // 菜单手风琴
 const uniqueOpened = ref(appStore.getUniqueOpened)
 
-const uniqueOpenedChange = (uniqueOpened: boolean) => {
+const uniqueOpenedChange = (uniqueOpened) => {
   appStore.setUniqueOpened(uniqueOpened)
 }
 
 // 固定头部
 const fixedHeader = ref(appStore.getFixedHeader)
 
-const fixedHeaderChange = (show: boolean) => {
+const fixedHeaderChange = (show) => {
   appStore.setFixedHeader(show)
 }
 
 // 页脚
 const footer = ref(appStore.getFooter)
 
-const footerChange = (show: boolean) => {
+const footerChange = (show) => {
   appStore.setFooter(show)
 }
 
 // 灰色模式
 const greyMode = ref(appStore.getGreyMode)
 
-const greyModeChange = (show: boolean) => {
+const greyModeChange = (show) => {
   appStore.setGreyMode(show)
 }
 
 // 动态路由
 const dynamicRouter = ref(!!appStore.getDynamicRouter)
 
-const dynamicRouterChange = (show: boolean) => {
+const dynamicRouterChange = (show) => {
   ElMessage.info(t('setting.reExperienced'))
   appStore.setDynamicRouter(show)
 }
@@ -118,7 +118,7 @@ const dynamicRouterChange = (show: boolean) => {
 // 服务端动态路由
 const serverDynamicRouter = ref(appStore.getServerDynamicRouter)
 
-const serverDynamicRouterChange = (show: boolean) => {
+const serverDynamicRouterChange = (show) => {
   ElMessage.info(t('setting.reExperienced'))
   appStore.setServerDynamicRouter(show)
 }
@@ -126,7 +126,7 @@ const serverDynamicRouterChange = (show: boolean) => {
 // 固定菜单
 const fixedMenu = ref(appStore.getFixedMenu)
 
-const fixedMenuChange = (show: boolean) => {
+const fixedMenuChange = (show) => {
   appStore.setFixedMenu(show)
 }
 

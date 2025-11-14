@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup>
 import { ref } from 'vue'
 import { ElInput } from 'element-plus'
 import { resetRouter } from '@/router'
@@ -59,7 +59,7 @@ async function goLogin() {
   }
 }
 
-const passwordInputRef = ref<ComponentRef<typeof ElInput>>()
+const passwordInputRef = ref()
 
 function handleShowForm(show = false) {
   showDate.value = show

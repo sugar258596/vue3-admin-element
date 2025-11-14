@@ -1,21 +1,21 @@
-<script setup lang="tsx">
-import { PropType, ref } from 'vue'
-import { Descriptions, DescriptionsSchema } from '@/components/Descriptions'
+<script setup lang="jsx">
+import { ref } from 'vue'
+import { Descriptions } from '@/components/Descriptions'
 import { Icon } from '@/components/Icon'
 import { ElTag } from 'element-plus'
 
 defineProps({
   currentRow: {
-    type: Object as PropType<any>,
+    type: Object,
     default: () => undefined
   }
 })
 
-const renderTag = (enable?: boolean) => {
+const renderTag = (enable) => {
   return <ElTag type={!enable ? 'danger' : 'success'}>{enable ? '启用' : '禁用'}</ElTag>
 }
 
-const detailSchema = ref<DescriptionsSchema[]>([
+const detailSchema = ref([
   {
     field: 'type',
     label: '菜单类型',
@@ -80,7 +80,7 @@ const detailSchema = ref<DescriptionsSchema[]>([
     label: '按钮权限',
     span: 24,
     slots: {
-      default: (data: any) => (
+      default: (data) => (
         <>
           {data?.permissionList?.map((v) => {
             return (

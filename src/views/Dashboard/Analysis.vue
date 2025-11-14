@@ -1,36 +1,36 @@
-<script setup lang="ts">
+<script setup>
 import PanelGroup from './components/PanelGroup.vue'
 import { ElRow, ElCol, ElCard, ElSkeleton } from 'element-plus'
 import { Echart } from '@/components/Echart'
 import { pieOptions, barOptions, lineOptions } from './echarts-data'
 import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { set } from 'lodash-es'
-import { EChartsOption } from 'echarts'
-import { useI18n } from '@/hooks/web/useI18n'
+
+
 import { useAppStore } from '@/store/modules/app'
 
-const { t } = useI18n()
+
 
 const loading = ref(true)
 
 const appStore = useAppStore()
 const isDark = computed(() => appStore.getIsDark)
 
-const pieOptionsData = reactive<EChartsOption>(pieOptions) as EChartsOption
+const pieOptionsData = reactive(pieOptions)
 
 // 用户来源
 const getUserAccessSource = async () => {
 
 }
 
-const barOptionsData = reactive<EChartsOption>(barOptions) as EChartsOption
+const barOptionsData = reactive(barOptions)
 
 // 周活跃量
 const getWeeklyUserActivity = async () => {
 
 }
 
-const lineOptionsData = reactive<EChartsOption>(lineOptions) as EChartsOption
+const lineOptionsData = reactive(lineOptions)
 
 // 每月销售总额
 const getMonthlySales = async () => {

@@ -1,4 +1,4 @@
-<script setup lang="tsx">
+<script setup lang="jsx">
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Table, TableColumn, TableSlotDefault } from '@/components/Table'
@@ -26,7 +26,7 @@ const { setProps, setColumn, getElTableExpose, addColumn, delColumn, refresh } =
 
 const { t } = useI18n()
 
-const columns = reactive<TableColumn[]>([])
+const columns = reactive([])
 
 onMounted(() => {
   setTimeout(() => {
@@ -36,7 +36,7 @@ onMounted(() => {
           field: 'expand',
           type: 'expand',
           slots: {
-            default: (data: TableSlotDefault) => {
+            default: (data) => {
               const { row } = data
               return (
                 <div class="ml-30px">
@@ -78,7 +78,7 @@ onMounted(() => {
         {
           field: 'importance',
           label: t('tableDemo.importance'),
-          formatter: (_: Recordable, __: TableColumn, cellValue: number) => {
+          formatter: (_, __, cellValue) => {
             return (
               <ElTag type={cellValue === 1 ? 'success' : cellValue === 2 ? 'warning' : 'danger'}>
                 {cellValue === 1
@@ -112,22 +112,22 @@ onMounted(() => {
   }, 2000)
 })
 
-const actionFn = (data: TableSlotDefault) => {
+const actionFn = (data) => {
   console.log(data)
 }
 
 const canShowPagination = ref(true)
-const showPagination = (show: boolean) => {
+const showPagination = (show) => {
   canShowPagination.value = show
 }
 
-const reserveIndex = (custom: boolean) => {
+const reserveIndex = (custom) => {
   setProps({
     reserveIndex: custom
   })
 }
 
-const showSelections = (show: boolean) => {
+const showSelections = (show) => {
   setColumn([
     {
       field: 'selection',
@@ -150,7 +150,7 @@ const changeTitle = () => {
   index.value++
 }
 
-const showExpandedRows = (show: boolean) => {
+const showExpandedRows = (show) => {
   setColumn([
     {
       field: 'expand',
@@ -196,7 +196,7 @@ const showOrHiddenStripe = () => {
   showStripe.value = !unref(showStripe)
 }
 
-const height = ref<string | number>('auto')
+const height = ref('auto')
 const fixedHeaderOrAuto = () => {
   if (unref(height) === 'auto') {
     setProps({
@@ -238,7 +238,7 @@ const getSelections = async () => {
     <BaseButton @click="showExpandedRows(true)">{{ t('tableDemo.showExpandedRows') }}</BaseButton>
     <BaseButton @click="showExpandedRows(false)">{{
       t('tableDemo.hiddenExpandedRows')
-    }}</BaseButton>
+      }}</BaseButton>
 
     <BaseButton @click="selectAllNone">{{ t('tableDemo.selectAllNone') }}</BaseButton>
 
@@ -253,26 +253,13 @@ const getSelections = async () => {
     <!-- <BaseButton @click="showOrHiddenSortable">{{ t('tableDemo.showOrHiddenSortable') }}</BaseButton> -->
   </ContentWrap>
   <ContentWrap :title="`UseTable ${t('tableDemo.example')}`">
-    <Table
-      v-model:pageSize="pageSize"
-      v-model:currentPage="currentPage"
-      showAction
-      showSummary
-      default-expand-all
-      :columns="columns"
-      row-key="id"
-      :data="dataList"
-      :loading="loading"
-      :pagination="
-        canShowPagination
-          ? {
-              total: total
-            }
-          : undefined
-      "
-      @register="tableRegister"
-      @refresh="refresh"
-    />
+    <Table v-model:pageSize="pageSize" v-model:currentPage="currentPage" showAction showSummary default-expand-all
+      :columns="columns" row-key="id" :data="dataList" :loading="loading" :pagination="canShowPagination
+        ? {
+          total: total
+        }
+        : undefined
+        " @register="tableRegister" @refresh="refresh" />
   </ContentWrap>
 </template>
 

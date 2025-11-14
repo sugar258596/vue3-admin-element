@@ -1,13 +1,12 @@
-<script setup lang="ts">
+<script setup>
 import { onMounted, watch, computed, unref, ref, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import type { RouteLocationNormalizedLoaded, RouterLinkProps } from 'vue-router'
 import { usePermissionStore } from '@/store/modules/permission'
 import { useTagsViewStore } from '@/store/modules/tagsView'
 import { useAppStore } from '@/store/modules/app'
 import { useI18n } from '@/hooks/web/useI18n'
 import { filterAffixTags } from './helper'
-import { ContextMenu, ContextMenuExpose } from '@/components/ContextMenu'
+import { ContextMenu } from '@/components/ContextMenu'
 import { useDesign } from '@/hooks/web/useDesign'
 import { useTemplateRefsList } from '@vueuse/core'
 import { ElScrollbar } from 'element-plus'
@@ -33,7 +32,7 @@ const tagsViewStore = useTagsViewStore()
 
 const visitedViews = computed(() => tagsViewStore.getVisitedViews)
 
-const affixTagArr = ref<RouteLocationNormalizedLoaded[]>([])
+const affixTagArr = ref([])
 
 const selectedTag = computed(() => tagsViewStore.getSelectedTag)
 
@@ -66,7 +65,7 @@ const addTags = () => {
 }
 
 // 关闭选中的tag
-const closeSelectedTag = (view: RouteLocationNormalizedLoaded) => {
+const closeSelectedTag = (view) => {
   closeCurrent(view, () => {
     if (isActive(view)) {
       toLastView()
@@ -106,7 +105,7 @@ const closeOthersTags = () => {
 }
 
 // 重新加载
-const refreshSelectedTag = async (view?: RouteLocationNormalizedLoaded) => {
+const refreshSelectedTag = async (view) => {
   refreshPage(view)
 }
 
@@ -126,7 +125,7 @@ const moveToCurrentTag = async () => {
   for (const v of unref(visitedViews)) {
     if (v.fullPath === unref(currentRoute).path) {
       moveToTarget(v)
-      if (v.fullPath !== unref(currentRoute).fullPath) {
+      if (v.fullPath == unref(currentRoute).fullPath) {
         tagsViewStore.updateVisitedView(unref(currentRoute))
       }
 
@@ -135,12 +134,12 @@ const moveToCurrentTag = async () => {
   }
 }
 
-const tagLinksRefs = useTemplateRefsList<RouterLinkProps>()
+const tagLinksRefs = useTemplateRefsList()
 
-const moveToTarget = (currentTag: RouteLocationNormalizedLoaded) => {
+const moveToTarget = (currentTag) => {
   const wrap$ = unref(scrollbarRef)?.wrapRef
-  let firstTag: Nullable<RouterLinkProps> = null
-  let lastTag: Nullable<RouterLinkProps> = null
+  let firstTag = null
+  let lastTag = null
 
   const tagList = unref(tagLinksRefs)
   // find first tag and last tag
@@ -148,28 +147,28 @@ const moveToTarget = (currentTag: RouteLocationNormalizedLoaded) => {
     firstTag = tagList[0]
     lastTag = tagList[tagList.length - 1]
   }
-  if ((firstTag?.to as RouteLocationNormalizedLoaded).fullPath === currentTag.fullPath) {
+  if (firstTag?.to.fullPath === currentTag.fullPath) {
     // 直接滚动到0的位置
     const { start } = useScrollTo({
-      el: wrap$!,
+      el: wrap$,
       position: 'scrollLeft',
       to: 0,
       duration: 500
     })
     start()
-  } else if ((lastTag?.to as RouteLocationNormalizedLoaded).fullPath === currentTag.fullPath) {
+  } else if (lastTag?.to.fullPath === currentTag.fullPath) {
     // 滚动到最后的位置
     const { start } = useScrollTo({
-      el: wrap$!,
+      el: wrap$,
       position: 'scrollLeft',
-      to: wrap$!.scrollWidth - wrap$!.offsetWidth,
+      to: wrap$.scrollWidth - wrap$.offsetWidth,
       duration: 500
     })
     start()
   } else {
     // find preTag and nextTag
-    const currentIndex: number = tagList.findIndex(
-      (item) => (item?.to as RouteLocationNormalizedLoaded).fullPath === currentTag.fullPath
+    const currentIndex = tagList.findIndex(
+      (item) => item?.to.fullPath === currentTag.fullPath
     )
     const tgsRefs = document.getElementsByClassName(`${prefixCls}__item`)
 
@@ -182,17 +181,17 @@ const moveToTarget = (currentTag: RouteLocationNormalizedLoaded) => {
     // the tag's offsetLeft before of prevTag
     const beforePrevTagOffsetLeft = prevTag.offsetLeft - 4
 
-    if (afterNextTagOffsetLeft > unref(scrollLeftNumber) + wrap$!.offsetWidth) {
+    if (afterNextTagOffsetLeft > unref(scrollLeftNumber) + wrap$.offsetWidth) {
       const { start } = useScrollTo({
-        el: wrap$!,
+        el: wrap$,
         position: 'scrollLeft',
-        to: afterNextTagOffsetLeft - wrap$!.offsetWidth,
+        to: afterNextTagOffsetLeft - wrap$.offsetWidth,
         duration: 500
       })
       start()
     } else if (beforePrevTagOffsetLeft < unref(scrollLeftNumber)) {
       const { start } = useScrollTo({
-        el: wrap$!,
+        el: wrap$,
         position: 'scrollLeft',
         to: beforePrevTagOffsetLeft,
         duration: 500
@@ -203,19 +202,19 @@ const moveToTarget = (currentTag: RouteLocationNormalizedLoaded) => {
 }
 
 // 是否是当前tag
-const isActive = (route: RouteLocationNormalizedLoaded): boolean => {
+const isActive = (route) => {
   return route.path === unref(currentRoute).path
 }
 
 // 所有右键菜单组件的元素
-const itemRefs = useTemplateRefsList<ComponentRef<typeof ContextMenu & ContextMenuExpose>>()
+const itemRefs = useTemplateRefsList()
 
 // 右键菜单状态改变的时候
-const visibleChange = (visible: boolean, tagItem: RouteLocationNormalizedLoaded) => {
+const visibleChange = (visible, tagItem) => {
   if (visible) {
     for (const v of unref(itemRefs)) {
       const elDropdownMenuRef = v.elDropdownMenuRef
-      if (tagItem.fullPath !== v.tagItem.fullPath) {
+      if (tagItem.fullPath == v.tagItem.fullPath) {
         elDropdownMenuRef?.handleClose()
         setSelectTag(tagItem)
       }
@@ -224,20 +223,20 @@ const visibleChange = (visible: boolean, tagItem: RouteLocationNormalizedLoaded)
 }
 
 // elscroll 实例
-const scrollbarRef = ref<ComponentRef<typeof ElScrollbar>>()
+const scrollbarRef = ref()
 
 // 保存滚动位置
 const scrollLeftNumber = ref(0)
 
 const scroll = ({ scrollLeft }) => {
-  scrollLeftNumber.value = scrollLeft as number
+  scrollLeftNumber.value = scrollLeft
 }
 
 // 移动到某个位置
-const move = (to: number) => {
+const move = (to) => {
   const wrap$ = unref(scrollbarRef)?.wrapRef
   const { start } = useScrollTo({
-    el: wrap$!,
+    el: wrap$,
     position: 'scrollLeft',
     to: unref(scrollLeftNumber) + to,
     duration: 500
@@ -245,7 +244,7 @@ const move = (to: number) => {
   start()
 }
 
-const canShowIcon = (item: RouteLocationNormalizedLoaded) => {
+const canShowIcon = (item) => {
   if (
     (item?.matched?.[1]?.meta?.icon && unref(tagsViewIcon)) ||
     (item?.meta?.affix && unref(tagsViewIcon) && item?.meta?.icon)
@@ -284,7 +283,7 @@ watch(
             {
               icon: 'vi-ant-design:sync-outlined',
               label: t('common.reload'),
-              disabled: selectedTag?.fullPath !== item.fullPath,
+              disabled: selectedTag?.fullPath == item.fullPath,
               command: () => {
                 refreshSelectedTag(item)
               }
@@ -292,7 +291,7 @@ watch(
             {
               icon: 'vi-ant-design:close-outlined',
               label: t('common.closeTab'),
-              disabled: !!visitedViews?.length && selectedTag?.meta.affix,
+              disabled: visitedViews?.length && selectedTag?.meta.affix,
               command: () => {
                 closeSelectedTag(item)
               }
@@ -302,9 +301,9 @@ watch(
               icon: 'vi-ant-design:vertical-right-outlined',
               label: t('common.closeTheLeftTab'),
               disabled:
-                !!visitedViews?.length &&
+                visitedViews?.length &&
                 (item.fullPath === visitedViews[0].fullPath ||
-                  selectedTag?.fullPath !== item.fullPath),
+                  selectedTag?.fullPath == item.fullPath),
               command: () => {
                 closeLeftTags()
               }
@@ -313,9 +312,9 @@ watch(
               icon: 'vi-ant-design:vertical-left-outlined',
               label: t('common.closeTheRightTab'),
               disabled:
-                !!visitedViews?.length &&
+                visitedViews?.length &&
                 (item.fullPath === visitedViews[visitedViews.length - 1].fullPath ||
-                  selectedTag?.fullPath !== item.fullPath),
+                  selectedTag?.fullPath == item.fullPath),
               command: () => {
                 closeRightTags()
               }
@@ -324,7 +323,7 @@ watch(
               divided: true,
               icon: 'vi-ant-design:tag-outlined',
               label: t('common.closeOther'),
-              disabled: selectedTag?.fullPath !== item.fullPath,
+              disabled: selectedTag?.fullPath == item.fullPath,
               command: () => {
                 closeOthersTags()
               }
@@ -337,18 +336,18 @@ watch(
               }
             }
           ]" v-for="item in visitedViews" :key="item.fullPath" :tag-item="item" :class="[
-              `${prefixCls}__item`,
-              item?.meta?.affix ? `${prefixCls}__item--affix` : '',
-              {
-                'is-active': isActive(item)
-              }
-            ]" @visible-change="visibleChange">
+            `${prefixCls}__item`,
+            item?.meta?.affix ? `${prefixCls}__item--affix` : '',
+            {
+              'is-active': isActive(item)
+            }
+          ]" @visible-change="visibleChange">
             <div>
               <router-link :ref="tagLinksRefs.set" :to="{ ...item }" custom v-slot="{ navigate }">
                 <div @click="navigate" class="h-full flex justify-center items-center whitespace-nowrap pl-15px">
                   <Icon v-if="canShowIcon(item)" :icon="item?.matched?.[1]?.meta?.icon || item?.meta?.icon" :size="12"
                     class="mr-5px" />
-                  {{ t(item?.meta?.title as string) }}
+                  {{ t(item?.meta?.title) }}
                   <Icon :class="`${prefixCls}__item--close`" color="#333" icon="vi-ant-design:close-outlined" :size="12"
                     @click.prevent.stop="closeSelectedTag(item)" />
                 </div>
@@ -381,16 +380,16 @@ watch(
       {
         icon: 'vi-ant-design:close-outlined',
         label: t('common.closeTab'),
-        disabled: !!visitedViews?.length && selectedTag?.meta.affix,
+        disabled: visitedViews?.length && selectedTag?.meta.affix,
         command: () => {
-          closeSelectedTag(selectedTag!)
+          closeSelectedTag(selectedTag)
         }
       },
       {
         divided: true,
         icon: 'vi-ant-design:vertical-right-outlined',
         label: t('common.closeTheLeftTab'),
-        disabled: !!visitedViews?.length && selectedTag?.fullPath === visitedViews[0].fullPath,
+        disabled: visitedViews?.length && selectedTag?.fullPath === visitedViews[0].fullPath,
         command: () => {
           closeLeftTags()
         }
@@ -399,7 +398,7 @@ watch(
         icon: 'vi-ant-design:vertical-left-outlined',
         label: t('common.closeTheRightTab'),
         disabled:
-          !!visitedViews?.length &&
+          visitedViews?.length &&
           selectedTag?.fullPath === visitedViews[visitedViews.length - 1].fullPath,
         command: () => {
           closeRightTags()
@@ -504,7 +503,7 @@ watch(
 
     .@{prefix-cls}__item--close {
       :deep(svg) {
-        color: var(--el-color-white) !important;
+        color: var(--el-color-white) important;
       }
     }
   }
@@ -537,7 +536,7 @@ watch(
 
       .@{prefix-cls}__item--close {
         :deep(svg) {
-          color: var(--el-color-white) !important;
+          color: var(--el-color-white) important;
         }
       }
     }

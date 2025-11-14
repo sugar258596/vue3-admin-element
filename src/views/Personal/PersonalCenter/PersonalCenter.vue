@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ContentWrap } from '@/components/ContentWrap'
 import { ref, unref } from 'vue'
 import { ElDivider, ElImage, ElTag, ElTabPane, ElTabs, ElButton, ElMessage } from 'element-plus'
@@ -28,7 +28,7 @@ const activeName = ref('first')
 
 const dialogVisible = ref(false)
 
-const uploadAvatarRef = ref<ComponentRef<typeof UploadAvatar>>()
+const uploadAvatarRef = ref()
 const avatarLoading = ref(false)
 const saveAvatar = async () => {
   try {
@@ -51,15 +51,8 @@ const saveAvatar = async () => {
   <div class="flex w-100% h-100%">
     <ContentWrap title="个人信息" class="w-400px">
       <div class="flex justify-center items-center">
-        <div
-          class="avatar w-[150px] h-[150px] relative cursor-pointer"
-          @click="dialogVisible = true"
-        >
-          <ElImage
-            class="w-[150px] h-[150px] rounded-full"
-            :src="userInfo?.avatarUrl || defaultAvatar"
-            fit="fill"
-          />
+        <div class="avatar w-[150px] h-[150px] relative cursor-pointer" @click="dialogVisible = true">
+          <ElImage class="w-[150px] h-[150px] rounded-full" :src="userInfo?.avatarUrl || defaultAvatar" fit="fill" />
         </div>
       </div>
       <ElDivider />
@@ -87,8 +80,7 @@ const saveAvatar = async () => {
         <div>所属角色：</div>
         <div>
           <template v-if="userInfo?.roleList?.length">
-            <ElTag v-for="item in userInfo?.roleList || []" :key="item" class="ml-2 mb-w"
-              >{{ item }}
+            <ElTag v-for="item in userInfo?.roleList || []" :key="item" class="ml-2 mb-w">{{ item }}
             </ElTag>
           </template>
           <template v-else>-</template>

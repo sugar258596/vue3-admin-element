@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { useIcon } from '@/hooks/web/useIcon'
 import { propTypes } from '@/utils/propTypes'
 import { useI18n } from '@/hooks/web/useI18n'

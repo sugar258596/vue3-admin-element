@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { useTimeAgo } from '@/hooks/web/useTimeAgo'
 import { ElRow, ElCol, ElSkeleton, ElCard, ElDivider, ElLink } from 'element-plus'
 import { useI18n } from '@/hooks/web/useI18n'
@@ -15,7 +15,7 @@ import type { WorkplaceTotal, Project, Dynamic, Team } from '@/api/dashboard/wor
 const loading = ref(true)
 
 // 获取统计数
-let totalSate = reactive<WorkplaceTotal>({
+let totalSate = reactive < WorkplaceTotal > ({
   project: 0,
   access: 0,
   todo: 0
@@ -25,7 +25,7 @@ const getCount = async () => {
 
 }
 
-let projects = reactive<Project[]>([])
+let projects = reactive < Project[] > ([])
 
 // 获取项目数
 const getProject = async () => {
@@ -33,21 +33,21 @@ const getProject = async () => {
 }
 
 // 获取动态
-let dynamics = reactive<Dynamic[]>([])
+let dynamics = reactive < Dynamic[] > ([])
 
 const getDynamic = async () => {
 
 }
 
 // 获取团队
-let team = reactive<Team[]>([])
+let team = reactive < Team[] > ([])
 
 const getTeam = async () => {
 
 }
 
 // 获取指数
-const radarOptionData = reactive<EChartsOption>(radarOption) as EChartsOption
+const radarOptionData = reactive < EChartsOption > (radarOption) as EChartsOption
 
 const getRadar = async () => {
 

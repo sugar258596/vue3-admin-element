@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(for dir in Editor Error Footer Highlight IAgree Icon InputPassword JsonEditor LocaleDropdown Logo Screenfull ThemeSwitch)",
+      "Bash(do mv \"E:\\ProgramData\\Rust\\vue-element-plus-admin\\src\\components$dir\\index.ts\" \"E:\\ProgramData\\Rust\\vue-element-plus-admin\\src\\components$dir\\index.js\")",
+      "Bash(done)",
+      "Bash(while IFS= read -r -d '' file)",
+      "Bash(do newfile=\"$file%.ts.js\")",
+      "Bash(echo:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []

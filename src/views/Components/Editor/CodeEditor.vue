@@ -1,4 +1,4 @@
-<script setup lang="tsx">
+<script setup lang="jsx">
 import { CodeEditor } from '@/components/CodeEditor'
 import { useI18n } from '@/hooks/web/useI18n'
 import { ContentWrap } from '@/components/ContentWrap'
@@ -10,7 +10,7 @@ const content = ref(
 )
 const { t } = useI18n()
 
-const MonacoEditRef = ref<InstanceType<typeof CodeEditor>>()
+const MonacoEditRef = ref()
 </script>
 <template>
   <ContentWrap :title="t('richText.codeEditor')" :message="t('richText.codeEditorDes')">

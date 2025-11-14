@@ -1,10 +1,10 @@
-<script setup lang="tsx">
-import { Form, FormSchema } from '@/components/Form'
+<script setup lang="jsx">
+import { Form, } from '@/components/Form'
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useForm } from '@/hooks/web/useForm'
 import { reactive, unref, ref } from 'vue'
-import { ElInput, FormItemProp, ComponentSize, ElMessage, ElMessageBox } from 'element-plus'
+import { ElInput, ElMessage, ElMessageBox } from 'element-plus'
 import { useValidator } from '@/hooks/web/useValidator'
 import { getDictOneApi } from '@/api/common'
 import { BaseButton } from '@/components/Button'
@@ -93,7 +93,7 @@ const getTreeSelectData = () => {
   })
 }
 
-const schema = reactive<FormSchema[]>([
+const schema = reactive([
   {
     field: 'field1',
     label: t('formDemo.input'),
@@ -210,8 +210,7 @@ const schema = reactive<FormSchema[]>([
       },
       onExceed: (files, uploadFiles) => {
         ElMessage.warning(
-          `The limit is 3, you selected ${files.length} files this time, add up to ${
-            files.length + uploadFiles.length
+          `The limit is 3, you selected ${files.length} files this time, add up to ${files.length + uploadFiles.length
           } totally`
         )
       },
@@ -236,25 +235,25 @@ const {
   getFormData
 } = formMethods
 
-const changeLabelWidth = (width: number | string) => {
+const changeLabelWidth = (width) => {
   setProps({
     labelWidth: width
   })
 }
 
-const changeSize = (size: ComponentSize) => {
+const changeSize = (size) => {
   setProps({
     size
   })
 }
 
-const changeDisabled = (bool: boolean) => {
+const changeDisabled = (bool) => {
   setProps({
     disabled: bool
   })
 }
 
-const changeSchema = (del: boolean) => {
+const changeSchema = (del) => {
   if (del) {
     delSchema('field2')
   } else if (!del && schema[1].field !== 'field2') {
@@ -281,7 +280,7 @@ const changeSchema = (del: boolean) => {
   }
 }
 
-const setValue = async (reset: boolean) => {
+const setValue = async (reset) => {
   const elFormExpose = await getElFormExpose()
   if (reset) {
     elFormExpose?.resetFields()
@@ -386,20 +385,20 @@ const getDictOne = async () => {
 }
 
 const inoutFocus = async () => {
-  const inputEl: ComponentRef<typeof ElInput> = await getComponentExpose('field1')
+  const inputEl = await getComponentExpose('field1')
   inputEl?.focus()
 }
 
 const inoutValidation = async () => {
   const formItem = await getFormItemExpose('field1')
-  const inputEl: ComponentRef<typeof ElInput> = await getComponentExpose('field1')
+  const inputEl = await getComponentExpose('field1')
   inputEl?.focus()
-  formItem?.validate('focus', (val: boolean) => {
+  formItem?.validate('focus', (val) => {
     console.log(val)
   })
 }
 
-const formValidate = (prop: FormItemProp, isValid: boolean, message: string) => {
+const formValidate = (prop, isValid, message) => {
   console.log(prop, isValid, message)
 }
 
@@ -417,9 +416,7 @@ const getData = async () => {
 <template>
   <ContentWrap :title="`UseForm ${t('formDemo.operate')}`" style="margin-bottom: 20px">
     <BaseButton @click="changeLabelWidth(150)">{{ t('formDemo.change') }} labelWidth</BaseButton>
-    <BaseButton @click="changeLabelWidth('auto')"
-      >{{ t('formDemo.restore') }} labelWidth</BaseButton
-    >
+    <BaseButton @click="changeLabelWidth('auto')">{{ t('formDemo.restore') }} labelWidth</BaseButton>
 
     <BaseButton @click="changeSize('large')">{{ t('formDemo.change') }} size</BaseButton>
     <BaseButton @click="changeSize('default')">{{ t('formDemo.restore') }} size</BaseButton>

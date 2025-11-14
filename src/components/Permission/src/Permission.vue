@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { propTypes } from '@/utils/propTypes'
 import { computed, unref } from 'vue'
 import { useRouter } from 'vue-router'

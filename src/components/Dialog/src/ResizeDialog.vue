@@ -1,4 +1,4 @@
-<script lang="tsx" setup>
+<script lang="jsx" setup>
 import { propTypes } from '@/utils/propTypes'
 import { computed, getCurrentInstance, onMounted, unref, useAttrs, useSlots } from 'vue'
 import Dialog from './Dialog.vue'
@@ -39,7 +39,7 @@ const vResize = {
 const attrs = useAttrs()
 const slots = useSlots()
 const getBindValue = computed(() => {
-  const delArr: string[] = ['maxHeight', 'width']
+  const delArr = ['maxHeight', 'width']
   const obj = Object.assign({}, { ...unref(attrs), ...props })
   for (const key in obj) {
     if (delArr.indexOf(key) !== -1) {

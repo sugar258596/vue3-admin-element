@@ -1,4 +1,4 @@
-<script setup lang="tsx">
+<script setup lang="jsx">
 import { Icon } from '@/components/Icon'
 import { Tree } from '@/components/Tree'
 import { ContentWrap } from '@/components/ContentWrap'
@@ -136,11 +136,11 @@ const treeData = ref([
   }
 ])
 
-const handleNodeClick = (data: any) => {
+const handleNodeClick = (data) => {
   console.log('Node clicked:', data)
 }
 
-const addOrg = (node: any) => {
+const addOrg = (node) => {
   ElMessageBox.prompt('请输入分组名称', '添加子分组', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
@@ -155,7 +155,7 @@ const addOrg = (node: any) => {
     ElMessage.success('添加成功')
   })
 }
-const editOrg = (node: any) => {
+const editOrg = (node) => {
   ElMessageBox.prompt('请输入新的分组名称', '修改分组名称', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
@@ -168,7 +168,7 @@ const editOrg = (node: any) => {
   })
 }
 
-const deleteOrg = (node: any) => {
+const deleteOrg = (node) => {
   ElMessageBox.confirm(`删除 [${node.name}] 分组、下级子分组 <br>是否继续?`, '提示', {
     dangerouslyUseHTMLString: true,
     confirmButtonText: '确定',
@@ -178,7 +178,7 @@ const deleteOrg = (node: any) => {
   }).then(() => {
     const id = node.id
     // 查找 treeData 中对应的节点，并删除
-    const deleteNode = (data: any) => {
+    const deleteNode = (data) => {
       for (let i = 0; i < data.length; i++) {
         if (data[i].id === id) {
           data.splice(i, 1)
@@ -197,20 +197,14 @@ const deleteOrg = (node: any) => {
 
 <template>
   <ContentWrap :title="t('treeDemo.treeTitle')" :message="t('qrcodeDemo.qrcodeDes')">
-    <Tree
-      :data="treeData"
-      :tree-props="{
-        highlightCurrent: true,
-        nodeKey: 'id',
-        props: {
-          children: 'children',
-          label: 'name'
-        }
-      }"
-      width="300px"
-      height="400px"
-      @node-click="handleNodeClick"
-    >
+    <Tree :data="treeData" :tree-props="{
+      highlightCurrent: true,
+      nodeKey: 'id',
+      props: {
+        children: 'children',
+        label: 'name'
+      }
+    }" width="300px" height="400px" @node-click="handleNodeClick">
       <!-- 自定义右键菜单 -->
       <template #context-menu="{ node }">
         <div class="menuItem" @click="addOrg(node)">
@@ -241,8 +235,10 @@ const deleteOrg = (node: any) => {
   padding: 2px 10px;
   text-align: left;
   box-sizing: border-box;
-  align-items: center; /* 垂直居中 */
-  gap: 5px; /* 图标和文字之间的间距，可根据需要调整 */
+  align-items: center;
+  /* 垂直居中 */
+  gap: 5px;
+  /* 图标和文字之间的间距，可根据需要调整 */
 }
 
 .menuItem:hover {

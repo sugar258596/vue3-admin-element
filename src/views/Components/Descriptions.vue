@@ -1,4 +1,4 @@
-<script setup lang="tsx">
+<script setup lang="jsx">
 import { Descriptions } from '@/components/Descriptions'
 import { useI18n } from '@/hooks/web/useI18n'
 import { reactive } from 'vue'
@@ -6,7 +6,6 @@ import { Form } from '@/components/Form'
 import { ElFormItem, ElInput } from 'element-plus'
 import { useValidator } from '@/hooks/web/useValidator'
 import { useForm } from '@/hooks/web/useForm'
-import { DescriptionsSchema } from '@/components/Descriptions'
 
 const { required } = useValidator()
 
@@ -23,7 +22,7 @@ const data = reactive({
   certy: '3505831994xxxxxxxx'
 })
 
-const schema = reactive<DescriptionsSchema[]>([
+const schema = reactive([
   {
     field: 'username',
     label: t('descriptionsDemo.username')
@@ -47,7 +46,7 @@ const schema = reactive<DescriptionsSchema[]>([
   }
 ])
 
-const schema2 = reactive<DescriptionsSchema[]>([
+const schema2 = reactive([
   {
     field: 'username',
     label: t('descriptionsDemo.username'),
@@ -159,20 +158,11 @@ const formValidation = async () => {
 </script>
 
 <template>
-  <Descriptions
-    :title="t('descriptionsDemo.descriptions')"
-    :message="t('descriptionsDemo.descriptionsDes')"
-    :data="data"
-    :schema="schema"
-  />
+  <Descriptions :title="t('descriptionsDemo.descriptions')" :message="t('descriptionsDemo.descriptionsDes')"
+    :data="data" :schema="schema" />
 
   <Form is-custom :model="form" :rules="rules" @register="formRegister">
-    <Descriptions
-      :title="t('descriptionsDemo.form')"
-      :data="data"
-      :schema="schema2"
-      class="mt-20px"
-    />
+    <Descriptions :title="t('descriptionsDemo.form')" :data="data" :schema="schema2" class="mt-20px" />
     <div class="text-center mt-10px">
       <BaseButton @click="formValidation"> {{ t('formDemo.formValidation') }} </BaseButton>
     </div>

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { pieOptions, barOptions, lineOptions, wordOptions } from '@/views/Dashboard/echarts-data'
@@ -28,7 +28,7 @@ const { t } = useI18n()
       </ElCol>
       <ElCol :span="24">
         <ElCard shadow="hover" class="mb-20px">
-          <Echart :options="wordOptions as any" :height="300" />
+          <Echart :options="wordOptions" :height="300" />
         </ElCard>
       </ElCol>
     </ElRow>

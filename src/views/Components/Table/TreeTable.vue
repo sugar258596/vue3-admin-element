@@ -1,4 +1,4 @@
-<script setup lang="tsx">
+<script setup lang="jsx">
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Table, TableColumn } from '@/components/Table'
@@ -25,7 +25,7 @@ const { loading, dataList, total, currentPage, pageSize } = tableState
 
 const { t } = useI18n()
 
-const columns = reactive<TableColumn[]>([
+const columns = reactive([
   {
     field: 'selection',
     type: 'selection'
@@ -54,7 +54,7 @@ const columns = reactive<TableColumn[]>([
       {
         field: 'importance',
         label: t('tableDemo.importance'),
-        formatter: (_: Recordable, __: TableColumn, cellValue: number) => {
+        formatter: (_, __, cellValue) => {
           return (
             <ElTag type={cellValue === 1 ? 'success' : cellValue === 2 ? 'warning' : 'danger'}>
               {cellValue === 1
@@ -94,19 +94,10 @@ const actionFn = (data) => {
 
 <template>
   <ContentWrap :title="`${t('router.treeTable')} ${t('tableDemo.example')}`">
-    <Table
-      v-model:pageSize="pageSize"
-      v-model:currentPage="currentPage"
-      :columns="columns"
-      :data="dataList"
-      row-key="id"
-      :loading="loading"
-      sortable
-      :pagination="{
+    <Table v-model:pageSize="pageSize" v-model:currentPage="currentPage" :columns="columns" :data="dataList"
+      row-key="id" :loading="loading" sortable :pagination="{
         total: total
-      }"
-      @register="tableRegister"
-    />
+      }" @register="tableRegister" />
   </ContentWrap>
 </template>
 

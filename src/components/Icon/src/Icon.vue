@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { computed, unref } from 'vue'
 import { ElIcon } from 'element-plus'
 import { propTypes } from '@/utils/propTypes'

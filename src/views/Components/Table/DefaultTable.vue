@@ -1,21 +1,15 @@
-<script setup lang="tsx">
+<script setup lang="jsx">
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Table, TableColumn } from '@/components/Table'
 import { getTableListApi } from '@/api/table'
-import { TableData } from '@/api/table/types'
 import { ref, h } from 'vue'
 import { ElTag } from 'element-plus'
 import { BaseButton } from '@/components/Button'
 
-interface Params {
-  pageIndex?: number
-  pageSize?: number
-}
-
 const { t } = useI18n()
 
-const columns: TableColumn[] = [
+const columns = [
   {
     field: 'title',
     label: t('tableDemo.title')
@@ -32,7 +26,7 @@ const columns: TableColumn[] = [
   {
     field: 'importance',
     label: t('tableDemo.importance'),
-    formatter: (_: Recordable, __: TableColumn, cellValue: number) => {
+    formatter: (_, __, cellValue) => {
       return h(
         ElTag,
         {
@@ -68,16 +62,16 @@ const columns: TableColumn[] = [
 
 const loading = ref(true)
 
-const tableDataList = ref<TableData[]>([])
+const tableDataList = ref([])
 
-const getTableList = async (params?: Params) => {
+const getTableList = async (params) => {
   const res = await getTableListApi(
     params || {
       pageIndex: 1,
       pageSize: 10
     }
   )
-    .catch(() => {})
+    .catch(() => { })
     .finally(() => {
       loading.value = false
     })
@@ -88,18 +82,14 @@ const getTableList = async (params?: Params) => {
 
 getTableList()
 
-const actionFn = (data: any) => {
+const actionFn = (data) => {
   console.log(data)
 }
 </script>
 
 <template>
   <ContentWrap :title="t('tableDemo.table')" :message="t('tableDemo.tableDes')">
-    <Table
-      :columns="columns"
-      :data="tableDataList"
-      :loading="loading"
-      :defaultSort="{ prop: 'display_time', order: 'descending' }"
-    />
+    <Table :columns="columns" :data="tableDataList" :loading="loading"
+      :defaultSort="{ prop: 'display_time', order: 'descending' }" />
   </ContentWrap>
 </template>

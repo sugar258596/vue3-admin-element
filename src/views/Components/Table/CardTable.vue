@@ -1,4 +1,4 @@
-<script setup lang="tsx">
+<script setup lang="jsx">
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Table } from '@/components/Table'
@@ -6,25 +6,21 @@ import { getCardTableListApi } from '@/api/table'
 import { ref } from 'vue'
 import { ElLink, ElDivider } from 'element-plus'
 
-interface Params {
-  pageIndex?: number
-  pageSize?: number
-}
 
 const { t } = useI18n()
 
 const loading = ref(true)
 
-const tableDataList = ref<any[]>([])
+const tableDataList = ref([])
 
-const getTableList = async (params?: Params) => {
+const getTableList = async (params) => {
   const res = await getCardTableListApi(
     params || {
       pageIndex: 1,
       pageSize: 10
     }
   )
-    .catch(() => {})
+    .catch(() => { })
     .finally(() => {
       loading.value = false
     })
@@ -35,24 +31,18 @@ const getTableList = async (params?: Params) => {
 
 getTableList()
 
-const actionClick = (row?: any) => {
+const actionClick = (row) => {
   console.log(row)
 }
 </script>
 
 <template>
   <ContentWrap :title="t('tableDemo.cardTable')">
-    <Table
-      :columns="[]"
-      :data="tableDataList"
-      :loading="loading"
-      custom-content
-      :card-wrap-style="{
-        width: '200px',
-        marginBottom: '20px',
-        marginRight: '20px'
-      }"
-    >
+    <Table :columns="[]" :data="tableDataList" :loading="loading" custom-content :card-wrap-style="{
+      width: '200px',
+      marginBottom: '20px',
+      marginRight: '20px'
+    }">
       <template #content="row">
         <div class="flex cursor-pointer">
           <div class="pr-16px">

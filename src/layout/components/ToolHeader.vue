@@ -1,4 +1,4 @@
-<script lang="tsx">
+<script lang="jsx">
 import { defineComponent, computed } from 'vue'
 import { Collapse } from '@/components/Collapse'
 import { LocaleDropdown } from '@/components/LocaleDropdown'

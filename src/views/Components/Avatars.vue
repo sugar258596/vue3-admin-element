@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Avatars, AvatarItem } from '@/components/Avatars'
@@ -6,7 +6,7 @@ import { ref } from 'vue'
 
 const { t } = useI18n()
 
-const data = ref<AvatarItem[]>([
+const data = ref([
   {
     name: 'Lily',
     url: 'https://avatars.githubusercontent.com/u/3459374?v=4'

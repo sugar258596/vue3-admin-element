@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import VueJsonPretty from 'vue-json-pretty'
 import 'vue-json-pretty/lib/styles.css'
 import { propTypes } from '@/utils/propTypes'
@@ -28,7 +28,7 @@ const props = defineProps({
   itemHeight: propTypes.number.def(20),
   rootPath: propTypes.string.def('root'),
   nodeSelectable: propTypes.func.def(),
-  selectableType: propTypes.oneOf<'multiple' | 'single'>(['multiple', 'single']).def(),
+  selectableType: propTypes.oneOf < 'multiple' | 'single' > (['multiple', 'single']).def(),
   showSelectController: propTypes.bool.def(false),
   selectOnClickNode: propTypes.bool.def(true),
   highlightSelectedNode: propTypes.bool.def(true),
@@ -36,7 +36,7 @@ const props = defineProps({
   renderNodeKey: propTypes.func.def(),
   renderNodeValue: propTypes.func.def(),
   editable: propTypes.bool.def(true),
-  editableTrigger: propTypes.oneOf<'click' | 'dblclick'>(['click', 'dblclick']).def('click')
+  editableTrigger: propTypes.oneOf < 'click' | 'dblclick' > (['click', 'dblclick']).def('click')
 })
 
 const data = computed(() => props.modelValue)
@@ -49,50 +49,32 @@ const localModelValue = computed({
   }
 })
 
-const nodeClick = (node: any) => {
+const nodeClick = (node) => {
   emits('node-click', node)
 }
 
-const bracketsClick = (collapsed: boolean) => {
+const bracketsClick = (collapsed) => {
   emits('brackets-click', collapsed)
 }
 
-const iconClick = (collapsed: boolean) => {
+const iconClick = (collapsed) => {
   emits('icon-click', collapsed)
 }
 
-const selectedChange = (newVal: any, oldVal: any) => {
+const selectedChange = (newVal, oldVal) => {
   console.log(newVal, oldVal)
   emits('selected-value', newVal, oldVal)
 }
 </script>
 
 <template>
-  <VueJsonPretty
-    v-model:data="localModelValue"
-    :deep="deep"
-    :show-length="showLength"
-    :show-line-numbers="showLineNumbers"
-    :show-line-number="showLineNumber"
-    :show-icon="showIcon"
-    :show-double-quotes="showDoubleQuotes"
-    :virtual="virtual"
-    :height="height"
-    :item-height="itemHeight"
-    :root-path="rootPath"
-    :node-selectable="nodeSelectable"
-    :selectable-type="selectableType"
-    :show-select-controller="showSelectController"
-    :select-on-click-node="selectOnClickNode"
-    :highlight-selected-node="highlightSelectedNode"
-    :collapsed-on-click-brackets="collapsedOnClickBrackets"
-    :render-node-key="renderNodeKey"
-    :render-node-value="renderNodeValue"
-    :editable="editable"
-    :editable-trigger="editableTrigger"
-    @node-click="nodeClick"
-    @brackets-click="bracketsClick"
-    @icon-click="iconClick"
-    @selected-change="selectedChange"
-  />
+  <VueJsonPretty v-model:data="localModelValue" :deep="deep" :show-length="showLength"
+    :show-line-numbers="showLineNumbers" :show-line-number="showLineNumber" :show-icon="showIcon"
+    :show-double-quotes="showDoubleQuotes" :virtual="virtual" :height="height" :item-height="itemHeight"
+    :root-path="rootPath" :node-selectable="nodeSelectable" :selectable-type="selectableType"
+    :show-select-controller="showSelectController" :select-on-click-node="selectOnClickNode"
+    :highlight-selected-node="highlightSelectedNode" :collapsed-on-click-brackets="collapsedOnClickBrackets"
+    :render-node-key="renderNodeKey" :render-node-value="renderNodeValue" :editable="editable"
+    :editable-trigger="editableTrigger" @node-click="nodeClick" @brackets-click="bracketsClick" @icon-click="iconClick"
+    @selected-change="selectedChange" />
 </template>

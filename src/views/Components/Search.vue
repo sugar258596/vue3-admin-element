@@ -1,10 +1,10 @@
-<script setup lang="ts">
+<script setup>
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Search } from '@/components/Search'
 import { reactive, ref, unref } from 'vue'
 import { getDictOneApi } from '@/api/common'
-import { FormSchema } from '@/components/Form'
+import { } from '@/components/Form'
 import { useSearch } from '@/hooks/web/useSearch'
 
 const { t } = useI18n()
@@ -92,7 +92,7 @@ const getTreeSelectData = () => {
   })
 }
 
-const schema = reactive<FormSchema[]>([
+const schema = reactive([
   {
     field: 'field1',
     label: t('formDemo.input'),
@@ -114,7 +114,7 @@ const schema = reactive<FormSchema[]>([
         }
       ],
       on: {
-        change: (value: string) => {
+        change: (value) => {
           console.log(value)
         }
       }
@@ -219,7 +219,7 @@ const schema = reactive<FormSchema[]>([
 
 const isGrid = ref(false)
 
-const changeGrid = (grid: boolean) => {
+const changeGrid = (grid) => {
   setProps({
     isCol: grid
   })
@@ -234,7 +234,7 @@ const changeLayout = () => {
 
 const buttonPosition = ref('left')
 
-const changePosition = (position: string) => {
+const changePosition = (position) => {
   layout.value = 'bottom'
   buttonPosition.value = position
 }
@@ -252,7 +252,7 @@ const getDictOne = async () => {
   }
 }
 
-const handleSearch = async (data: any) => {
+const handleSearch = async (data) => {
   const formData = await getFormData()
   console.log(formData)
   console.log(data)
@@ -302,10 +302,7 @@ const changeResetLoading = () => {
 </script>
 
 <template>
-  <ContentWrap
-    :title="`${t('searchDemo.search')} ${t('searchDemo.operate')}`"
-    style="margin-bottom: 20px"
-  >
+  <ContentWrap :title="`${t('searchDemo.search')} ${t('searchDemo.operate')}`" style="margin-bottom: 20px">
     <BaseButton @click="changeGrid(true)">{{ t('searchDemo.grid') }}</BaseButton>
     <BaseButton @click="changeGrid(false)">
       {{ t('searchDemo.restore') }} {{ t('searchDemo.grid') }}
@@ -340,19 +337,9 @@ const changeResetLoading = () => {
   </ContentWrap>
 
   <ContentWrap :title="t('searchDemo.search')" :message="t('searchDemo.searchDes')">
-    <Search
-      :schema="schema"
-      :is-col="isGrid"
-      :layout="layout"
-      :button-position="buttonPosition"
-      :search-loading="searchLoading"
-      :reset-loading="resetLoading"
-      show-expand
-      expand-field="field6"
-      @search="handleSearch"
-      @reset="handleSearch"
-      @register="searchRegister"
-    />
+    <Search :schema="schema" :is-col="isGrid" :layout="layout" :button-position="buttonPosition"
+      :search-loading="searchLoading" :reset-loading="resetLoading" show-expand expand-field="field6"
+      @search="handleSearch" @reset="handleSearch" @register="searchRegister" />
   </ContentWrap>
 </template>
 

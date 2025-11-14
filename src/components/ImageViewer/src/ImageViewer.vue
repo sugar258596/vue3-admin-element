@@ -1,12 +1,12 @@
-<script setup lang="ts">
+<script setup>
 import { ElImageViewer } from 'element-plus'
-import { computed, ref, PropType } from 'vue'
+import { computed, ref, } from 'vue'
 import { propTypes } from '@/utils/propTypes'
 
 const props = defineProps({
   urlList: {
-    type: Array as PropType<string[]>,
-    default: (): string[] => []
+    type: Array,
+    default: () => []
   },
   zIndex: propTypes.number.def(200),
   initialIndex: propTypes.number.def(0),
@@ -17,7 +17,7 @@ const props = defineProps({
 })
 
 const getBindValue = computed(() => {
-  const propsData: Recordable = { ...props }
+  const propsData = { ...props }
   delete propsData.show
   return propsData
 })

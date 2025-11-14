@@ -1,5 +1,5 @@
-<script setup lang="ts">
-import { Form, FormSchema } from '@/components/Form'
+<script setup>
+import { Form, } from '@/components/Form'
 import { useForm } from '@/hooks/web/useForm'
 import { reactive, ref } from 'vue'
 import { useValidator } from '@/hooks/web/useValidator'
@@ -7,7 +7,7 @@ import { ElMessage, ElMessageBox, ElDivider } from 'element-plus'
 
 const { required } = useValidator()
 
-const formSchema = reactive<FormSchema[]>([
+const formSchema = reactive([
   {
     field: 'password',
     label: '旧密码',
@@ -98,7 +98,7 @@ const save = async () => {
           saveLoading.value = false
         }
       })
-      .catch(() => {})
+      .catch(() => { })
   }
 }
 </script>

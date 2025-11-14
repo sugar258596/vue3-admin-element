@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { useI18n } from '@/hooks/web/useI18n'
 import { ref, watch } from 'vue'
 import { Dialog } from '@/components/Dialog'
@@ -6,7 +6,7 @@ import { Form } from '@/components/Form'
 import { useForm } from '@/hooks/web/useForm'
 import { reactive, computed } from 'vue'
 import { useValidator } from '@/hooks/web/useValidator'
-import { FormSchema } from '@/components/Form'
+import { } from '@/components/Form'
 import { useDesign } from '@/hooks/web/useDesign'
 import { useLockStore } from '@/store/modules/lock'
 
@@ -55,7 +55,7 @@ const rules = reactive({
   password: [required()]
 })
 
-const schema: FormSchema[] = reactive([
+const schema = reactive([
   {
     label: t('lock.lockPassword'),
     field: 'password',
@@ -64,7 +64,7 @@ const schema: FormSchema[] = reactive([
       type: 'password',
       showPassword: true,
       // 按下enter键触发登录
-      onKeydown: (_e: any) => {
+      onKeydown: (_e) => {
         if (_e.key === 'Enter') {
           handleLock()
         }
@@ -93,13 +93,7 @@ const handleLock = async () => {
 </script>
 
 <template>
-  <Dialog
-    v-model="dialogVisible"
-    width="500px"
-    max-height="170px"
-    :class="prefixCls"
-    :title="dialogTitle"
-  >
+  <Dialog v-model="dialogVisible" width="500px" max-height="170px" :class="prefixCls" :title="dialogTitle">
     <div class="flex flex-col items-center">
       <img src="@/assets/imgs/avatar.jpg" alt="" class="w-70px h-70px rounded-[50%]" />
       <span class="text-14px my-10px text-[var(--top-header-text-color)]">Archer</span>
@@ -113,7 +107,7 @@ const handleLock = async () => {
 
 <style lang="less" scoped>
 :global(.v-lock-dialog) {
-  @media (width <= 767px) {
+  @media (width <=767px) {
     max-width: calc(100vw - 16px);
   }
 }

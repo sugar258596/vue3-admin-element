@@ -1,5 +1,5 @@
-<script lang="tsx">
-import { computed, defineComponent, unref, PropType } from 'vue'
+<script lang="jsx">
+import { computed, defineComponent, unref } from 'vue'
 import { ElMenu, ElScrollbar } from 'element-plus'
 import { useAppStore } from '@/store/modules/app'
 import { usePermissionStore } from '@/store/modules/permission'
@@ -16,7 +16,7 @@ export default defineComponent({
   name: 'Menu',
   props: {
     menuSelect: {
-      type: Function as PropType<(index: string) => void>,
+      type: Function,
       default: undefined
     }
   },
@@ -29,9 +29,9 @@ export default defineComponent({
 
     const permissionStore = usePermissionStore()
 
-    const menuMode = computed((): 'vertical' | 'horizontal' => {
+    const menuMode = computed(() => {
       // 竖
-      const vertical: LayoutType[] = ['classic', 'topLeft', 'cutMenu']
+      const vertical = ['classic', 'topLeft', 'cutMenu']
 
       if (vertical.includes(unref(layout))) {
         return 'vertical'
@@ -52,12 +52,12 @@ export default defineComponent({
       const { meta, path } = unref(currentRoute)
       // if set path, the sidebar will highlight the path you set
       if (meta.activeMenu) {
-        return meta.activeMenu as string
+        return meta.activeMenu
       }
       return path
     })
 
-    const menuSelect = (index: string) => {
+    const menuSelect = (index) => {
       if (props.menuSelect) {
         props.menuSelect(index)
       }
@@ -138,7 +138,7 @@ export default defineComponent({
 
     // 设置选中时子标题的颜色
     .is-active {
-      & > .@{elNamespace}-sub-menu__title {
+      &>.@{elNamespace}-sub-menu__title {
         color: var(--left-menu-text-active-color) !important;
       }
     }
@@ -168,6 +168,7 @@ export default defineComponent({
 
     // 设置子菜单的背景颜色
     .@{elNamespace}-menu {
+
       .@{elNamespace}-sub-menu__title,
       .@{elNamespace}-menu-item:not(.is-active) {
         background-color: var(--left-menu-bg-light-color) !important;
@@ -179,8 +180,8 @@ export default defineComponent({
   :deep(.@{elNamespace}-menu--collapse) {
     width: var(--left-menu-min-width);
 
-    & > .is-active,
-    & > .is-active > .@{elNamespace}-sub-menu__title {
+    &>.is-active,
+    &>.is-active>.@{elNamespace}-sub-menu__title {
       position: relative;
       background-color: var(--left-menu-collapse-bg-active-color) !important;
     }
@@ -200,8 +201,9 @@ export default defineComponent({
     :deep(.@{elNamespace}-menu--horizontal) {
       height: calc(~'var(--top-tool-height)');
       border-bottom: none;
+
       // 重新设置底部高亮颜色
-      & > .@{elNamespace}-sub-menu.is-active {
+      &>.@{elNamespace}-sub-menu.is-active {
         .@{elNamespace}-sub-menu__title {
           border-bottom-color: var(--el-color-primary) !important;
         }
@@ -231,9 +233,10 @@ export default defineComponent({
 
 .@{prefix-cls}--vertical,
 .@{prefix-cls}--horizontal {
+
   // 设置选中时子标题的颜色
   .is-active {
-    & > .el-sub-menu__title {
+    &>.el-sub-menu__title {
       color: var(--left-menu-text-active-color) !important;
     }
   }

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useDesign } from '@/hooks/web/useDesign'
@@ -27,7 +27,7 @@ const loginOut = () => {
   userStore.logoutConfirm()
 }
 
-const dialogVisible = ref<boolean>(false)
+const dialogVisible = ref < boolean > (false)
 
 // 锁定屏幕
 const lockScreen = () => {
@@ -38,7 +38,7 @@ const toDocument = () => {
   window.open('https://element-plus-admin-doc.cn/')
 }
 
-const toPage = (path: string) => {
+const toPage = (path) => {
   push(path)
 }
 </script>
@@ -46,14 +46,10 @@ const toPage = (path: string) => {
 <template>
   <ElDropdown class="custom-hover" :class="prefixCls" trigger="click">
     <div class="flex items-center">
-      <img
-        src="@/assets/imgs/avatar.jpg"
-        alt=""
-        class="w-[calc(var(--logo-height)-25px)] rounded-[50%]"
-      />
+      <img src="@/assets/imgs/avatar.jpg" alt="" class="w-[calc(var(--logo-height)-25px)] rounded-[50%]" />
       <span class="<lg:hidden text-14px pl-[5px] text-[var(--top-header-text-color)]">{{
         userStore.getUserInfo?.username
-      }}</span>
+        }}</span>
     </div>
     <template #dropdown>
       <ElDropdownMenu>

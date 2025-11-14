@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { CountTo } from '@/components/CountTo'
@@ -7,7 +7,7 @@ import { ref, unref } from 'vue'
 
 const { t } = useI18n()
 
-const countRef = ref<ComponentRef<typeof CountTo>>()
+const countRef = ref()
 
 const startVal = ref(0)
 
@@ -37,18 +37,9 @@ const pauseResume = () => {
 <template>
   <ContentWrap :title="t('countToDemo.countTo')" :message="t('countToDemo.countToDes')">
     <div class="text-center mb-40px">
-      <CountTo
-        ref="countRef"
-        :start-val="startVal"
-        :end-val="endVal"
-        :duration="duration"
-        :decimals="decimals"
-        :separator="separator"
-        :prefix="prefix"
-        :suffix="suffix"
-        :autoplay="autoplay"
-        class="text-30px font-bold text-[var(--el-color-primary)]"
-      />
+      <CountTo ref="countRef" :start-val="startVal" :end-val="endVal" :duration="duration" :decimals="decimals"
+        :separator="separator" :prefix="prefix" :suffix="suffix" :autoplay="autoplay"
+        class="text-30px font-bold text-[var(--el-color-primary)]" />
     </div>
     <ElRow :gutter="20" justify="space-between">
       <ElCol :xl="8" :lg="8" :md="12" :sm="24" :xs="24">

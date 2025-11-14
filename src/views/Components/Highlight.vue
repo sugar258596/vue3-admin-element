@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Highlight } from '@/components/Highlight'
@@ -6,7 +6,7 @@ import { ElMessage } from 'element-plus'
 
 const { t } = useI18n()
 
-const keyClick = (key: string) => {
+const keyClick = (key) => {
   ElMessage.info(key)
 }
 </script>

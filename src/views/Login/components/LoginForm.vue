@@ -1,6 +1,6 @@
 <script setup lang="jsx">
 import { reactive, ref, watch, onMounted, unref } from 'vue'
-import { Form, FormSchema } from '@/components/Form'
+import { Form, } from '@/components/Form'
 import { useI18n } from '@/hooks/web/useI18n'
 import { ElCheckbox, ElLink } from 'element-plus'
 import { useForm } from '@/hooks/web/useForm'

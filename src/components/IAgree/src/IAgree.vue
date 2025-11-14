@@ -1,8 +1,7 @@
-<script lang="ts" setup>
+<script setup>
 import { ElCheckbox } from 'element-plus'
 import { Highlight } from '@/components/Highlight'
-import { PropType, computed } from 'vue'
-import { LinkItem } from './types'
+import { computed } from 'vue'
 
 const props = defineProps({
   text: {
@@ -10,18 +9,18 @@ const props = defineProps({
     default: ''
   },
   link: {
-    type: Array as PropType<LinkItem[]>,
+    type: Array,
     default: undefined
   }
 })
 
-const modelValue = defineModel<boolean>()
+const modelValue = defineModel()
 
 const highlightKeys = computed(() => {
   return props.link?.map((item) => item.text) || []
 })
 
-const keyClick = (key: string) => {
+const keyClick = (key) => {
   const linkItem = props.link?.find((item) => item.text === key)
   if (linkItem?.url) {
     window.open(linkItem.url)

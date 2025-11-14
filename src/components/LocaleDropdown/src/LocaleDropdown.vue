@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { computed, unref } from 'vue'
 import { ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus'
 import { useLocaleStore } from '@/store/modules/locale'
@@ -20,7 +20,7 @@ const langMap = computed(() => localeStore.getLocaleMap)
 
 const currentLang = computed(() => localeStore.getCurrentLocale)
 
-const setLang = (lang: LocaleType) => {
+const setLang = (lang) => {
   if (lang === unref(currentLang).lang) return
   // 需要重新加载页面让整个语言多初始化
   window.location.reload()
@@ -34,13 +34,7 @@ const setLang = (lang: LocaleType) => {
 
 <template>
   <ElDropdown :class="prefixCls" trigger="click" @command="setLang">
-    <Icon
-      :size="18"
-      icon="vi-ion:language-sharp"
-      class="cursor-pointer !p-0"
-      :class="$attrs.class"
-      :color="color"
-    />
+    <Icon :size="18" icon="vi-ion:language-sharp" class="cursor-pointer !p-0" :class="$attrs.class" :color="color" />
     <template #dropdown>
       <ElDropdownMenu>
         <ElDropdownItem v-for="item in langMap" :key="item.lang" :command="item.lang">

@@ -1,5 +1,5 @@
-<script lang="ts" setup>
-import { FormSchema, Form } from '@/components/Form'
+<script setup>
+import { , Form } from '@/components/Form'
 import { useForm } from '@/hooks/web/useForm'
 import { useValidator } from '@/hooks/web/useValidator'
 import { reactive, ref, watch } from 'vue'
@@ -14,7 +14,7 @@ const props = defineProps({
 
 const { required, phone, maxlength, email } = useValidator()
 
-const formSchema = reactive<FormSchema[]>([
+const formSchema = reactive([
   {
     field: 'realName',
     label: '昵称',
@@ -84,7 +84,7 @@ const save = async () => {
           saveLoading.value = false
         }
       })
-      .catch(() => {})
+      .catch(() => { })
   }
 }
 </script>

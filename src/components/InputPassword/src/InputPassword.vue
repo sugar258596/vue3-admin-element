@@ -1,10 +1,9 @@
-<script setup lang="ts">
+<script setup>
 import { ref, unref, computed, watch } from 'vue'
 import { ElInput } from 'element-plus'
 import { propTypes } from '@/utils/propTypes'
 import { useConfigGlobal } from '@/hooks/web/useConfigGlobal'
 import { zxcvbn } from '@zxcvbn-ts/core'
-import type { ZxcvbnResult } from '@zxcvbn-ts/core'
 import { useDesign } from '@/hooks/web/useDesign'
 
 const { getPrefixCls } = useDesign()
@@ -19,7 +18,7 @@ const props = defineProps({
 
 watch(
   () => props.modelValue,
-  (val: string) => {
+  (val) => {
     if (val === unref(valueRef)) return
     valueRef.value = val
   }
@@ -30,7 +29,7 @@ const { configGlobal } = useConfigGlobal()
 const emit = defineEmits(['update:modelValue'])
 
 // 设置input的type属性
-const textType = ref<'password' | 'text'>('password')
+const textType = ref < 'password' | 'text' > ('password')
 
 // 输入框的值
 const valueRef = ref(props.modelValue)
@@ -38,7 +37,7 @@ const valueRef = ref(props.modelValue)
 // 监听
 watch(
   () => valueRef.value,
-  (val: string) => {
+  (val) => {
     emit('update:modelValue', val)
   }
 )
@@ -46,7 +45,7 @@ watch(
 // 获取密码强度
 const getPasswordStrength = computed(() => {
   const value = unref(valueRef)
-  const zxcvbnRef = zxcvbn(unref(valueRef)) as ZxcvbnResult
+  const zxcvbnRef = zxcvbn(unref(valueRef))
   return value ? zxcvbnRef.score : -1
 })
 </script>
@@ -54,11 +53,7 @@ const getPasswordStrength = computed(() => {
 <template>
   <div :class="[prefixCls, `${prefixCls}--${configGlobal?.size}`]">
     <ElInput v-bind="$attrs" v-model="valueRef" showPassword :type="textType" />
-    <div
-      v-if="strength"
-      :class="`${prefixCls}__bar`"
-      class="relative h-6px mt-10px mb-6px mr-auto ml-auto"
-    >
+    <div v-if="strength" :class="`${prefixCls}__bar`" class="relative h-6px mt-10px mb-6px mr-auto ml-auto">
       <div :class="`${prefixCls}__bar--fill`" :data-score="getPasswordStrength"></div>
     </div>
   </div>
@@ -135,7 +130,7 @@ const getPasswordStrength = computed(() => {
     }
   }
 
-  &--mini > &__bar {
+  &--mini>&__bar {
     border-radius: var(--el-border-radius-small);
   }
 }

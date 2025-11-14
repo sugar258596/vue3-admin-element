@@ -1,10 +1,9 @@
-<script setup lang="tsx">
+<script setup lang="jsx">
 import { Form } from '@/components/Form'
 import { reactive, ref, onMounted, computed } from 'vue'
 import { useI18n } from '@/hooks/web/useI18n'
 import { ContentWrap } from '@/components/ContentWrap'
 import { useAppStore } from '@/store/modules/app'
-import { SelectOption, RadioOption, CheckboxOption, FormSchema } from '@/components/Form'
 import {
   ElOption,
   ElOptionGroup,
@@ -27,16 +26,16 @@ const { t } = useI18n()
 
 const isMobile = computed(() => appStore.getMobile)
 
-const restaurants = ref<Recordable[]>([])
-const querySearch = (queryString: string, cb: Fn) => {
+const restaurants = ref([])
+const querySearch = (queryString, cb) => {
   const results = queryString
     ? restaurants.value.filter(createFilter(queryString))
     : restaurants.value
   // call callback function to return suggestions
   cb(results)
 }
-let timeout: NodeJS.Timeout
-const querySearchAsync = (queryString: string, cb: (arg: any) => void) => {
+let timeout
+const querySearchAsync = (queryString, cb) => {
   const results = queryString
     ? restaurants.value.filter(createFilter(queryString))
     : restaurants.value
@@ -46,8 +45,8 @@ const querySearchAsync = (queryString: string, cb: (arg: any) => void) => {
     cb(results)
   }, 3000 * Math.random())
 }
-const createFilter = (queryString: string) => {
-  return (restaurant: Recordable) => {
+const createFilter = (queryString) => {
+  return (restaurant) => {
     return restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
   }
 }
@@ -62,7 +61,7 @@ const loadAll = () => {
     { value: 'babel', link: 'https://github.com/babel/babel' }
   ]
 }
-const handleSelect = (item: Recordable) => {
+const handleSelect = (item) => {
   console.log(item)
 }
 onMounted(() => {
@@ -342,11 +341,7 @@ const options3 = [
 ]
 
 const generateData = () => {
-  const data: {
-    value: number
-    desc: string
-    disabled: boolean
-  }[] = []
+  const data = []
   for (let i = 1; i <= 15; i++) {
     data.push({
       value: i,
@@ -455,7 +450,7 @@ let id = 0
 
 const imageUrl = ref('')
 
-const schema = reactive<FormSchema[]>([
+const schema = reactive([
   {
     field: 'field1',
     label: t('formDemo.input'),
@@ -627,7 +622,7 @@ const schema = reactive<FormSchema[]>([
         }
       ],
       slots: {
-        default: (options: SelectOption[]) => {
+        default: (options) => {
           if (options.length) {
             return options?.map((v) => {
               return <ElOption key={v.value} label={v.label} value={v.value} />
@@ -672,7 +667,7 @@ const schema = reactive<FormSchema[]>([
         }
       ],
       slots: {
-        optionDefault: (option: SelectOption) => {
+        optionDefault: (option) => {
           return (
             <>
               <span style="float: left">{option.label}</span>
@@ -755,7 +750,7 @@ const schema = reactive<FormSchema[]>([
         }
       ],
       slots: {
-        optionGroupDefault: (option: SelectOption) => {
+        optionGroupDefault: (option) => {
           return (
             <ElOptionGroup key={option.label} label={`${option.label} ${option.label}`}>
               {option?.options?.map((v) => {
@@ -788,7 +783,7 @@ const schema = reactive<FormSchema[]>([
     componentProps: {
       options: options.value,
       slots: {
-        default: (option: SelectOption) => {
+        default: (option) => {
           return (
             <>
               <span style="margin-right: 8px">{option?.label}</span>
@@ -816,7 +811,7 @@ const schema = reactive<FormSchema[]>([
     componentProps: {
       options: options2.value,
       slots: {
-        default: (option: SelectOption) => {
+        default: (option) => {
           return (
             <>
               <span style="margin-right: 8px">{option?.label}</span>
@@ -1050,7 +1045,7 @@ const schema = reactive<FormSchema[]>([
         }
       ],
       slots: {
-        default: (options: RadioOption[]) => {
+        default: (options) => {
           return options?.map((v) => {
             return <ElRadio label={v.label + `(${v.value})`} value={v.value} />
           })
@@ -1091,7 +1086,7 @@ const schema = reactive<FormSchema[]>([
         }
       ],
       slots: {
-        default: (options: RadioOption[]) => {
+        default: (options) => {
           return options?.map((v) => {
             return <ElRadioButton label={v.label + `(${v.value})`} value={v.value} />
           })
@@ -1147,7 +1142,7 @@ const schema = reactive<FormSchema[]>([
         }
       ],
       slots: {
-        default: (options: CheckboxOption[]) => {
+        default: (options) => {
           return options?.map((v) => {
             return <ElCheckbox label={v.label + `(${v.value})`} value={v.value} />
           })
@@ -1200,7 +1195,7 @@ const schema = reactive<FormSchema[]>([
         }
       ],
       slots: {
-        default: (options: CheckboxOption[]) => {
+        default: (options) => {
           return options?.map((v) => {
             return <ElCheckboxButton label={v.label + `(${v.value})`} value={v.value} />
           })
@@ -1238,7 +1233,7 @@ const schema = reactive<FormSchema[]>([
     label: t('formDemo.shortcuts'),
     componentProps: {
       type: 'date',
-      disabledDate: (time: Date) => {
+      disabledDate: (time) => {
         return time.getTime() > Date.now()
       },
       shortcuts: [
@@ -1273,7 +1268,7 @@ const schema = reactive<FormSchema[]>([
     componentProps: {
       type: 'date',
       slots: {
-        default: (cell: any) => {
+        default: (cell) => {
           return (
             <div class={{ cell: true, current: cell.isCurrent }}>
               <span class="text">{cell.text}</span>
@@ -1458,7 +1453,7 @@ const schema = reactive<FormSchema[]>([
     label: `custom formItem`,
     formItemProps: {
       slots: {
-        default: (formModel: any) => {
+        default: (formModel) => {
           return <ElInput v-model={formModel['field69-1']} />
         }
       }
@@ -1718,7 +1713,7 @@ const schema = reactive<FormSchema[]>([
       action: 'https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15',
       showFileList: false,
       onSuccess: (_response, uploadFile) => {
-        imageUrl.value = URL.createObjectURL(uploadFile.raw!)
+        imageUrl.value = URL.createObjectURL(uploadFile.raw)
       },
       beforeUpload: (rawFile) => {
         if (rawFile.type !== 'image/jpeg') {

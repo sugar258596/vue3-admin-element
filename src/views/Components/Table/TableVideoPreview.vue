@@ -1,19 +1,14 @@
-<script setup lang="tsx">
+<script setup lang="jsx">
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Table, TableColumn } from '@/components/Table'
 import { getTableListApi } from '@/api/table'
-import { TableData } from '@/api/table/types'
 import { ref } from 'vue'
 
-interface Params {
-  pageIndex?: number
-  pageSize?: number
-}
 
 const { t } = useI18n()
 
-const columns: TableColumn[] = [
+const columns = [
   {
     field: 'title',
     label: t('tableDemo.title')
@@ -38,16 +33,16 @@ const columns: TableColumn[] = [
 
 const loading = ref(true)
 
-const tableDataList = ref<TableData[]>([])
+const tableDataList = ref([])
 
-const getTableList = async (params?: Params) => {
+const getTableList = async (params) => {
   const res = await getTableListApi(
     params || {
       pageIndex: 1,
       pageSize: 10
     }
   )
-    .catch(() => {})
+    .catch(() => { })
     .finally(() => {
       loading.value = false
     })
@@ -61,11 +56,6 @@ getTableList()
 
 <template>
   <ContentWrap :title="t('router.PicturePreview')">
-    <Table
-      :columns="columns"
-      :data="tableDataList"
-      :loading="loading"
-      :video-preview="['image_uri', 'video_uri']"
-    />
+    <Table :columns="columns" :data="tableDataList" :loading="loading" :video-preview="['image_uri', 'video_uri']" />
   </ContentWrap>
 </template>

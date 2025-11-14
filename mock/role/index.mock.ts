@@ -679,7 +679,7 @@ const adminList = [
   }
 ]
 
-const testList: string[] = [
+const testList = [
   '/dashboard',
   '/dashboard/analysis',
   '/dashboard/workplace',

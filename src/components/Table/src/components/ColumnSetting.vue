@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import {
   ElDrawer,
   ElCheckbox,
@@ -7,41 +7,40 @@ import {
   ElRadioButton,
   ElRadioGroup
 } from 'element-plus'
-import { TableColumn } from '../types'
-import { PropType, ref, watch, unref } from 'vue'
+import { ref, watch, unref } from 'vue'
 import { cloneDeep } from 'lodash-es'
 import { DEFAULT_FILTER_COLUMN } from '@/constants'
 import { VueDraggable } from 'vue-draggable-plus'
 
-const modelValue = defineModel<boolean>()
+const modelValue = defineModel()
 
 const props = defineProps({
   columns: {
-    type: Array as PropType<TableColumn[]>,
+    type: Array,
     default: () => []
   }
 })
 
 const emit = defineEmits(['confirm'])
 
-const oldColumns = ref<TableColumn[]>()
+const oldColumns = ref()
 
-const settingColumns = ref<TableColumn[]>()
+const settingColumns = ref()
 
 // 存储不要的列
-const hiddenColumns = ref<TableColumn[]>([])
+const hiddenColumns = ref([])
 
-const defaultCheckColumns = ref<string[]>([])
-const checkColumns = ref<string[]>([])
+const defaultCheckColumns = ref([])
+const checkColumns = ref([])
 
 const checkAll = ref(false)
 const isIndeterminate = ref(true)
-const handleCheckAllChange = (val: boolean) => {
+const handleCheckAllChange = (val) => {
   checkColumns.value = val ? unref(defaultCheckColumns) : []
   isIndeterminate.value = false
 }
 
-const handleCheckedColumnsChange = (value: string[]) => {
+const handleCheckedColumnsChange = (value) => {
   const checkedCount = value.length
   checkAll.value = checkedCount === unref(defaultCheckColumns)?.length
   isIndeterminate.value = checkedCount > 0 && checkedCount < unref(defaultCheckColumns)?.length
@@ -62,7 +61,7 @@ const restore = () => {
   initColumns([...unref(hiddenColumns), ...(unref(oldColumns) || [])], true)
 }
 
-const initColumns = (columns: TableColumn[], isReStore = false) => {
+const initColumns = (columns, isReStore = false) => {
   const newColumns = columns?.filter((item) => {
     if (!isReStore) {
       item.fixed = item.fixed !== void 0 ? item.fixed : false

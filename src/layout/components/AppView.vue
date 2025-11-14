@@ -10,21 +10,19 @@ const footer = computed(() => appStore.getFooter)
 
 const tagsViewStore = useTagsViewStore()
 
-const getCaches = computed((): string[] => {
+const getCaches = computed(() => {
   return tagsViewStore.getCachedViews
 })
 </script>
 
 <template>
-  <section
-    :class="[
-      'box-border p-[var(--app-content-padding)] w-full bg-[var(--app-content-bg-color)] dark:bg-[var(--el-bg-color)]',
-      {
-        '!min-h-[calc(100vh-var(--top-tool-height)-var(--tags-view-height)-var(--app-footer-height))] pb-0':
-          footer
-      }
-    ]"
-  >
+  <section :class="[
+    'box-border p-[var(--app-content-padding)] w-full bg-[var(--app-content-bg-color)] dark:bg-[var(--el-bg-color)]',
+    {
+      '!min-h-[calc(100vh-var(--top-tool-height)-var(--tags-view-height)-var(--app-footer-height))] pb-0':
+        footer
+    }
+  ]">
     <router-view>
       <template #default="{ Component, route }">
         <keep-alive :include="getCaches">

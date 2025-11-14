@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ImageCropping } from '@/components/ImageCropping'
 import { ref, unref } from 'vue'
 
@@ -11,7 +11,7 @@ defineProps({
 
 const fileUrl = ref('')
 
-const CropperRef = ref<ComponentRef<typeof ImageCropping>>()
+const CropperRef = ref()
 
 const getBase64 = () => {
   const base64 = unref(CropperRef)?.cropperExpose?.getCroppedCanvas()?.toDataURL() ?? ''

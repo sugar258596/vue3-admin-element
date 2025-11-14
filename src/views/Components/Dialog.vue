@@ -1,9 +1,9 @@
-<script setup lang="ts">
+<script setup>
 import { ContentWrap } from '@/components/ContentWrap'
 import { Dialog } from '@/components/Dialog'
 import { useI18n } from '@/hooks/web/useI18n'
 import { ref, reactive } from 'vue'
-import { Form, FormSchema } from '@/components/Form'
+import { Form, } from '@/components/Form'
 import { useValidator } from '@/hooks/web/useValidator'
 import { getDictOneApi } from '@/api/common'
 import { useForm } from '@/hooks/web/useForm'
@@ -25,7 +25,7 @@ const dialogVisible4 = ref(false)
 const { formRegister, formMethods } = useForm()
 const { getElFormExpose } = formMethods
 
-const schema = reactive<FormSchema[]>([
+const schema = reactive([
   {
     field: 'field1',
     label: t('formDemo.input'),
@@ -134,11 +134,7 @@ const formSubmit = async () => {
     </Dialog>
   </ContentWrap>
 
-  <ContentWrap
-    class="mt-10px"
-    :title="t('dialogDemo.resizeDialog')"
-    :message="t('dialogDemo.dialogDes')"
-  >
+  <ContentWrap class="mt-10px" :title="t('dialogDemo.resizeDialog')" :message="t('dialogDemo.dialogDes')">
     <BaseButton type="primary" @click="dialogVisible3 = !dialogVisible3">
       {{ t('dialogDemo.open') }}
     </BaseButton>

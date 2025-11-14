@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { IconPicker } from '@/components/IconPicker'
 import { ref } from 'vue'
 import { ContentWrap } from '@/components/ContentWrap'

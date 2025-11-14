@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ContentWrap } from '@/components/ContentWrap'
 import { JsonEditor } from '@/components/JsonEditor'
 import { useI18n } from '@/hooks/web/useI18n'

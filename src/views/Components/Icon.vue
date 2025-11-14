@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ContentWrap } from '@/components/ContentWrap'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Infotip } from '@/components/Infotip'
@@ -6,7 +6,7 @@ import { useIcon } from '@/hooks/web/useIcon'
 
 const { t } = useI18n()
 
-const keyClick = (key: string) => {
+const keyClick = (key) => {
   if (key === t('iconDemo.accessAddress')) {
     window.open('https://iconify.design/')
   }
@@ -19,21 +19,16 @@ const alarmClock = useIcon({ icon: 'ep:alarm-clock' })
 </script>
 
 <template>
-  <Infotip
-    :show-index="false"
-    :title="`${t('iconDemo.recommendedUse')}${t('iconDemo.iconify')}`"
-    :schema="[
-      {
-        label: t('iconDemo.recommendeDes'),
-        keys: ['Iconify']
-      },
-      {
-        label: t('iconDemo.accessAddress'),
-        keys: [t('iconDemo.accessAddress')]
-      }
-    ]"
-    @click="keyClick"
-  />
+  <Infotip :show-index="false" :title="`${t('iconDemo.recommendedUse')}${t('iconDemo.iconify')}`" :schema="[
+    {
+      label: t('iconDemo.recommendeDes'),
+      keys: ['Iconify']
+    },
+    {
+      label: t('iconDemo.accessAddress'),
+      keys: [t('iconDemo.accessAddress')]
+    }
+  ]" @click="keyClick" />
   <ContentWrap :title="t('iconDemo.localIcon')">
     <div class="flex justify-between">
       <Icon icon="svg-icon:peoples" />
