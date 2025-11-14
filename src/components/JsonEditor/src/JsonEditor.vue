@@ -28,7 +28,7 @@ const props = defineProps({
   itemHeight: propTypes.number.def(20),
   rootPath: propTypes.string.def('root'),
   nodeSelectable: propTypes.func.def(),
-  selectableType: propTypes.oneOf < 'multiple' | 'single' > (['multiple', 'single']).def(),
+  selectableType: propTypes.oneOf(['multiple', 'single']).def(),
   showSelectController: propTypes.bool.def(false),
   selectOnClickNode: propTypes.bool.def(true),
   highlightSelectedNode: propTypes.bool.def(true),
@@ -36,7 +36,7 @@ const props = defineProps({
   renderNodeKey: propTypes.func.def(),
   renderNodeValue: propTypes.func.def(),
   editable: propTypes.bool.def(true),
-  editableTrigger: propTypes.oneOf < 'click' | 'dblclick' > (['click', 'dblclick']).def('click')
+  editableTrigger: propTypes.oneOf(['click', 'dblclick']).def('click')
 })
 
 const data = computed(() => props.modelValue)

@@ -3,7 +3,6 @@ import { Form, } from '@/components/Form'
 import { useForm } from '@/hooks/web/useForm'
 import { reactive, watch } from 'vue'
 import { useValidator } from '@/hooks/web/useValidator'
-import { DepartmentItem } from '@/api/department/types'
 
 const { required } = useValidator()
 

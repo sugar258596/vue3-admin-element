@@ -15,7 +15,7 @@ import { useTable } from '@/hooks/web/useTable'
 import { ref, unref, reactive } from 'vue'
 import Write from './components/Write.vue'
 import Detail from './components/Detail.vue'
-import { CrudSchema, useCrudSchemas } from '@/hooks/web/useCrudSchemas'
+import { useCrudSchemas } from '@/hooks/web/useCrudSchemas'
 import { BaseButton } from '@/components/Button'
 
 const ids = ref([])

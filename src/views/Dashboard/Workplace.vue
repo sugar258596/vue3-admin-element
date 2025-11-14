@@ -6,16 +6,13 @@ import { ref, reactive } from 'vue'
 import { CountTo } from '@/components/CountTo'
 import { formatTime } from '@/utils'
 import { Echart } from '@/components/Echart'
-import { EChartsOption } from 'echarts'
 import { radarOption } from './echarts-data'
 import { Highlight } from '@/components/Highlight'
-
-import type { WorkplaceTotal, Project, Dynamic, Team } from '@/api/dashboard/workplace/types'
 
 const loading = ref(true)
 
 // 获取统计数
-let totalSate = reactive < WorkplaceTotal > ({
+let totalSate = reactive({
   project: 0,
   access: 0,
   todo: 0
@@ -25,7 +22,7 @@ const getCount = async () => {
 
 }
 
-let projects = reactive < Project[] > ([])
+let projects = reactive([])
 
 // 获取项目数
 const getProject = async () => {
@@ -33,21 +30,21 @@ const getProject = async () => {
 }
 
 // 获取动态
-let dynamics = reactive < Dynamic[] > ([])
+let dynamics = reactive([])
 
 const getDynamic = async () => {
 
 }
 
 // 获取团队
-let team = reactive < Team[] > ([])
+let team = reactive([])
 
 const getTeam = async () => {
 
 }
 
 // 获取指数
-const radarOptionData = reactive < EChartsOption > (radarOption) as EChartsOption
+const radarOptionData = reactive(radarOption)
 
 const getRadar = async () => {
 

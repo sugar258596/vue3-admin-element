@@ -1,4 +1,4 @@
-import { VNode, createVNode, render } from 'vue'
+import { createVNode, render } from 'vue'
 import VideoPlayer from './src/VideoPlayer.vue'
 import { isClient } from '@/utils/is'
 import { VideoPlayerViewer } from '@/components/VideoPlayerViewer'

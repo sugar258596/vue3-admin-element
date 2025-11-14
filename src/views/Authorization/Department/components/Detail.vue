@@ -1,6 +1,5 @@
 <script setup>
-import { DepartmentItem } from '@/api/department/types'
-import { Descriptions, DescriptionsSchema } from '@/components/Descriptions'
+import { Descriptions } from '@/components/Descriptions'
 
 defineProps({
   currentRow: {

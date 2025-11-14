@@ -195,9 +195,9 @@ export default defineComponent({
     const currentPageRef = ref(props.currentPage)
 
     // useTable传入的props
-    const outsideProps = ref<TableProps>({})
+    const outsideProps = ref({})
 
-    const mergeProps = ref<TableProps>({})
+    const mergeProps = ref({})
 
     const getProps = computed(() => {
       const propsObj = { ...props }

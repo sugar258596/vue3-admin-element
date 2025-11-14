@@ -27,7 +27,7 @@ const loginOut = () => {
   userStore.logoutConfirm()
 }
 
-const dialogVisible = ref < boolean > (false)
+const dialogVisible = ref(false)
 
 // 锁定屏幕
 const lockScreen = () => {

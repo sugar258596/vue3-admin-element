@@ -45,7 +45,7 @@ const handleSave = async () => {
 
 const showDrawer = ref(false)
 // 存储正在编辑的行的数据
-const permissionEditingRow = ref < any > (null)
+const permissionEditingRow = ref(null)
 
 const formSchema = reactive([
   {
