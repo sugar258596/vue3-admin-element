@@ -1,11 +1,10 @@
-<script lang="tsx">
+<script lang="jsx">
 import { ElBreadcrumb, ElBreadcrumbItem } from 'element-plus'
 import { ref, watch, computed, unref, defineComponent, TransitionGroup } from 'vue'
 import { useRouter } from 'vue-router'
 import { usePermissionStore } from '@/store/modules/permission'
 import { filterBreadcrumb } from './helper'
 import { filter, treeToList } from '@/utils/tree'
-import type { RouteLocationNormalizedLoaded } from 'vue-router'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Icon } from '@/components/Icon'
 import { useAppStore } from '@/store/modules/app'
@@ -27,7 +26,7 @@ export default defineComponent({
 
     const { t } = useI18n()
 
-    const levelList = ref<AppRouteRecordRaw[]>([])
+    const levelList = ref([])
 
     const permissionStore = usePermissionStore()
 
@@ -38,13 +37,13 @@ export default defineComponent({
 
     const getBreadcrumb = () => {
       const currentPath = currentRoute.value.matched.slice(-1)[0].path
-      levelList.value = filter<AppRouteRecordRaw>(unref(menuRouters), (node: AppRouteRecordRaw) => {
+      levelList.value = filter(unref(menuRouters), (node) => {
         return node.path === currentPath
       })
     }
 
     const renderBreadcrumb = () => {
-      const breadcrumbList = treeToList<AppRouteRecordRaw[]>(unref(levelList))
+      const breadcrumbList = treeToList(unref(levelList))
       return breadcrumbList.map((v) => {
         const disabled = !v.redirect || v.redirect === 'noredirect'
         const meta = v.meta
@@ -64,7 +63,7 @@ export default defineComponent({
 
     watch(
       () => currentRoute.value,
-      (route: RouteLocationNormalizedLoaded) => {
+      (route) => {
         if (route.path.startsWith('/redirect/')) {
           return
         }

@@ -38,7 +38,7 @@ const openTreeMenu = (event: MouseEvent, data: any, _node: any, _target: HTMLEle
   if (!treeContainer.value) return
 
   const containerRect = treeContainer.value.getBoundingClientRect()
-  const nodeRect = (event.target as HTMLElement).getBoundingClientRect()
+  const nodeRect = (event.target).getBoundingClientRect()
 
   // 计算菜单相对于父容器定位的坐标
   const top = nodeRect.top - containerRect.top + treeContainer.value.scrollTop
@@ -85,14 +85,8 @@ const containerStyle: CSSProperties = {
 </script>
 <template>
   <div class="tree-container" ref="treeContainer" :style="containerStyle">
-    <ElTree
-      v-bind="treeProps"
-      :data="data"
-      @node-click="handleNodeClick"
-      @node-expand="handleNodeExpand"
-      @node-collapse="handleNodeCollapse"
-      @node-contextmenu="openTreeMenu"
-    >
+    <ElTree v-bind="treeProps" :data="data" @node-click="handleNodeClick" @node-expand="handleNodeExpand"
+      @node-collapse="handleNodeCollapse" @node-contextmenu="openTreeMenu">
       <template #default="{ node }">
         <!-- 如果使用者提供了 render-node slot，则渲染使用者的内容 -->
         <template v-if="$slots['render-node']">

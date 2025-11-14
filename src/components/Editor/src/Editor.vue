@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { onBeforeUnmount, computed, PropType, unref, nextTick, ref, watch, shallowRef } from 'vue'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { IDomEditor, IEditorConfig, i18nChangeLanguage } from '@wangeditor/editor'
@@ -17,7 +17,7 @@ const props = defineProps({
   editorId: propTypes.string.def('wangeEditor-1'),
   height: propTypes.oneOfType([Number, String]).def('500px'),
   editorConfig: {
-    type: Object as PropType<IEditorConfig>,
+    type: Object,
     default: () => undefined
   },
   modelValue: propTypes.string.def('')
@@ -26,13 +26,13 @@ const props = defineProps({
 const emit = defineEmits(['change', 'update:modelValue'])
 
 // 编辑器实例，必须用 shallowRef
-const editorRef = shallowRef<IDomEditor>()
+const editorRef = shallowRef()
 
 const valueHtml = ref('')
 
 watch(
   () => props.modelValue,
-  (val: string) => {
+  (val) => {
     if (val === unref(valueHtml)) return
     valueHtml.value = val
   }
@@ -41,22 +41,22 @@ watch(
 // 监听
 watch(
   () => valueHtml.value,
-  (val: string) => {
+  (val) => {
     emit('update:modelValue', val)
   }
 )
 
-const handleCreated = (editor: IDomEditor) => {
+const handleCreated = (editor) => {
   editorRef.value = editor
   valueHtml.value = props.modelValue
 }
 
 // 编辑器配置
-const editorConfig = computed((): IEditorConfig => {
+const editorConfig = computed(() => {
   return Object.assign(
     {
       readOnly: false,
-      customAlert: (s: string, t: string) => {
+      customAlert: (s, t) => {
         switch (t) {
           case 'success':
             ElMessage.success(s)
@@ -90,7 +90,7 @@ const editorStyle = computed(() => {
 })
 
 // 回调函数
-const handleChange = (editor: IDomEditor) => {
+const handleChange = (editor) => {
   emit('change', editor)
 }
 
@@ -102,9 +102,9 @@ onBeforeUnmount(() => {
   editor?.destroy()
 })
 
-const getEditorRef = async (): Promise<IDomEditor> => {
+const getEditorRef = async () => {
   await nextTick()
-  return unref(editorRef.value) as IDomEditor
+  return unref(editorRef.value)
 }
 
 defineExpose({
@@ -115,20 +115,11 @@ defineExpose({
 <template>
   <div class="border-1 border-solid border-[var(--el-border-color)] z-10">
     <!-- 工具栏 -->
-    <Toolbar
-      :editor="editorRef"
-      :editorId="editorId"
-      class="border-0 b-b-1 border-solid border-[var(--el-border-color)]"
-    />
+    <Toolbar :editor="editorRef" :editorId="editorId"
+      class="border-0 b-b-1 border-solid border-[var(--el-border-color)]" />
     <!-- 编辑器 -->
-    <Editor
-      v-model="valueHtml"
-      :editorId="editorId"
-      :defaultConfig="editorConfig"
-      :style="editorStyle"
-      @on-change="handleChange"
-      @on-created="handleCreated"
-    />
+    <Editor v-model="valueHtml" :editorId="editorId" :defaultConfig="editorConfig" :style="editorStyle"
+      @on-change="handleChange" @on-created="handleCreated" />
   </div>
 </template>
 

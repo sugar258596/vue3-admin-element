@@ -1,10 +1,9 @@
-<script setup lang="ts">
+<script setup>
 import { ElDropdown, ElDropdownMenu, ElDropdownItem } from 'element-plus'
-import { PropType, ref } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from '@/hooks/web/useI18n'
 import { useDesign } from '@/hooks/web/useDesign'
-import type { RouteLocationNormalizedLoaded } from 'vue-router'
-import { ContextMenuSchema } from './types'
+
 const { getPrefixCls } = useDesign()
 
 const prefixCls = getPrefixCls('context-menu')
@@ -15,28 +14,28 @@ const emit = defineEmits(['visibleChange'])
 
 const props = defineProps({
   schema: {
-    type: Array as PropType<ContextMenuSchema[]>,
+    type: Array,
     default: () => []
   },
   trigger: {
-    type: String as PropType<'click' | 'hover' | 'focus' | 'contextmenu'>,
+    type: String,
     default: 'contextmenu'
   },
   tagItem: {
-    type: Object as PropType<RouteLocationNormalizedLoaded>,
+    type: Object,
     default: () => ({})
   }
 })
 
-const command = (item: ContextMenuSchema) => {
+const command = (item) => {
   item.command && item.command(item)
 }
 
-const visibleChange = (visible: boolean) => {
+const visibleChange = (visible) => {
   emit('visibleChange', visible, props.tagItem)
 }
 
-const elDropdownMenuRef = ref<ComponentRef<typeof ElDropdown>>()
+const elDropdownMenuRef = ref()
 
 defineExpose({
   elDropdownMenuRef,

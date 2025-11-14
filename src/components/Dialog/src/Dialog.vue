@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ElDialog, ElScrollbar } from 'element-plus'
 import { propTypes } from '@/utils/propTypes'
 import { computed, useAttrs, ref, unref, useSlots, watch, nextTick } from 'vue'
@@ -14,7 +14,7 @@ const props = defineProps({
 })
 
 const getBindValue = computed(() => {
-  const delArr: string[] = ['fullscreen', 'title', 'maxHeight']
+  const delArr = ['fullscreen', 'title', 'maxHeight']
   const attrs = useAttrs()
   const obj = { ...attrs, ...props }
   for (const key in obj) {
@@ -35,7 +35,7 @@ const dialogHeight = ref(isNumber(props.maxHeight) ? `${props.maxHeight}px` : pr
 
 watch(
   () => isFullscreen.value,
-  async (val: boolean) => {
+  async (val) => {
     await nextTick()
     if (val) {
       const windowHeight = document.documentElement.offsetHeight

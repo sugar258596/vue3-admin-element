@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import Player from 'xgplayer'
 import { ref, unref, onMounted, watch, onBeforeUnmount, nextTick } from 'vue'
 import 'xgplayer/dist/index.min.css'
@@ -15,9 +15,9 @@ const props = defineProps({
   }
 })
 
-const playerRef = ref<Player>()
+const playerRef = ref()
 
-const videoEl = ref<HTMLDivElement>()
+const videoEl = ref()
 
 const intiPlayer = () => {
   if (!unref(videoEl)) return

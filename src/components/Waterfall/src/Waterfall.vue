@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup>
 import { propTypes } from '@/utils/propTypes'
 import { useDesign } from '@/hooks/web/useDesign'
 import { ref, nextTick, unref, onMounted, watch } from 'vue'
@@ -29,35 +29,35 @@ const prop = defineProps({
   layout: propTypes.oneOf(['javascript', 'flex']).def('flex')
 })
 
-const wrapEl = ref<HTMLDivElement>()
+const wrapEl = ref()
 
-const heights = ref<number[]>([])
+const heights = ref([])
 
 const wrapHeight = ref(0)
 
 const wrapWidth = ref(0)
 
-const loadMore = ref<HTMLDivElement>()
+const loadMore = ref()
 
 // 首先确定列数 = 页面宽度 / 图片宽度
 const innerCols = ref(0)
 
-const filterData = ref<any[]>([])
+const filterData = ref([])
 
 const filterWaterfall = async () => {
   filterData.value = []
   const { props, width, gap } = prop
-  const data = prop.data as any[]
+  const data = prop.data
   await nextTick()
 
-  const container = unref(wrapEl) as HTMLElement
+  const container = unref(wrapEl)
   if (!container) return
   innerCols.value = prop.cols ?? Math.floor(container.clientWidth / (width + gap))
 
   const length = data.length
   for (let i = 0; i < length; i++) {
     if (i < unref(innerCols)) {
-      heights.value[i] = data[i][props.height as string]
+      heights.value[i] = data[i][props.height]
       filterData.value.push({
         ...data[i],
         top: 0,
@@ -77,7 +77,7 @@ const filterWaterfall = async () => {
       }
 
       // 更新最矮高度
-      heights.value[index] += data[i][props.height as string] + gap
+      heights.value[index] += data[i][props.height] + gap
       filterData.value.push({
         ...data[i],
         top: minHeight + gap,
@@ -91,10 +91,10 @@ const filterWaterfall = async () => {
 
 const flexWaterfall = async () => {
   const { width, gap } = prop
-  const data = prop.data as any[]
+  const data = prop.data
   await nextTick()
 
-  const container = unref(wrapEl) as HTMLElement
+  const container = unref(wrapEl)
   if (!container) return
   innerCols.value = prop.cols ?? Math.floor(container.clientWidth / (width + gap))
 
@@ -147,85 +147,56 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    :class="[
-      prefixCls,
-      'flex',
-      'items-center',
-      {
-        'justify-center': autoCenter
-      }
-    ]"
-    ref="wrapEl"
-    :style="{
-      height: `${layout === 'javascript' ? wrapHeight + 40 : 'auto'}px`
-    }"
-  >
+  <div :class="[
+    prefixCls,
+    'flex',
+    'items-center',
+    {
+      'justify-center': autoCenter
+    }
+  ]" ref="wrapEl" :style="{
+    height: `${layout === 'javascript' ? wrapHeight + 40 : 'auto'}px`
+  }">
     <template v-if="layout === 'javascript'">
       <div class="relative" :style="{ width: `${wrapWidth}px`, height: `${wrapHeight + 40}px` }">
-        <div
-          v-for="(item, $index) in filterData"
-          :class="[
-            `${prefixCls}-item__${$index}`,
-            {
-              absolute: layout === 'javascript'
-            }
-          ]"
-          :key="`water-${$index}`"
-          :style="{
-            width: `${width}px`,
-            height: `${item[props.height as string]}px`,
-            top: `${item.top}px`,
-            left: `${item.left}px`
-          }"
-        >
-          <img :src="item[props.src as string]" class="w-full h-full block" alt="" srcset="" />
+        <div v-for="(item, $index) in filterData" :class="[
+          `${prefixCls}-item__${$index}`,
+          {
+            absolute: layout === 'javascript'
+          }
+        ]" :key="`water-${$index}`" :style="{
+          width: `${width}px`,
+          height: `${item[props.height]}px`,
+          top: `${item.top}px`,
+          left: `${item.left}px`
+        }">
+          <img :src="item[props.src]" class="w-full h-full block" alt="" srcset="" />
         </div>
-        <div
-          ref="loadMore"
-          class="h-40px flex justify-center absolute w-full"
-          :style="{
-            top: `${wrapHeight + gap}px`
-          }"
-        >
+        <div ref="loadMore" class="h-40px flex justify-center absolute w-full" :style="{
+          top: `${wrapHeight + gap}px`
+        }">
           {{ end ? endText : loadingText }}
         </div>
       </div>
     </template>
     <template v-else-if="layout === 'flex'">
-      <div
-        class="relative flex pb-40px"
-        :style="{
-          width: cols ? '100%' : 'auto'
-        }"
-      >
-        <div
-          v-for="(item, $index) in filterData"
-          :key="`waterWrap-${$index}`"
-          class="flex-1"
-          :style="{
-            marginRight: $index === filterData.length - 1 ? '0' : `${gap}px`
-          }"
-        >
-          <div
-            v-for="(child, i) in item"
-            :key="`waterWrap-${$index}-${i}`"
-            :style="{
-              marginBottom: `${gap}px`,
-              width: cols ? '100%' : `${width}px`,
-              height: cols ? 'auto' : `${child[props.height as string]}px`
-            }"
-          >
-            <img :src="child[props.src as string]" class="w-full h-full block" alt="" srcset="" />
+      <div class="relative flex pb-40px" :style="{
+        width: cols ? '100%' : 'auto'
+      }">
+        <div v-for="(item, $index) in filterData" :key="`waterWrap-${$index}`" class="flex-1" :style="{
+          marginRight: $index === filterData.length - 1 ? '0' : `${gap}px`
+        }">
+          <div v-for="(child, i) in item" :key="`waterWrap-${$index}-${i}`" :style="{
+            marginBottom: `${gap}px`,
+            width: cols ? '100%' : `${width}px`,
+            height: cols ? 'auto' : `${child[props.height]}px`
+          }">
+            <img :src="child[props.src]" class="w-full h-full block" alt="" srcset="" />
           </div>
         </div>
-        <div
-          ref="loadMore"
-          class="h-40px flex justify-center absolute w-full items-center"
-          :style="{
-            bottom: 0
-          }"
-        >
+        <div ref="loadMore" class="h-40px flex justify-center absolute w-full items-center" :style="{
+          bottom: 0
+        }">
           {{ end ? endText : loadingText }}
         </div>
       </div>

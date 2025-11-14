@@ -1,20 +1,20 @@
-<script setup lang="tsx">
+<script setup>
 import { useMonacoEditor } from '@/hooks/web/useMonacoEditor'
 import { onMounted, computed, watch, ref } from 'vue'
 import { ElSelect, ElOption, ElFormItem, ElForm } from 'element-plus'
 import { languageOptions, themeOptions } from './config/config'
 
 const props = withDefaults(
-  defineProps<{
-    width?: string | number
-    height?: string | number
-    languageSelector?: boolean
-    language?: string
-    themeSelector?: boolean
-    theme?: string
-    editorOption?: object
-    modelValue: string
-  }>(),
+  defineProps({
+    width: [String, Number],
+    height: [String, Number],
+    languageSelector: Boolean,
+    language: String,
+    themeSelector: Boolean,
+    theme: String,
+    editorOption: Object,
+    modelValue: String
+  }),
   {
     width: '100%',
     height: '100%',
@@ -27,10 +27,7 @@ const props = withDefaults(
   }
 )
 
-const emits = defineEmits<{
-  (e: 'blur'): void
-  (e: 'update:modelValue', val: string): void
-}>()
+const emits = defineEmits(['blur', 'update:modelValue'])
 
 const monacoEditorStyle = computed(() => {
   return {
@@ -53,7 +50,7 @@ onMounted(() => {
   const monacoEditor = createEditor(props.editorOption)
   updateMonacoVal(props.modelValue)
   monacoEditor?.onDidChangeModelContent(() => {
-    emits('update:modelValue', monacoEditor!.getValue())
+    emits('update:modelValue', monacoEditor.getValue())
   })
   monacoEditor?.onDidBlurEditorText(() => {
     emits('blur')
@@ -78,7 +75,7 @@ watch(localTheme, (newTheme) => {
   changeTheme(newTheme)
 })
 
-function updateMonacoVal(val: string) {
+function updateMonacoVal(val) {
   if (val !== getEditor()?.getValue()) {
     updateVal(val)
   }

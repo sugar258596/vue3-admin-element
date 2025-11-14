@@ -6,13 +6,13 @@ import { toAnyString } from '@/utils'
 
 export { VideoPlayer }
 
-let instance: Nullable<VNode> = null
+let instance = null
 
-export function createVideoViewer(options: { url: string; poster?: string; show?: boolean }) {
+export function createVideoViewer(options = {}) {
   if (!isClient) return
   const { url, poster } = options
 
-  const propsData: Partial<{ url: string; poster?: string; show?: boolean; id?: string }> = {}
+  const propsData = {}
   const container = document.createElement('div')
   const id = toAnyString()
   container.id = id

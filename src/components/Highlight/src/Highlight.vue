@@ -1,4 +1,4 @@
-<script lang="tsx">
+<script lang="jsx">
 import { defineComponent, PropType, computed, h, unref } from 'vue'
 import { propTypes } from '@/utils/propTypes'
 
@@ -7,7 +7,7 @@ export default defineComponent({
   props: {
     tag: propTypes.string.def('span'),
     keys: {
-      type: Array as PropType<string[]>,
+      type: Array,
       default: () => []
     },
     color: propTypes.string.def('var(--el-color-primary)')
@@ -32,7 +32,7 @@ export default defineComponent({
       })
     })
 
-    const parseText = (text: string) => {
+    const parseText = (text) => {
       props.keys.forEach((key, index) => {
         const regexp = new RegExp(key, 'g')
         text = text.replace(regexp, `{{${index}}}`)
@@ -48,7 +48,7 @@ export default defineComponent({
         return slots?.default()[0]
       }
 
-      const textArray = parseText(node as string)
+      const textArray = parseText(node)
       const regexp = /^[0-9]*$/
       const nodes = textArray.map((t) => {
         if (regexp.test(t)) {

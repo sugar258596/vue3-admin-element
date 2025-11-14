@@ -1,11 +1,6 @@
 import { ref } from 'vue'
 
-export const useResize = (props?: {
-  minHeightPx?: number
-  minWidthPx?: number
-  initHeight?: number
-  initWidth?: number
-}) => {
+export const useResize = (props) => {
   const {
     minHeightPx = 400,
     minWidthPx = window.innerWidth / 2,
@@ -20,7 +15,7 @@ export const useResize = (props?: {
   const maxHeight = ref(initHeight + 'px')
   // 初始宽度限制为 50%
   const minWidth = ref(initWidth + 'px')
-  const setupDrag = (elDialog: any, el: any) => {
+  const setupDrag = (elDialog, el) => {
     // 获取对话框元素
     // 是否正在调整大小的标志
     let isResizing = false
@@ -28,7 +23,7 @@ export const useResize = (props?: {
     let currentResizeDirection = ''
 
     // 鼠标移动时的事件处理器，用于检测鼠标位置并设置相应的光标样式
-    const handleMouseMove = (e: any) => {
+    const handleMouseMove = (e) => {
       const rect = elDialog.getBoundingClientRect()
       // 鼠标相对于对话框左侧的偏移量
       const offsetX = e.clientX - rect.left
@@ -100,7 +95,7 @@ export const useResize = (props?: {
         const initialHeight = el.querySelector('.el-dialog__body').clientHeight
 
         // 调整大小的事件处理器
-        const handleResizing = (e: any) => {
+        const handleResizing = (e) => {
           if (!isResizing) return
 
           let newWidth = initialWidth

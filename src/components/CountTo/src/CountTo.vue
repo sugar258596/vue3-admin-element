@@ -1,5 +1,5 @@
-<script setup lang="ts">
-import { reactive, computed, watch, onMounted, unref, toRef, PropType } from 'vue'
+<script setup>
+import { reactive, computed, watch, onMounted, unref, toRef } from 'vue'
 import { isNumber } from '@/utils/is'
 import { propTypes } from '@/utils/propTypes'
 import { useDesign } from '@/hooks/web/useDesign'
@@ -13,15 +13,15 @@ const props = defineProps({
   endVal: propTypes.number.def(2021),
   duration: propTypes.number.def(3000),
   autoplay: propTypes.bool.def(true),
-  decimals: propTypes.number.validate((value: number) => value >= 0).def(0),
+  decimals: propTypes.number.validate((value) => value >= 0).def(0),
   decimal: propTypes.string.def('.'),
   separator: propTypes.string.def(','),
   prefix: propTypes.string.def(''),
   suffix: propTypes.string.def(''),
   useEasing: propTypes.bool.def(true),
   easingFn: {
-    type: Function as PropType<(t: number, b: number, c: number, d: number) => number>,
-    default(t: number, b: number, c: number, d: number) {
+    type: Function,
+    default(t, b, c, d) {
       return (c * (-Math.pow(2, (-10 * t) / d) + 1) * 1024) / 1023 + b
     }
   }
@@ -29,7 +29,7 @@ const props = defineProps({
 
 const emit = defineEmits(['mounted', 'callback'])
 
-const formatNumber = (num: number | string) => {
+const formatNumber = (num) => {
   const { decimals, decimal, separator, suffix, prefix } = props
   num = Number(num).toFixed(decimals)
   num += ''
@@ -45,17 +45,7 @@ const formatNumber = (num: number | string) => {
   return prefix + x1 + x2 + suffix
 }
 
-const state = reactive<{
-  localStartVal: number
-  printVal: number | null
-  displayValue: string
-  paused: boolean
-  localDuration: number | null
-  startTime: number | null
-  timestamp: number | null
-  rAF: any
-  remaining: number | null
-}>({
+const state = reactive({
   localStartVal: props.startVal,
   displayValue: formatNumber(props.startVal),
   printVal: null,
@@ -111,8 +101,8 @@ const pause = () => {
 
 const resume = () => {
   state.startTime = null
-  state.localDuration = +(state.remaining as number)
-  state.localStartVal = +(state.printVal as number)
+  state.localDuration = +state.remaining
+  state.localStartVal = +state.printVal
   requestAnimationFrame(count)
 }
 
@@ -122,34 +112,34 @@ const reset = () => {
   state.displayValue = formatNumber(props.startVal)
 }
 
-const count = (timestamp: number) => {
+const count = (timestamp) => {
   const { useEasing, easingFn, endVal } = props
   if (!state.startTime) state.startTime = timestamp
   state.timestamp = timestamp
   const progress = timestamp - state.startTime
-  state.remaining = (state.localDuration as number) - progress
+  state.remaining = state.localDuration - progress
   if (useEasing) {
     if (unref(getCountDown)) {
       state.printVal =
         state.localStartVal -
-        easingFn(progress, 0, state.localStartVal - endVal, state.localDuration as number)
+        easingFn(progress, 0, state.localStartVal - endVal, state.localDuration)
     } else {
       state.printVal = easingFn(
         progress,
         state.localStartVal,
         endVal - state.localStartVal,
-        state.localDuration as number
+        state.localDuration
       )
     }
   } else {
     if (unref(getCountDown)) {
       state.printVal =
         state.localStartVal -
-        (state.localStartVal - endVal) * (progress / (state.localDuration as number))
+        (state.localStartVal - endVal) * (progress / state.localDuration)
     } else {
       state.printVal =
         state.localStartVal +
-        (endVal - state.localStartVal) * (progress / (state.localDuration as number))
+        (endVal - state.localStartVal) * (progress / state.localDuration)
     }
   }
   if (unref(getCountDown)) {
@@ -157,8 +147,8 @@ const count = (timestamp: number) => {
   } else {
     state.printVal = state.printVal > endVal ? endVal : state.printVal
   }
-  state.displayValue = formatNumber(state.printVal!)
-  if (progress < (state.localDuration as number)) {
+  state.displayValue = formatNumber(state.printVal)
+  if (progress < state.localDuration) {
     state.rAF = requestAnimationFrame(count)
   } else {
     emit('callback')

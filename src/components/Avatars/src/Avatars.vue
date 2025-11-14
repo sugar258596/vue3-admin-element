@@ -1,7 +1,6 @@
-<script setup lang="ts">
-import { ComponentSize, ElAvatar, ElTooltip } from 'element-plus'
-import { PropType, computed } from 'vue'
-import { AvatarItem } from './types'
+<script setup>
+import { ElAvatar, ElTooltip } from 'element-plus'
+import { computed } from 'vue'
 import { useDesign } from '@/hooks/web/useDesign'
 
 const { getPrefixCls } = useDesign()
@@ -10,7 +9,7 @@ const prefixCls = getPrefixCls('avatars')
 
 const props = defineProps({
   size: {
-    type: [String, Number] as PropType<ComponentSize | number>,
+    type: [String, Number],
     default: ''
   },
   max: {
@@ -18,7 +17,7 @@ const props = defineProps({
     default: 5
   },
   data: {
-    type: Array as PropType<AvatarItem[]>,
+    type: Array,
     default: () => []
   },
   showTooltip: {

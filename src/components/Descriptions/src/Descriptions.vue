@@ -1,10 +1,9 @@
-<script lang="tsx">
+<script lang="jsx">
 import { ElCollapseTransition, ElTooltip, ElRow, ElCol } from 'element-plus'
 import { useDesign } from '@/hooks/web/useDesign'
 import { propTypes } from '@/utils/propTypes'
-import { ref, unref, PropType, computed, defineComponent } from 'vue'
+import { ref, unref, computed, defineComponent } from 'vue'
 import { useAppStore } from '@/store/modules/app'
-import { DescriptionsSchema } from './types'
 import { Icon } from '@/components/Icon'
 import { get } from 'lodash-es'
 
@@ -30,17 +29,17 @@ export default defineComponent({
     direction: propTypes.oneOf(['horizontal', 'vertical']).def('horizontal'),
     extra: propTypes.string.def(''),
     schema: {
-      type: Array as PropType<DescriptionsSchema[]>,
+      type: Array,
       default: () => []
     },
     data: {
-      type: Object as PropType<any>,
+      type: Object,
       default: () => ({})
     }
   },
   setup(props, { attrs }) {
-    const getBindValue = computed((): any => {
-      const delArr: string[] = ['title', 'message', 'collapse', 'schema', 'data', 'class']
+    const getBindValue = computed(() => {
+      const delArr = ['title', 'message', 'collapse', 'schema', 'data', 'class']
       const obj = { ...attrs, ...props }
       for (const key in obj) {
         if (delArr.indexOf(key) !== -1) {
@@ -53,8 +52,8 @@ export default defineComponent({
       return obj
     })
 
-    const getBindItemValue = (item: DescriptionsSchema) => {
-      const delArr: string[] = ['field']
+    const getBindItemValue = (item) => {
+      const delArr = ['field']
       const obj = { ...item }
       for (const key in obj) {
         if (delArr.indexOf(key) !== -1) {

@@ -1,21 +1,13 @@
-<script setup lang="ts">
+<script setup>
 import pageError from '@/assets/svgs/404.svg'
 import networkError from '@/assets/svgs/500.svg'
 import noPermission from '@/assets/svgs/403.svg'
 import { propTypes } from '@/utils/propTypes'
 import { useI18n } from '@/hooks/web/useI18n'
 
-interface ErrorMap {
-  url: string
-  message: string
-  buttonText: string
-}
-
 const { t } = useI18n()
 
-const errorMap: {
-  [key: string]: ErrorMap
-} = {
+const errorMap = {
   '404': {
     url: pageError,
     message: t('error.pageError'),
@@ -34,7 +26,7 @@ const errorMap: {
 }
 
 const props = defineProps({
-  type: propTypes.string.validate((v: string) => ['404', '500', '403'].includes(v)).def('404')
+  type: propTypes.string.validate((v) => ['404', '500', '403'].includes(v)).def('404')
 })
 
 const emit = defineEmits(['errorClick'])

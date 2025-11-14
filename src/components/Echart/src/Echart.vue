@@ -1,10 +1,9 @@
-<script setup lang="ts">
-import type { EChartsOption } from 'echarts'
+<script setup>
 import echarts from '@/plugins/echarts'
 import { debounce } from 'lodash-es'
 import 'echarts-wordcloud'
 import { propTypes } from '@/utils/propTypes'
-import { computed, PropType, ref, unref, watch, onMounted, onBeforeUnmount, onActivated } from 'vue'
+import { computed, ref, unref, watch, onMounted, onBeforeUnmount, onActivated } from 'vue'
 import { useAppStore } from '@/store/modules/app'
 import { isString } from '@/utils/is'
 import { useDesign } from '@/hooks/web/useDesign'
@@ -17,7 +16,7 @@ const appStore = useAppStore()
 
 const props = defineProps({
   options: {
-    type: Object as PropType<EChartsOption>,
+    type: Object,
     required: true
   },
   width: propTypes.oneOfType([Number, String]).def('100%'),
@@ -27,7 +26,7 @@ const props = defineProps({
 const isDark = computed(() => appStore.getIsDark)
 
 const theme = computed(() => {
-  const echartTheme: boolean | string = unref(isDark) ? true : 'auto'
+  const echartTheme = unref(isDark) ? true : 'auto'
 
   return echartTheme
 })
@@ -38,11 +37,11 @@ const options = computed(() => {
   })
 })
 
-const elRef = ref<ElRef>()
+const elRef = ref()
 
-let echartRef: Nullable<echarts.ECharts> = null
+let echartRef = null
 
-const contentEl = ref<Element>()
+const contentEl = ref()
 
 const styles = computed(() => {
   const width = isString(props.width) ? props.width : `${props.width}px`
@@ -56,7 +55,7 @@ const styles = computed(() => {
 
 const initChart = () => {
   if (unref(elRef) && props.options) {
-    echartRef = echarts.init(unref(elRef) as HTMLElement)
+    echartRef = echarts.init(unref(elRef))
     echartRef?.setOption(unref(options))
   }
 }
@@ -79,7 +78,7 @@ const resizeHandler = debounce(() => {
   }
 }, 100)
 
-const contentResizeHandler = async (e: TransitionEvent) => {
+const contentResizeHandler = async (e) => {
   if (e.propertyName === 'width') {
     resizeHandler()
   }
@@ -94,13 +93,13 @@ onMounted(() => {
 
   contentEl.value = document.getElementsByClassName(`${variables.namespace}-layout-content`)[0]
   unref(contentEl) &&
-    (unref(contentEl) as Element).addEventListener('transitionend', contentResizeHandler)
+    unref(contentEl).addEventListener('transitionend', contentResizeHandler)
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', resizeHandler)
   unref(contentEl) &&
-    (unref(contentEl) as Element).removeEventListener('transitionend', contentResizeHandler)
+    unref(contentEl).removeEventListener('transitionend', contentResizeHandler)
 })
 
 onActivated(() => {

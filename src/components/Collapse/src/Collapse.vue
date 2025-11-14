@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { computed, unref } from 'vue'
 import { useAppStore } from '@/store/modules/app'
 import { propTypes } from '@/utils/propTypes'

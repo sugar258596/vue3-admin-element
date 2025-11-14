@@ -1,10 +1,7 @@
 import { pathResolve } from '@/utils/routerHelper'
 
-export const filterBreadcrumb = (
-  routes: AppRouteRecordRaw[],
-  parentPath = ''
-): AppRouteRecordRaw[] => {
-  const res: AppRouteRecordRaw[] = []
+export const filterBreadcrumb = (routes, parentPath = '') => {
+  const res = []
 
   for (const route of routes) {
     const meta = route?.meta
@@ -12,7 +9,7 @@ export const filterBreadcrumb = (
       continue
     }
 
-    const data: AppRouteRecordRaw =
+    const data =
       !meta.alwaysShow && route.children?.length === 1
         ? { ...route.children[0], path: pathResolve(route.path, route.children[0].path) }
         : { ...route }

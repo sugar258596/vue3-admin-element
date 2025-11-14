@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { ElBacktop } from 'element-plus'
 import { useDesign } from '@/hooks/web/useDesign'
 

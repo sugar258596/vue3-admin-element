@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { VideoPlayer } from '@/components/VideoPlayer'
 import { ElOverlay } from 'element-plus'
 import { ref, nextTick } from 'vue'
@@ -39,8 +39,7 @@ const close = async () => {
     <div class="w-full h-full flex justify-center items-center relative" @click="close">
       <div
         class="w-44px h-44px color-[#fff] bg-[var(--el-text-color-regular)] rounded-full border-[#fff] flex justify-center items-center cursor-pointer absolute top-40px right-40px"
-        @click="close"
-      >
+        @click="close">
         <Icon icon="vi-ep:close" :size="24" />
       </div>
       <VideoPlayer :url="url" :poster="poster" />
