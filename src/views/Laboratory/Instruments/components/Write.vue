@@ -56,16 +56,16 @@ const formSchema = ref([
     field: 'status',
     label: t('menu.status'),
     component: 'Select',
-    value: 0,
+    value: '0',
     componentProps: {
       options: [
         {
           label: t('userDemo.enable'),
-          value: 0
+          value: '0'
         },
         {
           label: t('userDemo.disable'),
-          value: 1
+          value: '1'
         },
 
       ]

@@ -135,11 +135,11 @@ const crudSchemas = reactive([
       componentProps: {
         options: [
           {
-            value: 0,
+            value: '0',
             label: t('userDemo.disable')
           },
           {
-            value: 1,
+            value: '1',
             label: t('userDemo.enable')
           }
         ]
@@ -150,8 +150,8 @@ const crudSchemas = reactive([
         default: (data) => {
           return (
             <>
-              <ElTag type={data.status === 0 ? 'danger' : 'success'}>
-                {data.status === 1 ? t('userDemo.enable') : t('userDemo.disable')}
+              <ElTag type={data.status === '0' || data.status === 0 ? 'danger' : 'success'}>
+                {data.status === '1' || data.status === 1 ? t('userDemo.enable') : t('userDemo.disable')}
               </ElTag>
             </>
           )

@@ -3,7 +3,7 @@ import { useDesign } from '@/hooks/web/useDesign'
 import { nextTick, unref, ref, watch, onBeforeUnmount, onMounted, computed } from 'vue'
 import Cropper from 'cropperjs'
 import 'cropperjs/dist/cropper.min.css'
-import { ElDivider, ElUpload, UploadFile, ElMessage, ElTooltip } from 'element-plus'
+import { ElDivider, ElUpload, ElMessage, ElTooltip } from 'element-plus'
 import { useDebounceFn } from '@vueuse/core'
 import { BaseButton } from '@/components/Button'
 

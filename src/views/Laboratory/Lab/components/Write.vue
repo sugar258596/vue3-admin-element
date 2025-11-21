@@ -129,15 +129,15 @@ const formSchema = ref([
       allowCreate: true,
       options: [
         {
-          value: 2,
+          value: '2',
           label: 'HTML',
         },
         {
-          value: 1,
+          value: '1',
           label: 'CSS',
         },
         {
-          value: 3,
+          value: '3',
           label: 'JavaScript',
         },
       ]

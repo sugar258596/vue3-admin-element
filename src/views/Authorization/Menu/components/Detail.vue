@@ -23,7 +23,7 @@ const detailSchema = ref([
     slots: {
       default: (data) => {
         const type = data.type
-        return <>{type === 1 ? '菜单' : '目录'}</>
+        return <>{type === '1' || type === 1 ? '菜单' : '目录'}</>
       }
     }
   },

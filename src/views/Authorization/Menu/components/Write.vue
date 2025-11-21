@@ -52,7 +52,7 @@ const formSchema = reactive([
     field: 'type',
     label: '菜单类型',
     component: 'RadioButton',
-    value: 0,
+    value: '0',
     colProps: {
       span: 24
     },
@@ -60,17 +60,17 @@ const formSchema = reactive([
       options: [
         {
           label: '目录',
-          value: 0
+          value: '0'
         },
         {
           label: '菜单',
-          value: 1
+          value: '1'
         }
       ],
       on: {
         change: async (val) => {
           const formData = await getFormData()
-          if (val === 1) {
+          if (val === '1') {
             setSchema([
               {
                 field: 'component',
@@ -123,15 +123,15 @@ const formSchema = reactive([
       on: {
         change: async (val) => {
           const formData = await getFormData()
-          if (val && formData.type === 0) {
+          if (val && formData.type === '0') {
             setValues({
               component: '##'
             })
-          } else if (!val && formData.type === 0) {
+          } else if (!val && formData.type === '0') {
             setValues({
               component: '#'
             })
-          } else if (formData.type === 1) {
+          } else if (formData.type === '1') {
             setValues({
               component: unref(cacheComponent) ?? ''
             })

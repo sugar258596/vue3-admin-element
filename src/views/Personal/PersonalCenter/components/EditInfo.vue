@@ -1,5 +1,5 @@
 <script setup>
-import { , Form } from '@/components/Form'
+import { Form } from '@/components/Form'
 import { useForm } from '@/hooks/web/useForm'
 import { useValidator } from '@/hooks/web/useValidator'
 import { reactive, ref, watch } from 'vue'
