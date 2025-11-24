@@ -5,7 +5,7 @@ import { reactive, watch, ref, } from 'vue'
 import { useValidator } from '@/hooks/web/useValidator'
 import { useI18n } from '@/hooks/web/useI18n'
 import { ElIcon, ElMessage, ElAvatar } from 'element-plus'
-import { addLabs, editLabs } from '@/api'
+import { addLabs, editLabs, getInstrumentsOptions } from '@/api'
 
 const { t } = useI18n()
 
@@ -17,6 +17,24 @@ const props = defineProps({
     default: () => null
   }
 })
+
+
+
+const remoteMethod = async (keyword) => {
+  const { list } = await getInstrumentsOptions({
+    keyword,
+    page: 1,
+    pageSize: 100,
+  })
+
+  return list.map(item => {
+    return {
+      label: item.name,
+      value: item.id,
+    }
+  })
+
+}
 
 
 const formSchema = ref([
@@ -100,6 +118,7 @@ const formSchema = ref([
     field: 'status',
     label: t('menu.status'),
     component: 'Select',
+    value: 0,
     componentProps: {
       options: [
         {
@@ -120,28 +139,16 @@ const formSchema = ref([
     component: 'InputTag'
   },
   {
-    field: 'equipmentList',
+    field: 'instrumentIds',
     label: '实验室设备',
-    component: 'Select',
+    component: 'SelectV2',
     componentProps: {
       multiple: true,
       filterable: true,
       allowCreate: true,
-      options: [
-        {
-          value: '2',
-          label: 'HTML',
-        },
-        {
-          value: '1',
-          label: 'CSS',
-        },
-        {
-          value: '3',
-          label: 'JavaScript',
-        },
-      ]
+      options: [],
     },
+    optionApi: remoteMethod,
     colProps: {
       span: 24
     }
@@ -155,6 +162,8 @@ const rules = reactive({
 
 const { formRegister, formMethods } = useForm()
 const { setValues, getFormData, getElFormExpose } = formMethods
+
+
 
 
 const submit = async () => {
@@ -196,9 +205,8 @@ watch(
         url: item,
       }
     })
-    newData.equipmentList = currentRow.equipmentList.map(item => item.id)
-    console.log(newData.equipmentList);
-
+    remoteMethod()
+    newData.instrumentIds = currentRow.instruments.map(item => item.id)
     setValues(newData)
   },
   {

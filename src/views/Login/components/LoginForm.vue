@@ -213,7 +213,7 @@ const iconColor = '#999'
 
 const hoverColor = 'var(--el-color-primary)'
 
-const redirect = ref < string > ('')
+const redirect = ref('')
 
 watch(
   () => currentRoute.value,

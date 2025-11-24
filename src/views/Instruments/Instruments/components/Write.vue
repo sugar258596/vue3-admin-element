@@ -5,7 +5,7 @@ import { reactive, watch, ref, } from 'vue'
 import { useValidator } from '@/hooks/web/useValidator'
 import { useI18n } from '@/hooks/web/useI18n'
 import { ElIcon, ElMessage, ElAvatar } from 'element-plus'
-import { editUser } from '@/api'
+import { addInstruments, getLabsOptions, editInstruments } from '@/api'
 
 const { t } = useI18n()
 
@@ -18,7 +18,24 @@ const props = defineProps({
   }
 })
 
-const imageUrl = ref(props.currentRow?.avatar)
+const options = ref([])
+
+
+const remoteMethod = async (keyword) => {
+  const { list } = await getLabsOptions({
+    keyword,
+    page: 1,
+    pageSize: 100,
+  })
+
+  options.value = list.map(item => {
+    return {
+      label: item.name,
+      value: item.id,
+    }
+  })
+  return options.value
+}
 
 
 const formSchema = ref([
@@ -56,20 +73,29 @@ const formSchema = ref([
     field: 'status',
     label: t('menu.status'),
     component: 'Select',
-    value: '0',
+    value: 0,
     componentProps: {
       options: [
         {
           label: t('userDemo.enable'),
-          value: '0'
+          value: 0
         },
         {
           label: t('userDemo.disable'),
-          value: '1'
+          value: 1
         },
 
       ]
     }
+  },
+  {
+    field: 'lab',
+    label: '所属实验室',
+    component: 'Select',
+    componentProps: {
+      options: []
+    },
+    optionApi: remoteMethod,
   },
   {
     field: 'images',
@@ -82,10 +108,8 @@ const formSchema = ref([
       autoUpload: false,
       action: "#",
       listType: "picture-card",
-      limit: 1,
-      onChange: (uploadFile) => {
-        imageUrl.value = uploadFile.url
-      },
+      limit: 10,
+      multiple: true,
       beforeUpload: (rawFile) => {
         if (rawFile.size / 1024 / 1024 > 2) {
           ElMessage.error('Avatar picture size can not exceed 2MB!')
@@ -94,17 +118,13 @@ const formSchema = ref([
         return true
       },
       beforeRemove: () => {
-        imageUrl.value = ''
       },
       slots: {
         default: () => (
           <>
-            {imageUrl.value ? <ElAvatar src={imageUrl.value} /> : null}
-            {!imageUrl.value ? (
-              <ElIcon class="avatar-uploader-icon" size="large">
-                add
-              </ElIcon>
-            ) : null}
+            <ElIcon class="avatar-uploader-icon" size="large">
+              add
+            </ElIcon>
           </>
         )
       }
@@ -140,10 +160,13 @@ const submit = async () => {
     })
     newData.images = image
 
+    console.log(newData);
+
+
     if (id) {
-      // await editLabs(id, newData)
+      await editInstruments(id, newData)
     } else {
-      // addLabs(newData)
+      addInstruments(newData)
     }
     return formData
   }
@@ -153,17 +176,16 @@ watch(
   () => props.currentRow,
   (currentRow) => {
     if (!currentRow) return
-    const { images, ...newData } = currentRow
+    const { images, lab, ...newData } = currentRow
     newData.images = images?.map(item => {
       return {
         url: item,
       }
     }) ?? []
-    newData.equipmentList = currentRow.equipmentList.map(item => item.id)
-    console.log(newData.equipmentList);
+
+    newData.lab = lab?.id
 
     setValues(newData)
-    setValues(currentRow)
   },
   {
     deep: true,

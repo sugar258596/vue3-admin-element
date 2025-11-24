@@ -8,7 +8,11 @@ export const getLabsOptions = (params) => {
 }
 
 export const addLabs = (data) => {
-  return request.post({ url: '/labs', data })
+  return request.post({
+    url: '/labs', data, headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
 }
 
 export const detailedLabs = (id) => {

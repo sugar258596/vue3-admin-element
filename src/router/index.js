@@ -401,14 +401,43 @@ export const asyncRouterMap = [
           title: '实验室预约'
         }
       },
+    ]
+  },
+  {
+    path: '/instrument',
+    component: Layout,
+    redirect: '/authorization/user',
+    name: 'Instrument',
+    meta: {
+      title: '仪器管理',
+      icon: 'arcticons:apparatus',
+      alwaysShow: true
+    },
+    children: [
       {
         path: 'instruments',
-        component: () => import('@/views/Laboratory/Instruments/index.vue'),
+        component: () => import('@/views/Instruments/Instruments/index.vue'),
         name: 'Instruments',
         meta: {
           title: '仪器'
         }
-      }
+      },
+      {
+        path: 'applications',
+        component: () => import('@/views/Instruments/Applications/index.vue'),
+        name: 'Applications',
+        meta: {
+          title: '使用申请'
+        }
+      },
+      {
+        path: 'repaires',
+        component: () => import('@/views/Instruments/Repaires/index.vue'),
+        name: 'Repaires',
+        meta: {
+          title: '维修记录'
+        }
+      },
     ]
   },
   {

@@ -11,25 +11,16 @@ defineProps({
 })
 
 
-const timeSlot = {
-  0: '上午',
-  1: '下午',
-  2: '晚上'
-}
-
-
 const renderTag = (enable) => {
   switch (enable) {
+    case 0:
+      return <ElTag type='warning'>待审核</ElTag>
     case 1:
-      return <ElTag type='success'>已预约</ElTag>
+      return <ElTag type='success'>已通过</ElTag>
     case 2:
       return <ElTag type='danger'>已拒绝</ElTag>
-    case 3:
-      return <ElTag type='warning'>已取消</ElTag>
-    case 4:
-      return <ElTag type='success'>已完成</ElTag>
     default:
-      return <ElTag type='info'>待审核</ElTag>
+      return <ElTag type='danger'>已拒绝</ElTag>
   }
 }
 
@@ -37,25 +28,25 @@ const renderTag = (enable) => {
 const detailSchema = ref([
   {
     field: 'name',
-    label: '实验室名称',
+    label: '仪器名称',
     slots: {
       default: (data) => {
         return (
           <>
-            <div>{data.lab.name}</div>
+            <div>{data.instrument.name}</div>
           </>
         )
       }
     }
   },
   {
-    field: 'user',
-    label: '预约用户',
+    field: 'serialNumber',
+    label: '设备序列号',
     slots: {
       default: (data) => {
         return (
           <>
-            <div>{data.user.name}</div>
+            <div>{data.instrument.serialNumber}</div>
           </>
         )
       }
@@ -70,32 +61,28 @@ const detailSchema = ref([
     label: '预约详细描述'
   },
   {
-    field: 'participantCount',
-    label: '参与人数'
-  },
-  {
-    field: 'appointmentDate',
+    field: 'createdAt',
     label: '预约日期',
   },
   {
-    field: 'status',
-    label: '状态',
-    slots: {
-      default: (data) => {
-        return renderTag(data.status)
-      }
-    }
-  },
-  {
-    field: 'timeSlot',
-    label: '时间段',
+    field: 'username',
+    label: '预约人',
     slots: {
       default: (data) => {
         return (
           <>
-            <div>{timeSlot[data.timeSlot]}</div>
+            <div>{data.applicant.username}</div>
           </>
         )
+      }
+    },
+  },
+  {
+    field: 'status',
+    label: '审核状态',
+    slots: {
+      default: (data) => {
+        return renderTag(data.status)
       }
     }
   },
