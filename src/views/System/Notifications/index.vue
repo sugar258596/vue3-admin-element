@@ -1,29 +1,26 @@
 <script setup lang="jsx">
 import { reactive, ref, unref } from 'vue'
-import { getRepairsList } from '@/api'
 
 import { useTable } from '@/hooks/web/useTable'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Table, } from '@/components/Table'
+import { ElMessage, ElMessageBox, ElTag } from 'element-plus'
 import { Search } from '@/components/Search'
 import { ContentWrap } from '@/components/ContentWrap'
 import Write from './components/Write.vue'
 import Detail from './components/Detail.vue'
 import { Dialog } from '@/components/Dialog'
 import { BaseButton } from '@/components/Button'
-import { ElTag } from 'element-plus'
+
+import { getNotifications, deleteNotifications } from '@/api'
 
 const { t } = useI18n()
 
-const searchParams = ref({
-
-})
-
-
+const searchParams = ref({})
 
 const { tableRegister, tableState, tableMethods } = useTable({
   fetchDataApi: async () => {
-    const { list, total } = await getRepairsList(searchParams.value)
+    const { list, total } = await getNotifications(searchParams.value)
     return {
       list: list || [],
       total: total
@@ -35,31 +32,19 @@ const { tableRegister, tableState, tableMethods } = useTable({
 const renderTag = (enable) => {
   switch (enable) {
     case 0:
-      return <ElTag type='danger'>硬件故障</ElTag>
+      return <ElTag type='success'>预约审核</ElTag>
     case 1:
-      return <ElTag type='warning'>软件故障</ElTag>
+      return <ElTag type='warning'>临时通知</ElTag>
     case 2:
-      return <ElTag type='info'>操作错误</ElTag>
+      return <ElTag type='info'>预约提醒</ElTag>
     case 3:
-      return <ElTag type='info'>其他</ElTag>
+      return <ElTag type='primary'>设备申请</ElTag>
+    case 4:
+      return <ElTag type='danger'>维修进度</ElTag>
     default:
-      return <ElTag type='info'>待审核</ElTag>
+      return <ElTag type='danger'>预约审核</ElTag>
   }
 }
-
-const status = (enable) => {
-  switch (enable) {
-    case 0:
-      return <ElTag type='success'>待处理</ElTag>
-    case 1:
-      return <ElTag type='danger'>维修中</ElTag>
-    case 2:
-      return <ElTag type='warning'>已完成</ElTag>
-    default:
-      return <ElTag type='danger'>待处理</ElTag>
-  }
-}
-
 
 const { dataList, loading, total } = tableState
 const { getList } = tableMethods
@@ -70,81 +55,36 @@ const tableColumns = reactive([
     label: 'ID',
   },
   {
-    field: 'repairNumber',
-    label: '维修单号',
+    field: 'title',
+    label: '通知标题'
   },
   {
-    field: 'instrument',
-    label: '报修设备',
+    field: 'content',
+    label: '通知内容'
+  },
+  {
+    field: 'type',
+    label: '通知类型',
+    slots: {
+      default: (data) => {
+        return renderTag(data.row.type)
+      }
+    }
+  },
+  {
+    field: 'user',
+    label: '通知用户',
     slots: {
       default: (data) => {
         return (
-          <>
-            <div>{data.row.instrument.name}</div>
-          </>
+          <div>{data.row.user.username}</div>
         )
       }
     }
   },
   {
-    field: 'model',
-    label: '设备序列号',
-    slots: {
-      default: (data) => {
-        return (
-          <>
-            <div>{data.row.instrument.model}</div>
-          </>
-        )
-      }
-    }
-  },
-  {
-    field: 'reporter',
-    label: '报修用户',
-    slots: {
-      default: (data) => {
-        return (
-          <>
-            <div>{data.row.reporter.username}</div>
-          </>
-        )
-      }
-    }
-  },
-  {
-    field: 'faultType',
-    label: '故障类型',
-    slots: {
-      default: (data) => {
-        return (
-          <>
-            <div>{renderTag(data.row.faultType)}</div>
-          </>
-        )
-      }
-    }
-  },
-  {
-    field: 'description',
-    label: '故障详细描述'
-  },
-  {
-    field: 'createdAt',
-    label: '报修时间',
-  },
-  {
-    field: 'status',
-    label: '维修状态',
-    slots: {
-      default: (data) => {
-        return (
-          <>
-            <div>{status(data.row.status)}</div>
-          </>
-        )
-      }
-    }
+    field: 'updatedAt',
+    label: '通知时间'
   },
   {
     field: 'action',
@@ -155,15 +95,12 @@ const tableColumns = reactive([
         const row = data.row
         return (
           <>
-            <BaseButton type="primary" onClick={() => action(row, 'edit')
-            }>
-              审核
-            </BaseButton>
             < BaseButton type="success" onClick={() => action(row, 'detail')
             }>
               {t('exampleDemo.detail')}
             </BaseButton>
-
+            < BaseButton type="danger" onClick={() => delData(row)}
+            >{t('exampleDemo.del')} </BaseButton >
           </>
         )
       }
@@ -196,12 +133,18 @@ const writeRef = ref()
 const saveLoading = ref(false)
 
 const action = (row, type) => {
-  dialogTitle.value = t(type === 'edit' ? "审核" : 'exampleDemo.detail')
+  dialogTitle.value = t(type === 'edit' ? 'exampleDemo.edit' : 'exampleDemo.detail')
   actionType.value = type
   currentRow.value = row
   dialogVisible.value = true
 }
 
+const AddAction = () => {
+  dialogTitle.value = t('exampleDemo.add')
+  currentRow.value = undefined
+  dialogVisible.value = true
+  actionType.value = ''
+}
 
 const save = async () => {
   const write = unref(writeRef)
@@ -216,11 +159,36 @@ const save = async () => {
   }
 }
 
+const delData = async (row) => {
+  try {
+    await ElMessageBox.confirm(
+      `确定要 "${row.title}" 吗？此操作不可恢复。`,
+      '删除确认',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    )
+
+    await deleteNotifications(row.id)
+    ElMessage.success('删除成功')
+    getList()
+  } catch (error) {
+    if (error !== 'cancel') {
+      ElMessage.error('删除失败')
+      console.error(error)
+    }
+  }
+}
 </script>
 
 <template>
   <ContentWrap>
     <Search :schema="searchSchema" @reset="setSearchParams" @search="setSearchParams" />
+    <div class="mb-10px">
+      <BaseButton type="primary" @click="AddAction">{{ t('exampleDemo.add') }}</BaseButton>
+    </div>
     <Table :columns="tableColumns" default-expand-all node-key="id" :data="dataList" :loading="loading" :pagination="{
       total
     }" @register="tableRegister" />

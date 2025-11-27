@@ -144,7 +144,7 @@ export default ({ command, mode }) => {
       proxy: {
         // 选项写法
         '/api': {
-          target: 'http://127.0.0.1:3000',
+          target: 'http://127.0.0.1:7001/api',
           changeOrigin: true,
           rewrite: (path) => path.replace(/^\/api/, '')
         }

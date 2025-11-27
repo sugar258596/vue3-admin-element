@@ -52,9 +52,8 @@ const { getList } = tableMethods
 
 const tableColumns = reactive([
   {
-    field: 'index',
-    label: t('userDemo.index'),
-    type: 'index'
+    field: 'id',
+    label: 'ID',
   },
   {
     field: 'name',

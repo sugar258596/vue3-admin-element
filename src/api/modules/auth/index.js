@@ -5,5 +5,5 @@ export const loginApi = (data) => {
 }
 
 export const loginOutApi = () => {
-  return request.get({ url: '/mock/user/loginOut' })
+  return request.get({ url: '/auth/logout' })
 }
