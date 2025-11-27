@@ -7,19 +7,11 @@ import UploadAvatar from './components/UploadAvatar.vue'
 import { Dialog } from '@/components/Dialog'
 import EditInfo from './components/EditInfo.vue'
 import EditPassword from './components/EditPassword.vue'
+import { getUserInfoApi, editUserInfo } from '@/api'
 
 const userInfo = ref()
 const fetchDetailUserApi = async () => {
-  // 这里可以调用接口获取用户信息
-  const data = {
-    id: 1,
-    username: 'admin',
-    realName: 'admin',
-    phoneNumber: '18888888888',
-    email: '502431556@qq.com',
-    avatarUrl: '',
-    roleList: ['超级管理员']
-  }
+  const data = await getUserInfoApi()
   userInfo.value = data
 }
 fetchDetailUserApi()
@@ -30,14 +22,36 @@ const dialogVisible = ref(false)
 
 const uploadAvatarRef = ref()
 const avatarLoading = ref(false)
+
+const base64ToFile = (base64, filename, mimeType = 'image/jpeg') => {
+  // 提取 base64 数据部分（去掉 data:image/jpeg;base64, 前缀）
+  const arr = base64.split(',');
+  const mime = arr[0].match(/:(.*?);/)[1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+
+  return new File([u8arr], filename, { type: mimeType || mime });
+};
+
+
 const saveAvatar = async () => {
   try {
-    avatarLoading.value = true
+    // avatarLoading.value = true
     const base64 = unref(uploadAvatarRef)?.getBase64()
-    console.log(base64)
-    // 这里可以调用修改头像接口
-    fetchDetailUserApi()
+    const file = base64ToFile(base64, 'avatar.jpg')
+    const formData = {
+      ...userInfo.value,
+      teachingTags: JSON.stringify(userInfo.value?.teachingTags),
+      avatar: file
+    }
+    await editUserInfo(formData)
     ElMessage.success('修改成功')
+    fetchDetailUserApi()
     dialogVisible.value = false
   } catch (error) {
     console.log(error)
@@ -45,6 +59,9 @@ const saveAvatar = async () => {
     avatarLoading.value = false
   }
 }
+
+
+
 </script>
 
 <template>
@@ -52,7 +69,7 @@ const saveAvatar = async () => {
     <ContentWrap title="个人信息" class="w-400px">
       <div class="flex justify-center items-center">
         <div class="avatar w-[150px] h-[150px] relative cursor-pointer" @click="dialogVisible = true">
-          <ElImage class="w-[150px] h-[150px] rounded-full" :src="userInfo?.avatarUrl || defaultAvatar" fit="fill" />
+          <ElImage class="w-[150px] h-[150px] rounded-full" :src="userInfo?.avatar || defaultAvatar" fit="fill" />
         </div>
       </div>
       <ElDivider />
@@ -63,12 +80,12 @@ const saveAvatar = async () => {
       <ElDivider />
       <div class="flex justify-between items-center">
         <div>昵称：</div>
-        <div>{{ userInfo?.realName }}</div>
+        <div>{{ userInfo?.nickname }}</div>
       </div>
       <ElDivider />
       <div class="flex justify-between items-center">
         <div>手机号码：</div>
-        <div>{{ userInfo?.phoneNumber ?? '-' }}</div>
+        <div>{{ userInfo?.phone ?? '-' }}</div>
       </div>
       <ElDivider />
       <div class="flex justify-between items-center">
@@ -79,11 +96,8 @@ const saveAvatar = async () => {
       <div class="flex justify-between items-center">
         <div>所属角色：</div>
         <div>
-          <template v-if="userInfo?.roleList?.length">
-            <ElTag v-for="item in userInfo?.roleList || []" :key="item" class="ml-2 mb-w">{{ item }}
-            </ElTag>
-          </template>
-          <template v-else>-</template>
+          <ElTag :key="item" class="ml-2 mb-w">{{ userInfo?.role }}
+          </ElTag>
         </div>
       </div>
       <ElDivider />
@@ -101,7 +115,7 @@ const saveAvatar = async () => {
   </div>
 
   <Dialog v-model="dialogVisible" title="修改头像" width="800px">
-    <UploadAvatar ref="uploadAvatarRef" :url="userInfo?.avatarUrl || defaultAvatar" />
+    <UploadAvatar ref="uploadAvatarRef" :url="userInfo?.avatar || defaultAvatar" />
 
     <template #footer>
       <ElButton type="primary" :loading="avatarLoading" @click="saveAvatar"> 保存 </ElButton>

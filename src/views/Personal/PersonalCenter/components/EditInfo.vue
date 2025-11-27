@@ -4,6 +4,8 @@ import { useForm } from '@/hooks/web/useForm'
 import { useValidator } from '@/hooks/web/useValidator'
 import { reactive, ref, watch } from 'vue'
 import { ElDivider, ElMessage, ElMessageBox } from 'element-plus'
+import { editUserInfo } from '@/api'
+
 
 const props = defineProps({
   userInfo: {
@@ -16,7 +18,7 @@ const { required, phone, maxlength, email } = useValidator()
 
 const formSchema = reactive([
   {
-    field: 'realName',
+    field: 'nickname',
     label: '昵称',
     component: 'Input',
     colProps: {
@@ -24,7 +26,7 @@ const formSchema = reactive([
     }
   },
   {
-    field: 'phoneNumber',
+    field: 'phone',
     label: '手机号码',
     component: 'Input',
     colProps: {
@@ -34,6 +36,14 @@ const formSchema = reactive([
   {
     field: 'email',
     label: '邮箱',
+    component: 'Input',
+    colProps: {
+      span: 24
+    }
+  },
+  {
+    field: 'department',
+    label: '所属院系/部门',
     component: 'Input',
     colProps: {
       span: 24
@@ -48,7 +58,7 @@ const rules = reactive({
 })
 
 const { formRegister, formMethods } = useForm()
-const { setValues, getElFormExpose } = formMethods
+const { setValues, getFormData, getElFormExpose } = formMethods
 
 watch(
   () => props.userInfo,
@@ -75,8 +85,13 @@ const save = async () => {
     })
       .then(async () => {
         try {
+          const formData = await getFormData()
+
+          const { teachingTags, ...newData } = formData
+          newData.teachingTags = JSON.stringify(teachingTags)
+
           saveLoading.value = true
-          // 这里可以调用修改用户信息接口
+          editUserInfo(formData)
           ElMessage.success('修改成功')
         } catch (error) {
           console.log(error)

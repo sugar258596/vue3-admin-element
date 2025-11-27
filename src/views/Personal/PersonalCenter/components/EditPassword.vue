@@ -5,11 +5,13 @@ import { reactive, ref } from 'vue'
 import { useValidator } from '@/hooks/web/useValidator'
 import { ElMessage, ElMessageBox, ElDivider } from 'element-plus'
 
+import { editPassword } from '@/api'
+
 const { required } = useValidator()
 
 const formSchema = reactive([
   {
-    field: 'password',
+    field: 'oldPassword',
     label: '旧密码',
     component: 'InputPassword',
     colProps: {
@@ -28,7 +30,7 @@ const formSchema = reactive([
     }
   },
   {
-    field: 'newPassword2',
+    field: 'confirmPassword',
     label: '确认新密码',
     component: 'InputPassword',
     colProps: {
@@ -90,7 +92,8 @@ const save = async () => {
       .then(async () => {
         try {
           saveLoading.value = true
-          // 这里可以调用修改密码的接口
+          const formData = await getFormData()
+          await editPassword(formData)
           ElMessage.success('修改成功')
         } catch (error) {
           console.log(error)

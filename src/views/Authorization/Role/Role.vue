@@ -118,6 +118,13 @@ const action = (row, type) => {
   dialogVisible.value = true
 }
 
+const AddAction = () => {
+  dialogTitle.value = t('exampleDemo.add')
+  currentRow.value = undefined
+  dialogVisible.value = true
+  actionType.value = ''
+}
+
 
 const save = async () => {
   const write = unref(writeRef)
@@ -162,6 +169,9 @@ const delData = async (row) => {
 <template>
   <ContentWrap>
     <Search :schema="searchSchema" @reset="setSearchParams" @search="setSearchParams" />
+    <div class="mb-10px">
+      <BaseButton type="primary" @click="AddAction">{{ t('exampleDemo.add') }}</BaseButton>
+    </div>
     <Table :columns="tableColumns" default-expand-all node-key="id" :data="dataList" :loading="loading" :pagination="{
       total
     }" @register="tableRegister" />

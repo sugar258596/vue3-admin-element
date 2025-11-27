@@ -67,7 +67,18 @@ const detailSchema = ref([
   {
     field: 'teachingTags',
     label: '教学标签数组',
-    span: 24
+    span: 24,
+    slots: {
+      default: (data) => {
+        return (
+          <div class={'flex flex-wrap gap-2'}>
+            {data.teachingTags?.map((item, index) => (
+              <ElTag type="primary">{item}</ElTag>
+            ))}
+          </div>
+        )
+      }
+    }
   },
 ])
 </script>
