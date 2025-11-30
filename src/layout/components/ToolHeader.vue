@@ -1,5 +1,5 @@
 <script lang="jsx">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, ref } from 'vue'
 import { Collapse } from '@/components/Collapse'
 import { LocaleDropdown } from '@/components/LocaleDropdown'
 import { SizeDropdown } from '@/components/SizeDropdown'
@@ -9,6 +9,16 @@ import { Breadcrumb } from '@/components/Breadcrumb'
 import { ThemeSwitch } from '@/components/ThemeSwitch'
 import { useAppStore } from '@/store/modules/app'
 import { useDesign } from '@/hooks/web/useDesign'
+
+import { getUserInfoApi } from '@/api'
+
+
+const userInfo = ref()
+const fetchDetailUserApi = async () => {
+  const data = await getUserInfoApi()
+  userInfo.value = data
+}
+fetchDetailUserApi()
 
 const { getPrefixCls, variables } = useDesign()
 
@@ -67,7 +77,7 @@ export default defineComponent({
               color="var(--top-header-text-color)"
             ></LocaleDropdown>
           ) : undefined}
-          <UserInfo></UserInfo>
+          <UserInfo avatar={userInfo.value?.avatar}></UserInfo>
         </div>
       </div>
     )

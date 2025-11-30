@@ -99,15 +99,6 @@ export const asyncRouterMap = [
           affix: true
         }
       },
-      {
-        path: 'workplace',
-        component: () => import('@/views/Dashboard/Workplace.vue'),
-        name: 'Workplace',
-        meta: {
-          title: t('router.workplace'),
-          noCache: true
-        }
-      }
     ]
   },
   {
@@ -232,15 +223,6 @@ export const asyncRouterMap = [
       alwaysShow: true
     },
     children: [
-      {
-        path: 'department',
-        component: () => import('@/views/Authorization/Department/Department.vue'),
-        name: 'Department',
-        meta: {
-          title: t('router.department')
-        }
-      },
-
       {
         path: 'role',
         component: () => import('@/views/Authorization/Role/Role.vue'),

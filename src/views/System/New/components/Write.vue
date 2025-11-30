@@ -5,7 +5,7 @@ import { reactive, watch, ref, } from 'vue'
 import { useValidator } from '@/hooks/web/useValidator'
 import { useI18n } from '@/hooks/web/useI18n'
 import { ElIcon, ElMessage, ElAvatar } from 'element-plus'
-import { addBannerType, editBannerType } from '@/api'
+import { addNews, editNews } from '@/api'
 
 const { t } = useI18n()
 
@@ -23,48 +23,97 @@ const options = ref([])
 
 
 
+
 const formSchema = ref([
   {
-    field: "name",
-    label: "类型名称",
+    field: "title",
+    label: "标题",
     component: 'Input',
     colProps: {
       span: 24
-    },
+    }
   },
-
   {
-    field: "description",
-    label: "类型描述",
+    field: "content",
+    label: "内容",
     component: 'Input',
-    componentProps: {
-      type: 'textarea'
-    },
     colProps: {
       span: 24
-    },
+    }
   },
   {
-    field: 'status',
-    label: '状态',
-    component: 'Select',
-    value: 0,
-    componentProps: {
-      options: [
-        {
-          label: t('userDemo.enable'),
-          value: 0
-        },
-        {
-          label: t('userDemo.disable'),
-          value: 1
-        },
-
-      ]
-    },
+    field: 'tags',
+    label: '标签',
+    component: 'InputTag',
+    colProps: {
+      span: 24
+    }
+  },
+  {
+    field: 'coverImage',
+    component: 'Upload',
+    label: `封面图片`,
     colProps: {
       span: 24
     },
+    componentProps: {
+      autoUpload: false,
+      action: "#",
+      listType: "picture-card",
+      limit: 1,
+      multiple: true,
+      beforeUpload: (rawFile) => {
+        if (rawFile.size / 1024 / 1024 > 2) {
+          ElMessage.error('Avatar picture size can not exceed 2MB!')
+          return false
+        }
+        return true
+      },
+      beforeRemove: () => {
+      },
+      slots: {
+        default: () => (
+          <>
+            <ElIcon class="avatar-uploader-icon" size="large">
+              add
+            </ElIcon>
+          </>
+        )
+      }
+    }
+  },
+  {
+    field: 'images',
+    component: 'Upload',
+    label: `上传图片`,
+    colProps: {
+      span: 24
+    },
+    componentProps: {
+      autoUpload: false,
+      action: "#",
+      listType: "picture-card",
+      limit: 10,
+      multiple: true,
+      beforeUpload: (rawFile) => {
+        if (rawFile.size / 1024 / 1024 > 2) {
+          ElMessage.error('Avatar picture size can not exceed 2MB!')
+          return false
+        }
+        return true
+      },
+      beforeRemove: () => {
+      },
+      slots: {
+        default: () => (
+          <>
+            <ElIcon class="avatar-uploader-icon" size="large">
+              add
+            </ElIcon>
+          </>
+        )
+      }
+    }
   },
 ])
 
@@ -84,9 +133,16 @@ const submit = async () => {
   })
   if (valid) {
     const formData = await getFormData()
-    const { id, images, ...newData } = formData
+    const { id, images, coverImage, tags, ...newData } = formData
 
 
+    const cover = coverImage?.map(item => {
+      // 判断是否为文件
+      if (item.raw) {
+        return item.raw
+      }
+      return item?.url
+    })
     const image = images?.map(item => {
       // 判断是否为文件
       if (item.raw) {
@@ -94,13 +150,14 @@ const submit = async () => {
       }
       return item?.url
     })
+    newData.tags = JSON.stringify(tags)
     newData.images = image
-
+    newData.coverImage = cover
 
     if (id) {
-      await editBannerType(id, newData)
+      await editNews(id, newData)
     } else {
-      addBannerType(newData)
+      addNews(newData)
     }
     return formData
   }
@@ -110,14 +167,17 @@ watch(
   () => props.currentRow,
   (currentRow) => {
     if (!currentRow) return
-    const { images, lab, ...newData } = currentRow
+    const { images, coverImage, lab, ...newData } = currentRow
+    newData.coverImage = [
+      {
+        url: coverImage ?? "",
+      }
+    ]
     newData.images = images?.map(item => {
       return {
         url: item,
       }
     }) ?? []
-
-    newData.lab = lab?.id
 
     setValues(newData)
   },

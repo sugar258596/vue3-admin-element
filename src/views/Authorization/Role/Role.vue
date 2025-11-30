@@ -6,7 +6,7 @@ import { getUserList, deleteUser } from '@/api'
 import { useTable } from '@/hooks/web/useTable'
 import { useI18n } from '@/hooks/web/useI18n'
 import { Table, } from '@/components/Table'
-import { ElTag, ElMessageBox, ElMessage } from 'element-plus'
+import { ElTag, ElMessageBox, ElMessage, ElAvatar } from 'element-plus'
 import { Search } from '@/components/Search'
 import { ContentWrap } from '@/components/ContentWrap'
 import Write from './components/Write.vue'
@@ -37,6 +37,19 @@ const tableColumns = reactive([
   {
     field: 'username',
     label: t('role.roleName')
+  },
+  {
+    field: 'avatar',
+    label: '头像',
+    slots: {
+      default: (data) => {
+        return (
+          <>
+            <ElAvatar src={data.row.avatar} />
+          </>
+        )
+      }
+    }
   },
   {
     field: 'status',

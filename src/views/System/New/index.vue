@@ -12,7 +12,7 @@ import Detail from './components/Detail.vue'
 import { Dialog } from '@/components/Dialog'
 import { BaseButton } from '@/components/Button'
 
-import { getBannerType, deleteBannerType } from '@/api'
+import { getNewList, deleteNews } from '@/api'
 
 const { t } = useI18n()
 
@@ -20,7 +20,7 @@ const searchParams = ref({})
 
 const { tableRegister, tableState, tableMethods } = useTable({
   fetchDataApi: async () => {
-    const { list, total } = await getBannerType(searchParams.value)
+    const { list, total } = await getNewList(searchParams.value)
     return {
       list: list || [],
       total: total
@@ -29,40 +29,30 @@ const { tableRegister, tableState, tableMethods } = useTable({
 })
 
 
-const renderTag = (enable) => {
-  switch (enable) {
-    case 0:
-      return <ElTag type='success'>启用</ElTag>
-    case 1:
-      return <ElTag type='danger'>禁用</ElTag>
-    default:
-      return <ElTag type='danger'>禁用</ElTag>
-  }
-}
-
 const { dataList, loading, total } = tableState
 const { getList } = tableMethods
 
 const tableColumns = reactive([
   {
-    field: 'index',
-    label: t('userDemo.index'),
-    type: 'index'
+    field: 'title',
+    label: '标题'
   },
   {
-    field: 'name',
-    label: '类型名称'
+    field: 'content',
+    label: '内容'
   },
   {
-    field: 'description',
-    label: '类型描述'
-  },
-  {
-    field: 'status',
-    label: t('menu.status'),
+    field: 'coverImage',
+    label: '封面',
     slots: {
       default: (data) => {
-        return renderTag(data.row.status)
+        return (
+          <div class={'flex flex-wrap gap-2'}>
+            <div class={'w-20 h-20'}>
+              <img class={'w-full h-full object-cover'} src={data.row.coverImage} />
+            </div>
+          </div>
+        )
       }
     }
   },
@@ -146,7 +136,7 @@ const save = async () => {
 const delData = async (row) => {
   try {
     await ElMessageBox.confirm(
-      `确定要 "${row.name}" 吗？此操作不可恢复。`,
+      `确定要 "${row.title}" 吗？此操作不可恢复。`,
       '删除确认',
       {
         confirmButtonText: '确定',
@@ -155,7 +145,7 @@ const delData = async (row) => {
       }
     )
 
-    await deleteBannerType(row.id)
+    await deleteNews(row.id)
     ElMessage.success('删除成功')
     getList()
   } catch (error) {

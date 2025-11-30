@@ -71,7 +71,7 @@ const detailSchema = ref([
       default: (data) => {
         return (
           <>
-            <div>{data.applicant.username}</div>
+            <div>{data.applicant?.username}</div>
           </>
         )
       }

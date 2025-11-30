@@ -5,7 +5,7 @@ import { reactive, watch, ref, } from 'vue'
 import { useValidator } from '@/hooks/web/useValidator'
 import { useI18n } from '@/hooks/web/useI18n'
 import { ElIcon, ElMessage, ElAvatar } from 'element-plus'
-import { addUser, editUser } from '@/api'
+import { editUser } from '@/api'
 
 const { t } = useI18n()
 
@@ -157,20 +157,13 @@ const submit = async () => {
   })
   if (valid) {
     const formData = await getFormData()
-    const { Upload, id, teachingTags, ...newData } = formData
+    const { Upload, id, ...newData } = formData
 
     if (Upload && Upload.length > 0 && Upload[0].raw) {
       newData.avatar = Upload[0].raw
     }
 
-    newData.teachingTags = JSON.stringify(teachingTags)
-
-    if (id) {
-      await editUser(id, newData)
-    } else {
-      addUser(newData)
-    }
-
+    await editUser(id, newData)
     return formData
   }
 }

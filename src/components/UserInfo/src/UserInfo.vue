@@ -8,8 +8,17 @@ import LockPage from './components/LockPage.vue'
 import { useLockStore } from '@/store/modules/lock'
 import { useUserStore } from '@/store/modules/user'
 import { useRouter } from 'vue-router'
+import defaultAvatar from '@/assets/imgs/avatar.jpg'
 
 const { push } = useRouter()
+
+
+defineProps({
+  avatar: {
+    type: String,
+    default: defaultAvatar
+  }
+})
 
 const userStore = useUserStore()
 
@@ -46,10 +55,10 @@ const toPage = (path) => {
 <template>
   <ElDropdown class="custom-hover" :class="prefixCls" trigger="click">
     <div class="flex items-center">
-      <img src="@/assets/imgs/avatar.jpg" alt="" class="w-[calc(var(--logo-height)-25px)] rounded-[50%]" />
+      <img :src="avatar" alt="" class="w-[calc(var(--logo-height)-25px)] rounded-[50%]" />
       <span class="<lg:hidden text-14px pl-[5px] text-[var(--top-header-text-color)]">{{
         userStore.getUserInfo?.username
-        }}</span>
+      }}</span>
     </div>
     <template #dropdown>
       <ElDropdownMenu>
@@ -57,9 +66,6 @@ const toPage = (path) => {
           <div @click="toPage('/personal/personal-center')">
             {{ t('router.personalCenter') }}
           </div>
-        </ElDropdownItem>
-        <ElDropdownItem>
-          <div @click="toDocument">{{ t('common.document') }}</div>
         </ElDropdownItem>
         <ElDropdownItem divided>
           <div @click="lockScreen">{{ t('lock.lockScreen') }}</div>

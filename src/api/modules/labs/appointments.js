@@ -12,5 +12,5 @@ export const detailedAppointments = (id) => {
 }
 
 export const updateReview = (id, data) => {
-  return request.patch({ url: `/appointments/review/${id}`, data })
+  return request.put({ url: `/appointments/review/${id}`, data })
 }

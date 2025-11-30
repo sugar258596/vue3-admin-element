@@ -80,7 +80,7 @@ const tableColumns = reactive([
       default: (data) => {
         return (
           <>
-            <div>{data.row.instrument.name}</div>
+            <div>{data.row.instrument?.name}</div>
           </>
         )
       }
@@ -93,7 +93,7 @@ const tableColumns = reactive([
       default: (data) => {
         return (
           <>
-            <div>{data.row.instrument.model}</div>
+            <div>{data.row.instrument?.model}</div>
           </>
         )
       }
@@ -106,7 +106,7 @@ const tableColumns = reactive([
       default: (data) => {
         return (
           <>
-            <div>{data.row.reporter.username}</div>
+            <div>{data.row.reporter?.username}</div>
           </>
         )
       }

@@ -8,11 +8,15 @@ export const getInstrumentsOptions = (params) => {
 }
 
 export const addInstruments = (data) => {
-  return request.post({ url: '/instruments', data })
+  return request.post({
+    url: '/instruments', data, headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
 }
 
 export const detailedInstruments = (id) => {
-  return request.get({ url: `/instruments/${id}` })
+  return request.delete({ url: `/instruments/${id}` })
 }
 
 export const editInstruments = (id, data) => {

@@ -64,7 +64,7 @@ const detailSchema = ref([
       default: (data) => {
         return (
           <>
-            <div>{data.instrument.name}</div>
+            <div>{data.instrument?.name}</div>
           </>
         )
       }
@@ -77,7 +77,7 @@ const detailSchema = ref([
       default: (data) => {
         return (
           <>
-            <div>{data.instrument.model}</div>
+            <div>{data.instrument?.model}</div>
           </>
         )
       }
@@ -90,7 +90,7 @@ const detailSchema = ref([
       default: (data) => {
         return (
           <>
-            <div>{data.reporter.username}</div>
+            <div>{data.reporter?.username}</div>
           </>
         )
       }
