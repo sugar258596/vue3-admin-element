@@ -35,6 +35,8 @@ const renderTag = (enable) => {
       return <ElTag type='success'>已通过</ElTag>
     case 2:
       return <ElTag type='danger'>已拒绝</ElTag>
+    case 3:
+      return <ElTag type='primary'>已归还</ElTag>
     default:
       return <ElTag type='danger'>已拒绝</ElTag>
   }

@@ -71,7 +71,7 @@ const detailSchema = ref([
       default: (data) => {
         return (
           <div class={'flex flex-wrap gap-2'}>
-            {data.tags?.map((item, index) => (
+            {data?.tags?.map((item, index) => (
               <ElTag type="primary">{item}</ElTag>
             ))}
           </div>
