@@ -132,7 +132,7 @@ const submit = async () => {
       if (item.raw) return item.raw
       return item?.url
     })
-    
+
     newData.tags = JSON.stringify(tags || [])
     newData.images = image
     newData.coverImage = cover?.[0]
@@ -156,11 +156,10 @@ watch(
   () => props.currentRow,
   (currentRow) => {
     if (!currentRow) return
-    const { images, coverImage, tags, ...newData } = currentRow
-    
+    const { images, coverImage, ...newData } = currentRow
+
     newData.coverImage = coverImage ? [{ url: coverImage }] : []
     newData.images = images?.map(item => ({ url: item })) || []
-    newData.tags = tags ? JSON.parse(tags) : []
 
     setValues(newData)
   },
