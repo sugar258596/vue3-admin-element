@@ -33,7 +33,7 @@ const detailSchema = ref([
       default: (data) => {
         return (
           <>
-            <div>{data.instrument.name}</div>
+            <div>{data.instrument?.name}</div>
           </>
         )
       }
@@ -46,7 +46,7 @@ const detailSchema = ref([
       default: (data) => {
         return (
           <>
-            <div>{data.instrument.serialNumber}</div>
+            <div>{data.instrument?.serialNumber}</div>
           </>
         )
       }

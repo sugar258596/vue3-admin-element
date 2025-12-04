@@ -17,10 +17,15 @@ import { getAppointmentsList, getApplicationsList } from '@/api'
 
 const { t } = useI18n()
 
-const searchParams = ref({
+const searchParams = ref({})
 
-})
-// :0-待审核,1-已通过,2-已拒绝
+// status: 0-待审核, 1-已通过, 2-已拒绝
+const statusOptions = [
+  { label: '全部', value: '' },
+  { label: '待审核', value: 0 },
+  { label: '已通过', value: 1 },
+  { label: '已拒绝', value: 2 }
+]
 
 const renderTag = (enable) => {
   switch (enable) {
@@ -35,10 +40,18 @@ const renderTag = (enable) => {
   }
 }
 
-
 const { tableRegister, tableState, tableMethods } = useTable({
   fetchDataApi: async () => {
-    const { list, total } = await getApplicationsList(searchParams.value)
+    const params = {
+      page: currentPage.value,
+      pageSize: pageSize.value,
+      ...searchParams.value
+    }
+    // 移除空值参数
+    if (params.status === '' || params.status === undefined) {
+      delete params.status
+    }
+    const { list, total } = await getApplicationsList(params)
     return {
       list: list || [],
       total: total
@@ -46,7 +59,7 @@ const { tableRegister, tableState, tableMethods } = useTable({
   }
 })
 
-const { dataList, loading, total } = tableState
+const { dataList, loading, total, currentPage, pageSize } = tableState
 const { getList } = tableMethods
 
 const tableColumns = reactive([
@@ -61,7 +74,7 @@ const tableColumns = reactive([
       default: (data) => {
         return (
           <>
-            <div>{data.row.instrument.name}</div>
+            <div>{data.row.instrument?.name}</div>
           </>
         )
       }
@@ -74,7 +87,7 @@ const tableColumns = reactive([
       default: (data) => {
         return (
           <>
-            <div>{data.row.instrument.serialNumber}</div>
+            <div>{data.row.instrument?.serialNumber}</div>
           </>
         )
       }
@@ -99,7 +112,7 @@ const tableColumns = reactive([
       default: (data) => {
         return (
           <>
-            <div>{data.row.applicant.username}</div>
+            <div>{data.row.applicant?.username}</div>
           </>
         )
       }
@@ -141,9 +154,12 @@ const tableColumns = reactive([
 
 const searchSchema = reactive([
   {
-    field: 'keyword',
-    label: "关键字",
-    component: 'Input'
+    field: 'status',
+    label: '审核状态',
+    component: 'Select',
+    componentProps: {
+      options: statusOptions
+    }
   }
 ])
 

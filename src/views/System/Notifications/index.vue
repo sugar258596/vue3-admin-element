@@ -20,7 +20,16 @@ const searchParams = ref({})
 
 const { tableRegister, tableState, tableMethods } = useTable({
   fetchDataApi: async () => {
-    const { list, total } = await getNotifications(searchParams.value)
+    const params = {
+      page: currentPage.value,
+      pageSize: pageSize.value,
+      ...searchParams.value
+    }
+    // 移除空值参数
+    if (!params.keyword) {
+      delete params.keyword
+    }
+    const { list, total } = await getNotifications(params)
     return {
       list: list || [],
       total: total
@@ -46,7 +55,7 @@ const renderTag = (enable) => {
   }
 }
 
-const { dataList, loading, total } = tableState
+const { dataList, loading, total, currentPage, pageSize } = tableState
 const { getList } = tableMethods
 
 const tableColumns = reactive([
@@ -111,8 +120,11 @@ const tableColumns = reactive([
 const searchSchema = reactive([
   {
     field: 'keyword',
-    label: "关键字",
-    component: 'Input'
+    label: '关键字',
+    component: 'Input',
+    componentProps: {
+      placeholder: '标题/内容'
+    }
   }
 ])
 

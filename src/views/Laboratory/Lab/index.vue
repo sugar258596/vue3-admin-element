@@ -15,13 +15,30 @@ import { BaseButton } from '@/components/Button'
 
 const { t } = useI18n()
 
-const searchParams = ref({
+const searchParams = ref({})
 
-})
+// 实验室状态选项
+const statusOptions = [
+  { label: '全部', value: '' },
+  { label: '启用', value: 0 },
+  { label: '停用', value: 1 }
+]
 
 const { tableRegister, tableState, tableMethods } = useTable({
   fetchDataApi: async () => {
-    const { list, total } = await getLabsList(searchParams.value)
+    const params = {
+      page: currentPage.value,
+      pageSize: pageSize.value,
+      ...searchParams.value
+    }
+    // 移除空值参数
+    if (params.status === '' || params.status === undefined) {
+      delete params.status
+    }
+    if (!params.keyword) {
+      delete params.keyword
+    }
+    const { list, total } = await getLabsList(params)
     return {
       list: list || [],
       total: total
@@ -29,7 +46,7 @@ const { tableRegister, tableState, tableMethods } = useTable({
   }
 })
 
-const { dataList, loading, total } = tableState
+const { dataList, loading, total, currentPage, pageSize } = tableState
 const { getList } = tableMethods
 
 const tableColumns = reactive([
@@ -106,8 +123,19 @@ const tableColumns = reactive([
 const searchSchema = reactive([
   {
     field: 'keyword',
-    label: "关键字",
-    component: 'Input'
+    label: '关键字',
+    component: 'Input',
+    componentProps: {
+      placeholder: '名称/位置/描述'
+    }
+  },
+  {
+    field: 'status',
+    label: '状态',
+    component: 'Select',
+    componentProps: {
+      options: statusOptions
+    }
   }
 ])
 

@@ -179,22 +179,6 @@ export const asyncRouterMap = [
     },
     children: [
       {
-        path: 'type',
-        component: () => import('@/views/System/Type/index.vue'),
-        name: 'Type',
-        meta: {
-          title: '轮播图类型'
-        }
-      },
-      {
-        path: 'carousel',
-        component: () => import('@/views/System/Slideshow/index.vue'),
-        name: 'Carousel',
-        meta: {
-          title: '轮播图'
-        }
-      },
-      {
         path: 'new',
         component: () => import('@/views/System/New/index.vue'),
         name: 'New',

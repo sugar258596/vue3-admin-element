@@ -19,9 +19,31 @@ const { t } = useI18n()
 
 const searchParams = ref({})
 
+// 仪器状态选项
+const statusOptions = [
+  { label: '全部', value: '' },
+  { label: '正常', value: 0 },
+  { label: '停用', value: 1 },
+  { label: '维护中', value: 2 },
+  { label: '故障', value: 3 },
+  { label: '借出', value: 4 }
+]
+
 const { tableRegister, tableState, tableMethods } = useTable({
   fetchDataApi: async () => {
-    const { list, total } = await getInstrumentsList(searchParams.value)
+    const params = {
+      page: currentPage.value,
+      pageSize: pageSize.value,
+      ...searchParams.value
+    }
+    // 移除空值参数
+    if (params.status === '' || params.status === undefined) {
+      delete params.status
+    }
+    if (!params.keyword) {
+      delete params.keyword
+    }
+    const { list, total } = await getInstrumentsList(params)
     return {
       list: list || [],
       total: total
@@ -47,7 +69,7 @@ const renderTag = (enable) => {
   }
 }
 
-const { dataList, loading, total } = tableState
+const { dataList, loading, total, currentPage, pageSize } = tableState
 const { getList } = tableMethods
 
 const tableColumns = reactive([
@@ -113,8 +135,19 @@ const tableColumns = reactive([
 const searchSchema = reactive([
   {
     field: 'keyword',
-    label: "关键字",
-    component: 'Input'
+    label: '关键字',
+    component: 'Input',
+    componentProps: {
+      placeholder: '设备名称/型号'
+    }
+  },
+  {
+    field: 'status',
+    label: '状态',
+    component: 'Select',
+    componentProps: {
+      options: statusOptions
+    }
   }
 ])
 

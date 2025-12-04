@@ -89,7 +89,7 @@ const formSchema = ref([
     }
   },
   {
-    field: 'lab',
+    field: 'labId',
     label: '所属实验室',
     component: 'Select',
     componentProps: {
@@ -183,7 +183,7 @@ watch(
       }
     }) ?? []
 
-    newData.lab = lab?.id
+    newData.labId = lab?.id
 
     setValues(newData)
   },

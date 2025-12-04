@@ -15,15 +15,28 @@ import { ElTag } from 'element-plus'
 
 const { t } = useI18n()
 
-const searchParams = ref({
+const searchParams = ref({})
 
-})
-
-
+// 维修状态选项
+const statusOptions = [
+  { label: '全部', value: '' },
+  { label: '待处理', value: 0 },
+  { label: '维修中', value: 1 },
+  { label: '已完成', value: 2 }
+]
 
 const { tableRegister, tableState, tableMethods } = useTable({
   fetchDataApi: async () => {
-    const { list, total } = await getRepairsList(searchParams.value)
+    const params = {
+      page: currentPage.value,
+      pageSize: pageSize.value,
+      ...searchParams.value
+    }
+    // 移除空值参数
+    if (params.status === '' || params.status === undefined) {
+      delete params.status
+    }
+    const { list, total } = await getRepairsList(params)
     return {
       list: list || [],
       total: total
@@ -61,7 +74,7 @@ const status = (enable) => {
 }
 
 
-const { dataList, loading, total } = tableState
+const { dataList, loading, total, currentPage, pageSize } = tableState
 const { getList } = tableMethods
 
 const tableColumns = reactive([
@@ -173,9 +186,12 @@ const tableColumns = reactive([
 
 const searchSchema = reactive([
   {
-    field: 'keyword',
-    label: "关键字",
-    component: 'Input'
+    field: 'status',
+    label: '维修状态',
+    component: 'Select',
+    componentProps: {
+      options: statusOptions
+    }
   }
 ])
 
