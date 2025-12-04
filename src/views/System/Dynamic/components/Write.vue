@@ -1,13 +1,10 @@
 <script setup lang="jsx">
-import { Form, } from '@/components/Form'
+import { Form } from '@/components/Form'
 import { useForm } from '@/hooks/web/useForm'
-import { reactive, watch, ref, } from 'vue'
+import { reactive, watch, ref } from 'vue'
 import { useValidator } from '@/hooks/web/useValidator'
-import { useI18n } from '@/hooks/web/useI18n'
-import { ElIcon, ElMessage, ElAvatar } from 'element-plus'
-import { addNews, editNews } from '@/api'
-
-const { t } = useI18n()
+import { ElIcon, ElMessage } from 'element-plus'
+import { addDynamic, editDynamic } from '@/api'
 
 const { required } = useValidator()
 
@@ -18,25 +15,23 @@ const props = defineProps({
   }
 })
 
-const options = ref([])
-
-
-
-
-
 const formSchema = ref([
   {
-    field: "title",
-    label: "标题",
+    field: 'title',
+    label: '标题',
     component: 'Input',
     colProps: {
       span: 24
     }
   },
   {
-    field: "content",
-    label: "内容",
+    field: 'content',
+    label: '内容',
     component: 'Input',
+    componentProps: {
+      type: 'textarea',
+      rows: 6
+    },
     colProps: {
       span: 24
     }
@@ -52,24 +47,21 @@ const formSchema = ref([
   {
     field: 'coverImage',
     component: 'Upload',
-    label: `封面图片`,
+    label: '封面图片',
     colProps: {
       span: 24
     },
     componentProps: {
       autoUpload: false,
-      action: "#",
-      listType: "picture-card",
+      action: '#',
+      listType: 'picture-card',
       limit: 1,
-      multiple: true,
       beforeUpload: (rawFile) => {
         if (rawFile.size / 1024 / 1024 > 2) {
-          ElMessage.error('Avatar picture size can not exceed 2MB!')
+          ElMessage.error('图片大小不能超过 2MB!')
           return false
         }
         return true
-      },
-      beforeRemove: () => {
       },
       slots: {
         default: () => (
@@ -85,24 +77,22 @@ const formSchema = ref([
   {
     field: 'images',
     component: 'Upload',
-    label: `上传图片`,
+    label: '图片',
     colProps: {
       span: 24
     },
     componentProps: {
       autoUpload: false,
-      action: "#",
-      listType: "picture-card",
-      limit: 10,
+      action: '#',
+      listType: 'picture-card',
+      limit: 9,
       multiple: true,
       beforeUpload: (rawFile) => {
         if (rawFile.size / 1024 / 1024 > 2) {
-          ElMessage.error('Avatar picture size can not exceed 2MB!')
+          ElMessage.error('图片大小不能超过 2MB!')
           return false
         }
         return true
-      },
-      beforeRemove: () => {
       },
       slots: {
         default: () => (
@@ -114,17 +104,16 @@ const formSchema = ref([
         )
       }
     }
-  },
+  }
 ])
 
 const rules = reactive({
-  roleName: [required()],
-  role: [required()],
+  title: [required()],
+  content: [required()]
 })
 
 const { formRegister, formMethods } = useForm()
 const { setValues, getFormData, getElFormExpose } = formMethods
-
 
 const submit = async () => {
   const elForm = await getElFormExpose()
@@ -135,31 +124,31 @@ const submit = async () => {
     const formData = await getFormData()
     const { id, images, coverImage, tags, ...newData } = formData
 
-
     const cover = coverImage?.map(item => {
-      // 判断是否为文件
-      if (item.raw) {
-        return item.raw
-      }
+      if (item.raw) return item.raw
       return item?.url
     })
     const image = images?.map(item => {
-      // 判断是否为文件
-      if (item.raw) {
-        return item.raw
-      }
+      if (item.raw) return item.raw
       return item?.url
     })
-    newData.tags = JSON.stringify(tags)
+    
+    newData.tags = JSON.stringify(tags || [])
     newData.images = image
-    newData.coverImage = cover
+    newData.coverImage = cover?.[0]
 
-    if (id) {
-      await editNews(id, newData)
-    } else {
-      addNews(newData)
+    try {
+      if (id) {
+        await editDynamic(id, newData)
+      } else {
+        await addDynamic(newData)
+      }
+      ElMessage.success(id ? '编辑成功' : '添加成功')
+      return formData
+    } catch (error) {
+      ElMessage.error(id ? '编辑失败' : '添加失败')
+      return null
     }
-    return formData
   }
 }
 
@@ -167,17 +156,11 @@ watch(
   () => props.currentRow,
   (currentRow) => {
     if (!currentRow) return
-    const { images, coverImage, lab, ...newData } = currentRow
-    newData.coverImage = [
-      {
-        url: coverImage ?? "",
-      }
-    ]
-    newData.images = images?.map(item => {
-      return {
-        url: item,
-      }
-    }) ?? []
+    const { images, coverImage, tags, ...newData } = currentRow
+    
+    newData.coverImage = coverImage ? [{ url: coverImage }] : []
+    newData.images = images?.map(item => ({ url: item })) || []
+    newData.tags = tags ? JSON.parse(tags) : []
 
     setValues(newData)
   },
@@ -195,7 +178,6 @@ defineExpose({
 <template>
   <Form :rules="rules" @register="formRegister" :schema="formSchema" />
 </template>
-
 
 <style lang="less">
 .el-upload {

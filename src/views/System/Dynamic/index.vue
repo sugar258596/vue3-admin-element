@@ -1,18 +1,16 @@
 <script setup lang="jsx">
 import { reactive, ref, unref } from 'vue'
-
 import { useTable } from '@/hooks/web/useTable'
 import { useI18n } from '@/hooks/web/useI18n'
-import { Table, } from '@/components/Table'
-import { ElMessage, ElMessageBox, ElTag } from 'element-plus'
+import { Table } from '@/components/Table'
+import { ElMessage, ElMessageBox, ElTag, ElSwitch } from 'element-plus'
 import { Search } from '@/components/Search'
 import { ContentWrap } from '@/components/ContentWrap'
 import Write from './components/Write.vue'
 import Detail from './components/Detail.vue'
 import { Dialog } from '@/components/Dialog'
 import { BaseButton } from '@/components/Button'
-
-import { getNewList, deleteNews } from '@/api'
+import { getDynamicList, deleteDynamic, toggleDynamicPublish } from '@/api'
 
 const { t } = useI18n()
 
@@ -25,11 +23,9 @@ const { tableRegister, tableState, tableMethods } = useTable({
       pageSize: pageSize.value,
       ...searchParams.value
     }
-    // 移除空值参数
-    if (!params.keyword) {
-      delete params.keyword
-    }
-    const { list, total } = await getNewList(params)
+    if (!params.keyword) delete params.keyword
+    
+    const { list, total } = await getDynamicList(params)
     return {
       list: list || [],
       total: total
@@ -37,33 +33,53 @@ const { tableRegister, tableState, tableMethods } = useTable({
   }
 })
 
-
 const { dataList, loading, total, currentPage, pageSize } = tableState
 const { getList } = tableMethods
 
 const tableColumns = reactive([
   {
     field: 'title',
-    label: '标题'
+    label: '标题',
+    width: 200
   },
   {
     field: 'content',
-    label: '内容'
+    label: '内容',
+    slots: {
+      default: (data) => {
+        const content = data.row.content || ''
+        return <div class="line-clamp-2">{content}</div>
+      }
+    }
   },
   {
     field: 'coverImage',
     label: '封面',
+    width: 100,
     slots: {
       default: (data) => {
-        return (
-          <div class={'flex flex-wrap gap-2'}>
-            <div class={'w-20 h-20'}>
-              <img class={'w-full h-full object-cover'} src={data.row.coverImage} />
-            </div>
+        return data.row.coverImage ? (
+          <div class="w-16 h-16">
+            <img class="w-full h-full object-cover rounded" src={data.row.coverImage} />
           </div>
-        )
+        ) : '-'
       }
     }
+  },
+  {
+    field: 'viewCount',
+    label: '浏览量',
+    width: 100
+  },
+  {
+    field: 'likeCount',
+    label: '点赞数',
+    width: 100
+  },
+  {
+    field: 'createdAt',
+    label: '创建时间',
+    width: 180
   },
   {
     field: 'action',
@@ -74,16 +90,15 @@ const tableColumns = reactive([
         const row = data.row
         return (
           <>
-            <BaseButton type="primary" onClick={() => action(row, 'edit')
-            }>
+            <BaseButton type="primary" size="small" onClick={() => action(row, 'edit')}>
               {t('exampleDemo.edit')}
             </BaseButton>
-            < BaseButton type="success" onClick={() => action(row, 'detail')
-            }>
+            <BaseButton type="success" size="small" onClick={() => action(row, 'detail')}>
               {t('exampleDemo.detail')}
             </BaseButton>
-            < BaseButton type="danger" onClick={() => delData(row)}
-            >{t('exampleDemo.del')} </BaseButton >
+            <BaseButton type="danger" size="small" onClick={() => delData(row)}>
+              {t('exampleDemo.del')}
+            </BaseButton>
           </>
         )
       }
@@ -102,7 +117,6 @@ const searchSchema = reactive([
   }
 ])
 
-
 const setSearchParams = (data) => {
   searchParams.value = data
   getList()
@@ -110,12 +124,9 @@ const setSearchParams = (data) => {
 
 const dialogVisible = ref(false)
 const dialogTitle = ref('')
-
 const currentRow = ref()
 const actionType = ref('')
-
 const writeRef = ref()
-
 const saveLoading = ref(false)
 
 const action = (row, type) => {
@@ -148,7 +159,7 @@ const save = async () => {
 const delData = async (row) => {
   try {
     await ElMessageBox.confirm(
-      `确定要 "${row.title}" 吗？此操作不可恢复。`,
+      `确定要删除 "${row.title}" 吗？此操作不可恢复。`,
       '删除确认',
       {
         confirmButtonText: '确定',
@@ -157,7 +168,7 @@ const delData = async (row) => {
       }
     )
 
-    await deleteNews(row.id)
+    await deleteDynamic(row.id)
     ElMessage.success('删除成功')
     getList()
   } catch (error) {
@@ -175,9 +186,13 @@ const delData = async (row) => {
     <div class="mb-10px">
       <BaseButton type="primary" @click="AddAction">{{ t('exampleDemo.add') }}</BaseButton>
     </div>
-    <Table :columns="tableColumns" default-expand-all node-key="id" :data="dataList" :loading="loading" :pagination="{
-      total
-    }" @register="tableRegister" />
+    <Table 
+      :columns="tableColumns" 
+      :data="dataList" 
+      :loading="loading" 
+      :pagination="{ total }" 
+      @register="tableRegister" 
+    />
   </ContentWrap>
 
   <Dialog v-model="dialogVisible" :title="dialogTitle">
@@ -192,3 +207,12 @@ const delData = async (row) => {
     </template>
   </Dialog>
 </template>
+
+<style scoped>
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+</style>

@@ -179,19 +179,27 @@ export const asyncRouterMap = [
     },
     children: [
       {
-        path: 'new',
-        component: () => import('@/views/System/New/index.vue'),
-        name: 'New',
-        meta: {
-          title: '资讯'
-        }
-      },
-      {
         path: 'notifications',
         component: () => import('@/views/System/Notifications/index.vue'),
         name: 'Notifications',
         meta: {
           title: '通知'
+        }
+      },
+      {
+        path: 'feedback',
+        component: () => import('@/views/System/Feedback/index.vue'),
+        name: 'Feedback',
+        meta: {
+          title: '反馈管理'
+        }
+      },
+      {
+        path: 'dynamic',
+        component: () => import('@/views/System/Dynamic/index.vue'),
+        name: 'Dynamic',
+        meta: {
+          title: '动态管理'
         }
       },
     ]

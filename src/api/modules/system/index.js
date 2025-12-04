@@ -1,3 +1,4 @@
 export * from './banner';
 export * from './notifications';
-export * from './new';
+export * from './feedback';
+export * from './dynamic';
