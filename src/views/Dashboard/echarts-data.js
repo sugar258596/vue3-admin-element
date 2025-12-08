@@ -4,24 +4,11 @@ const { t } = useI18n()
 
 export const lineOptions = {
   title: {
-    text: t('analysis.monthlySales'),
+    text: '月度预约统计',
     left: 'center'
   },
   xAxis: {
-    data: [
-      t('analysis.january'),
-      t('analysis.february'),
-      t('analysis.march'),
-      t('analysis.april'),
-      t('analysis.may'),
-      t('analysis.june'),
-      t('analysis.july'),
-      t('analysis.august'),
-      t('analysis.september'),
-      t('analysis.october'),
-      t('analysis.november'),
-      t('analysis.december')
-    ],
+    data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
     boundaryGap: false,
     axisTick: {
       show: false
@@ -47,24 +34,24 @@ export const lineOptions = {
     }
   },
   legend: {
-    data: [t('analysis.estimate'), t('analysis.actual')],
+    data: ['预约总数', '完成数'],
     top: 50
   },
   series: [
     {
-      name: t('analysis.estimate'),
+      name: '预约总数',
       smooth: true,
       type: 'line',
-      data: [100, 120, 161, 134, 105, 160, 165, 114, 163, 185, 118, 123],
+      data: [],
       animationDuration: 2800,
       animationEasing: 'cubicInOut'
     },
     {
-      name: t('analysis.actual'),
+      name: '完成数',
       smooth: true,
       type: 'line',
       itemStyle: {},
-      data: [120, 82, 91, 154, 162, 140, 145, 250, 134, 56, 99, 123],
+      data: [],
       animationDuration: 2800,
       animationEasing: 'quadraticOut'
     }
@@ -73,7 +60,7 @@ export const lineOptions = {
 
 export const pieOptions = {
   title: {
-    text: t('analysis.userAccessSource'),
+    text: '仪器状态分布',
     left: 'center'
   },
   tooltip: {
@@ -83,34 +70,22 @@ export const pieOptions = {
   legend: {
     orient: 'vertical',
     left: 'left',
-    data: [
-      t('analysis.directAccess'),
-      t('analysis.mailMarketing'),
-      t('analysis.allianceAdvertising'),
-      t('analysis.videoAdvertising'),
-      t('analysis.searchEngines')
-    ]
+    data: []
   },
   series: [
     {
-      name: t('analysis.userAccessSource'),
+      name: '仪器状态',
       type: 'pie',
       radius: '55%',
       center: ['50%', '60%'],
-      data: [
-        { value: 335, name: t('analysis.directAccess') },
-        { value: 310, name: t('analysis.mailMarketing') },
-        { value: 234, name: t('analysis.allianceAdvertising') },
-        { value: 135, name: t('analysis.videoAdvertising') },
-        { value: 1548, name: t('analysis.searchEngines') }
-      ]
+      data: []
     }
   ]
 }
 
 export const barOptions = {
   title: {
-    text: t('analysis.weeklyUserActivity'),
+    text: '周预约统计',
     left: 'center'
   },
   tooltip: {
@@ -126,15 +101,7 @@ export const barOptions = {
   },
   xAxis: {
     type: 'category',
-    data: [
-      t('analysis.monday'),
-      t('analysis.tuesday'),
-      t('analysis.wednesday'),
-      t('analysis.thursday'),
-      t('analysis.friday'),
-      t('analysis.saturday'),
-      t('analysis.sunday')
-    ],
+    data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
     axisTick: {
       alignWithLabel: true
     }
@@ -144,8 +111,8 @@ export const barOptions = {
   },
   series: [
     {
-      name: t('analysis.activeQuantity'),
-      data: [13253, 34235, 26321, 12340, 24643, 1322, 1324],
+      name: '预约数量',
+      data: [],
       type: 'bar'
     }
   ]

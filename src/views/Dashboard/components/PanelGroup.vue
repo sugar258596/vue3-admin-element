@@ -3,6 +3,7 @@ import { ElRow, ElCol, ElCard, ElSkeleton } from 'element-plus'
 import { CountTo } from '@/components/CountTo'
 import { useDesign } from '@/hooks/web/useDesign'
 import { useI18n } from '@/hooks/web/useI18n'
+import { getDashboardPanelApi } from '@/api'
 import { ref, reactive } from 'vue'
 
 const { t } = useI18n()
@@ -21,7 +22,17 @@ const totalState = reactive({
 })
 
 const getCount = async () => {
-
+  try {
+    const result = await getDashboardPanelApi()
+    console.log('面板数据:', result)
+    if (result) {
+      Object.assign(totalState, result)
+    }
+  } catch (error) {
+    console.error('获取面板数据失败:', error)
+  } finally {
+    loading.value = false
+  }
 }
 
 getCount()
@@ -40,10 +51,10 @@ getCount()
                 </div>
               </div>
               <div class="flex flex-col justify-between">
-                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">{{
-                  t('analysis.newUser')
-                }}</div>
-                <CountTo class="text-20px font-700 text-right" :start-val="0" :end-val="102400" :duration="2600" />
+                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">
+                  实验室总数
+                </div>
+                <CountTo class="text-20px font-700 text-right" :start-val="0" :end-val="totalState.users" :duration="2600" />
               </div>
             </div>
           </template>
@@ -62,10 +73,10 @@ getCount()
                 </div>
               </div>
               <div class="flex flex-col justify-between">
-                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">{{
-                  t('analysis.unreadInformation')
-                }}</div>
-                <CountTo class="text-20px font-700 text-right" :start-val="0" :end-val="81212" :duration="2600" />
+                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">
+                  仪器总数
+                </div>
+                <CountTo class="text-20px font-700 text-right" :start-val="0" :end-val="totalState.messages" :duration="2600" />
               </div>
             </div>
           </template>
@@ -84,10 +95,10 @@ getCount()
                 </div>
               </div>
               <div class="flex flex-col justify-between">
-                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">{{
-                  t('analysis.transactionAmount')
-                }}</div>
-                <CountTo class="text-20px font-700 text-right" :start-val="0" :end-val="9280" :duration="2600" />
+                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">
+                  今日预约
+                </div>
+                <CountTo class="text-20px font-700 text-right" :start-val="0" :end-val="totalState.moneys" :duration="2600" />
               </div>
             </div>
           </template>
@@ -106,10 +117,10 @@ getCount()
                 </div>
               </div>
               <div class="flex flex-col justify-between">
-                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">{{
-                  t('analysis.totalShopping')
-                }}</div>
-                <CountTo class="text-20px font-700 text-right" :start-val="0" :end-val="13600" :duration="2600" />
+                <div :class="`${prefixCls}__item--text text-16px text-gray-500 text-right`">
+                  待处理维修
+                </div>
+                <CountTo class="text-20px font-700 text-right" :start-val="0" :end-val="totalState.shoppings" :duration="2600" />
               </div>
             </div>
           </template>

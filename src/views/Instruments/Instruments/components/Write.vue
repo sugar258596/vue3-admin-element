@@ -65,11 +65,6 @@ const formSchema = ref([
     component: 'Input',
   },
   {
-    field: "qrCode",
-    label: "仪器二维码",
-    component: 'Input',
-  },
-  {
     field: 'status',
     label: t('menu.status'),
     component: 'Select',
