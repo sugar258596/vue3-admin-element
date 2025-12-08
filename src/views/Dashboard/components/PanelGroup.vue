@@ -47,7 +47,7 @@ getCount()
             <div :class="`${prefixCls}__item flex justify-between`">
               <div>
                 <div :class="`${prefixCls}__item--icon ${prefixCls}__item--peoples p-16px inline-block rounded-6px`">
-                  <Icon icon="svg-icon:peoples" :size="40" />
+                  <Icon icon="mdi:counter" :size="40" />
                 </div>
               </div>
               <div class="flex flex-col justify-between">
@@ -69,7 +69,7 @@ getCount()
             <div :class="`${prefixCls}__item flex justify-between`">
               <div>
                 <div :class="`${prefixCls}__item--icon ${prefixCls}__item--message p-16px inline-block rounded-6px`">
-                  <Icon icon="svg-icon:message" :size="40" />
+                  <Icon icon="medical-icon:laboratory" :size="40" />
                 </div>
               </div>
               <div class="flex flex-col justify-between">
@@ -91,7 +91,7 @@ getCount()
             <div :class="`${prefixCls}__item flex justify-between`">
               <div>
                 <div :class="`${prefixCls}__item--icon ${prefixCls}__item--money p-16px inline-block rounded-6px`">
-                  <Icon icon="svg-icon:money" :size="40" />
+                  <Icon icon="wi:day-fog" :size="40" />
                 </div>
               </div>
               <div class="flex flex-col justify-between">
@@ -113,7 +113,7 @@ getCount()
             <div :class="`${prefixCls}__item flex justify-between`">
               <div>
                 <div :class="`${prefixCls}__item--icon ${prefixCls}__item--shopping p-16px inline-block rounded-6px`">
-                  <Icon icon="svg-icon:shopping" :size="40" />
+                  <Icon icon="streamline-pixel:interface-essential-waiting-hourglass-loading" :size="40" />
                 </div>
               </div>
               <div class="flex flex-col justify-between">
