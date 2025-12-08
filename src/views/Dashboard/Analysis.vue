@@ -19,12 +19,12 @@ const pieOptionsData = reactive(pieOptions)
 // 仪器状态分布
 const getUserAccessSource = async () => {
   try {
-    const result = await getUserAccessSourceApi()
-    console.log('仪器状态分布数据:', result)
-    if (result && Array.isArray(result)) {
-      set(pieOptionsData, 'series[0].data', result)
+    const {list} = await getUserAccessSourceApi()
+    console.log('仪器状态分布数据:', list)
+    if (list && Array.isArray(list)) {
+      set(pieOptionsData, 'series[0].data', list)
       // 更新 legend 数据
-      const legendData = result.map(item => item.name)
+      const legendData = list.map(item => item.name)
       set(pieOptionsData, 'legend.data', legendData)
     }
   } catch (error) {
